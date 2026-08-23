@@ -35,7 +35,7 @@
 
   .bottom-nav{
     position:fixed; left:50%; transform:translateX(-50%);
-    bottom:calc(22px + env(safe-area-inset-bottom));
+    bottom:calc(10px + env(safe-area-inset-bottom));
     width:calc(100% - 32px); max-width:398px;
     display:flex;
     background:rgba(255,255,255,0.68);
@@ -63,6 +63,18 @@
   .nav-item.active{ color:var(--purple); }
 
   .placeholder-card{ text-align:center; padding:36px 20px; }
+
+  .back-to-top{
+    position:fixed; right:18px; bottom:calc(24px + env(safe-area-inset-bottom));
+    width:46px; height:46px; border-radius:50%; border:none;
+    background:var(--purple); color:var(--white);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(30,20,50,0.22);
+    cursor:pointer; z-index:19;
+    opacity:0; pointer-events:none; transform:translateY(8px);
+    transition:opacity 0.15s ease, transform 0.15s ease;
+  }
+  .back-to-top.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
   .placeholder-icon{
     width:56px; height:56px; border-radius:16px; margin:0 auto 14px;
     background:#F2EFE7; color:var(--purple); font-size:26px;
@@ -82,10 +94,12 @@
   .brand{ display:flex; align-items:center; gap:12px; }
   .brand-icon{
     width:44px; height:44px; border-radius:14px;
-    background:rgba(255,255,255,0.14);
+    background:#FFFFFF;
     display:flex; align-items:center; justify-content:center;
-    font-size:20px;
+    overflow:hidden;
+    padding:4px;
   }
+  .brand-icon img{ width:100%; height:100%; object-fit:contain; }
   .brand-text .name{ font-size:18px; font-weight:800; letter-spacing:0.01em; }
   .brand-text .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px;}
   .header-back{ display:flex; align-items:center; gap:12px; cursor:pointer; background:none; border:none; color:var(--white); padding:0; }
@@ -224,6 +238,8 @@
 
   <footer id="footer"></footer>
 
+  <button class="back-to-top" id="backToTop" aria-label="Torna su"></button>
+
   <div class="bottom-nav" id="bottomNav">
     <button class="nav-item" data-tab="canzoni"></button>
     <button class="nav-item" data-tab="categorie"></button>
@@ -244,7 +260,8 @@ const ICONS = {
   sortAsc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V5M6 11l6-6 6 6"/></svg>`,
   sortDesc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`,
   play: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>`,
-  pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`
+  pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`,
+  arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -327,6 +344,7 @@ let sortMode = "alpha"; // "alpha" | "anno"
 let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
 let searchQuery = "";
 let currentTab = "canzoni";
+let inDetailView = false;
 const content = document.getElementById("content");
 const footer = document.getElementById("footer");
 const appHeader = document.getElementById("appHeader");
@@ -377,6 +395,8 @@ function showTab(tab){
     return;
   }
   renderHeaderBrand();
+  inDetailView = false;
+  backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   const p = TAB_PLACEHOLDERS[tab];
   content.innerHTML = `
@@ -390,6 +410,16 @@ function showTab(tab){
 
 bottomNav.querySelectorAll(".nav-item").forEach(btn => {
   btn.addEventListener("click", () => showTab(btn.dataset.tab));
+});
+
+const backToTopBtn = document.getElementById("backToTop");
+backToTopBtn.innerHTML = ICONS.arrowUp(20);
+backToTopBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+window.addEventListener("scroll", () => {
+  const show = inDetailView && window.scrollY > 260;
+  backToTopBtn.classList.toggle("visible", show);
 });
 
 function matchesSearch(song, query){
@@ -439,7 +469,7 @@ function groupSongs(list){
 function renderHeaderBrand(){
   appHeader.innerHTML = `
     <div class="brand">
-      <div class="brand-icon">${ICONS.music(20)}</div>
+      <div class="brand-icon"><img src="icons/logo-roma150.png" alt="Roma 150"></div>
       <div class="brand-text">
         <div class="name">Canzoniere</div>
         <div class="sub">Roma 150</div>
@@ -451,7 +481,7 @@ function renderHeaderBrand(){
 function renderHeaderBack(){
   appHeader.innerHTML = `
     <div class="brand">
-      <div class="brand-icon">${ICONS.music(20)}</div>
+      <div class="brand-icon"><img src="icons/logo-roma150.png" alt="Roma 150"></div>
       <div class="brand-text">
         <div class="name">Canzoniere</div>
         <div class="sub">Roma 150</div>
@@ -504,6 +534,8 @@ function renderResults(card){
 function showList(){
   renderHeaderBrand();
   bottomNav.classList.remove("hidden");
+  inDetailView = false;
+  backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   if(SONGS.length === 0){
     content.innerHTML = '<div class="card"><p class="list-title">Canzoni</p><div class="empty">Nessuna canzone trovata.</div></div>';
@@ -562,6 +594,7 @@ function showDetail(index){
 
   renderHeaderBack();
   bottomNav.classList.add("hidden");
+  inDetailView = true;
   content.innerHTML = "";
 
   const card1 = document.createElement("div");
@@ -590,6 +623,15 @@ function showDetail(index){
   const body = document.createElement("div");
   card2.appendChild(body);
   content.appendChild(card2);
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "pill-btn active";
+  backBtn.style.width = "100%";
+  backBtn.style.justifyContent = "center";
+  backBtn.style.marginTop = "4px";
+  backBtn.innerHTML = `${ICONS.home(16)}Torna all'elenco`;
+  backBtn.addEventListener("click", showList);
+  content.appendChild(backBtn);
 
   function render(){
     body.innerHTML = "";
