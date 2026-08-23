@@ -148,19 +148,47 @@
   }
   .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
 
-  .search-box{
-    display:flex; align-items:center; gap:8px;
-    background:var(--neutral); border-radius:12px; padding:10px 14px; margin-bottom:12px;
+  .search-filter-row{
+    display:flex; align-items:center; gap:8px; margin-bottom:12px;
     position:sticky; top:0; z-index:5;
-    transition:box-shadow 0.25s ease;
   }
-  .search-box.stuck{ box-shadow:0 6px 14px rgba(28,28,30,0.10); }
+  .search-box{
+    display:flex; align-items:center; gap:8px; flex:1; min-width:0;
+    background:var(--neutral); border-radius:12px; padding:10px 14px;
+  }
+  .search-filter-row.stuck{ box-shadow:0 6px 14px rgba(28,28,30,0.10); border-radius:12px; }
   .search-box i{ color:var(--ink-soft); font-size:17px; }
   .search-box input{
     border:none; background:transparent; flex:1; font-size:14.5px;
     color:var(--ink); outline:none; font-family:inherit;
   }
   .search-box input::placeholder{ color:var(--ink-soft); }
+  .search-clear-btn{
+    display:none; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:50%; border:none; flex-shrink:0;
+    background:var(--border); color:var(--ink-soft); cursor:pointer; padding:0;
+  }
+  .search-clear-btn.visible{ display:flex; }
+
+  .filter-toggle-btn{
+    flex-shrink:0; width:38px; height:38px; border-radius:12px; border:none;
+    background:var(--neutral); color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .filter-toggle-btn.active{ background:var(--purple); color:var(--white); }
+
+  .filter-panel{ max-height:0; overflow:hidden; transition:max-height 0.28s ease; }
+  .filter-panel.open{ max-height:320px; }
+  .filter-row{ margin-bottom:10px; padding-top:2px; }
+  .filter-row .filter-label{ font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; }
+  .filter-chips{ display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+  .filter-chips::-webkit-scrollbar{ display:none; }
+  .filter-chip{
+    flex-shrink:0; border:none; border-radius:999px; padding:7px 14px;
+    font-size:12.5px; font-weight:700; background:var(--neutral); color:var(--ink-soft);
+    cursor:pointer; white-space:nowrap;
+  }
+  .filter-chip.active{ background:var(--purple); color:var(--white); }
 
   .sort-row{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
   .segmented{
@@ -186,7 +214,7 @@
   }
   .group-divider:first-of-type{ margin-top:10px; }
   .song-row{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
     padding:14px 4px;
     border-bottom:1px solid var(--border);
     cursor:pointer;
@@ -195,6 +223,17 @@
   .song-row .row-title{ font-size:16px; font-weight:700; color:var(--ink); }
   .song-row .row-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
   .song-row i{ color:var(--ink-soft); font-size:18px; }
+  .row-end{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .fav-star{
+    border:none; background:none; padding:6px; margin:-6px;
+    color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
+  }
+  .fav-star.active{ color:var(--gold); }
+  .key-badge{
+    display:flex; align-items:center; gap:3px; flex-shrink:0;
+    font-size:11.5px; font-weight:800; color:var(--gold);
+    background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
+  }
 
   /* dettaglio */
   .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
@@ -282,6 +321,10 @@ const ICONS = {
   music: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
   home: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>`,
   chevronRight: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 6l6 6-6 6"/></svg>`,
+  filter: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M4 5h16l-6.5 7.5v6L10.5 20v-7.5z"/></svg>`,
+  star: (s=18, filled=false) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 3.5l2.65 5.61 6.1.58-4.6 4.2 1.3 6.06L12 16.9l-5.45 3.05 1.3-6.06-4.6-4.2 6.1-.58L12 3.5z"/></svg>`,
+  flag: (s=13) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>`,
+  clear: (s=14) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
   arrowBack: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
   tags: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 2H4v8l10 10 8-8L12 2z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
   books: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3.5" y="4" width="5" height="16"/><rect x="10.5" y="4" width="5" height="16"/><path d="M17.5 5.3l4 .9-3 14.7-4-.9z"/></svg>`,
@@ -374,6 +417,21 @@ let SONGS = [];
 let sortMode = "alpha"; // "alpha" | "anno"
 let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
 let searchQuery = "";
+let selectedBranche = new Set();
+let selectedSedi = new Set();
+
+const FAV_KEY = "canzoniere_preferiti_v1";
+function loadFavorites(){
+  try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
+  catch(e){ return new Set(); }
+}
+function saveFavorites(){
+  try { localStorage.setItem(FAV_KEY, JSON.stringify([...favoriti])); }
+  catch(e){ /* localStorage non disponibile, i preferiti non persisteranno */ }
+}
+function favKey(song){ return song.titolo + "__" + song.anno; }
+let favoriti = loadFavorites();
+let showOnlyFavorites = false;
 let fontScaleIndex = 0;
 let currentTab = "canzoni";
 let inDetailView = false;
@@ -605,14 +663,21 @@ function metaLine(song){
   return parts.filter(Boolean).join(" · ");
 }
 
+function matchesFilters(song){
+  const brancaOk = selectedBranche.size === 0 || selectedBranche.has(song.branca);
+  const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
+  const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
+  return brancaOk && sedeOk && favOk;
+}
+
 function renderResults(card){
   let results = card.querySelector("#resultsArea");
   results.innerHTML = "";
 
-  const filtered = SONGS.filter(song => matchesSearch(song, searchQuery));
+  const filtered = SONGS.filter(song => matchesFilters(song) && matchesSearch(song, searchQuery));
 
   if(filtered.length === 0){
-    results.innerHTML = `<div class="empty">Nessuna canzone trovata per "${searchQuery}".</div>`;
+    results.innerHTML = `<div class="empty">Nessuna canzone trovata${searchQuery ? ` per "${searchQuery}"` : ""}.</div>`;
     return;
   }
 
@@ -623,6 +688,7 @@ function renderResults(card){
     results.appendChild(divider);
 
     group.songs.forEach(song => {
+      const isFav = favoriti.has(favKey(song));
       const row = document.createElement("div");
       row.className = "song-row";
       row.innerHTML = `
@@ -630,9 +696,20 @@ function renderResults(card){
           <div class="row-title">${song.titolo}</div>
           <div class="row-meta">${metaLine(song)}</div>
         </div>
-        ${ICONS.chevronRight(18)}
+        <div class="row-end">
+          <span class="key-badge">${ICONS.music(12)}${song.tonalita}</span>
+          <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
+          ${ICONS.chevronRight(18)}
+        </div>
       `;
       row.addEventListener("click", () => showDetail(SONGS.indexOf(song)));
+      row.querySelector(".fav-star").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if(favoriti.has(favKey(song))) favoriti.delete(favKey(song));
+        else favoriti.add(favKey(song));
+        saveFavorites();
+        renderResults(card);
+      });
       results.appendChild(row);
     });
   });
@@ -651,22 +728,98 @@ function showList(){
   const card = document.createElement("div");
   card.className = "card";
 
+  const brancheDisponibili = [...new Set(SONGS.map(s => s.branca).filter(Boolean))].sort();
+  const sediDisponibili = [...new Set(SONGS.flatMap(s => s.sede || []))].sort();
+  const filtriDisponibili = true;
+
+  const searchFilterRow = document.createElement("div");
+  searchFilterRow.className = "search-filter-row";
+  searchFilterRow.style.top = (appHeader.offsetHeight + 12) + "px";
+
   const searchBox = document.createElement("div");
   searchBox.className = "search-box";
-  searchBox.style.top = (appHeader.offsetHeight + 12) + "px";
   searchBox.innerHTML = `
     ${ICONS.search(17)}
     <input type="text" id="searchInput" placeholder="Cerca titolo, luogo, branca, testo..." value="${searchQuery.replace(/"/g, "&quot;")}">
+    <button class="search-clear-btn ${searchQuery ? "visible" : ""}" id="searchClear" aria-label="Cancella ricerca">${ICONS.clear(14)}</button>
   `;
-  card.appendChild(searchBox);
+  searchFilterRow.appendChild(searchBox);
+
+  if(filtriDisponibili){
+    const filterBtn = document.createElement("button");
+    filterBtn.className = "filter-toggle-btn";
+    filterBtn.setAttribute("aria-label", "Filtra");
+    filterBtn.innerHTML = ICONS.filter(17);
+    searchFilterRow.appendChild(filterBtn);
+  }
+
+  card.appendChild(searchFilterRow);
 
   const searchSentinel = document.createElement("div");
   searchSentinel.style.cssText = "height:1px;";
-  searchBox.before(searchSentinel);
+  searchFilterRow.before(searchSentinel);
   new IntersectionObserver(
-    ([entry]) => searchBox.classList.toggle("stuck", !entry.isIntersecting),
+    ([entry]) => searchFilterRow.classList.toggle("stuck", !entry.isIntersecting),
     { threshold: 1 }
   ).observe(searchSentinel);
+
+  function buildFilterRow(label, values, selectedSet){
+    if(values.length < 2) return null;
+    const row = document.createElement("div");
+    row.className = "filter-row";
+    const chipsHtml = values.map(v =>
+      `<button class="filter-chip ${selectedSet.has(v) ? "active" : ""}" data-value="${v}">${v}</button>`
+    ).join("");
+    row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips">${chipsHtml}</div>`;
+    row.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const v = chip.dataset.value;
+        if(selectedSet.has(v)) selectedSet.delete(v); else selectedSet.add(v);
+        chip.classList.toggle("active");
+        updateFilterBtnState();
+        renderResults(card);
+      });
+    });
+    return row;
+  }
+
+  function buildToggleFilterRow(label, chipText, getState, setState){
+    const row = document.createElement("div");
+    row.className = "filter-row";
+    row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips"><button class="filter-chip ${getState() ? "active" : ""}">${chipText}</button></div>`;
+    row.querySelector(".filter-chip").addEventListener("click", (e) => {
+      setState(!getState());
+      e.target.classList.toggle("active", getState());
+      updateFilterBtnState();
+      renderResults(card);
+    });
+    return row;
+  }
+
+  if(filtriDisponibili){
+    const filterPanel = document.createElement("div");
+    filterPanel.className = "filter-panel";
+    filterPanel.appendChild(buildToggleFilterRow(
+      "Preferite", `${ICONS.star(13, true)} Solo preferite`,
+      () => showOnlyFavorites, (v) => { showOnlyFavorites = v; }
+    ));
+    const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
+    if(brancaRow) filterPanel.appendChild(brancaRow);
+    const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi);
+    if(sedeRow) filterPanel.appendChild(sedeRow);
+    card.appendChild(filterPanel);
+
+    const filterBtn = searchFilterRow.querySelector(".filter-toggle-btn");
+    filterBtn.addEventListener("click", () => {
+      filterPanel.classList.toggle("open");
+    });
+
+    function updateFilterBtnState(){
+      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || showOnlyFavorites;
+      filterBtn.classList.toggle("active", anyActive);
+    }
+    updateFilterBtnState();
+  }
 
   const sortRow = document.createElement("div");
   sortRow.className = "sort-row";
@@ -688,8 +841,19 @@ function showList(){
   content.innerHTML = "";
   content.appendChild(card);
 
-  card.querySelector("#searchInput").addEventListener("input", (e) => {
+  const searchInputEl = card.querySelector("#searchInput");
+  const searchClearBtn = card.querySelector("#searchClear");
+
+  searchInputEl.addEventListener("input", (e) => {
     searchQuery = e.target.value;
+    searchClearBtn.classList.toggle("visible", searchQuery.length > 0);
+    renderResults(card);
+  });
+  searchClearBtn.addEventListener("click", () => {
+    searchQuery = "";
+    searchInputEl.value = "";
+    searchClearBtn.classList.remove("visible");
+    searchInputEl.focus();
     renderResults(card);
   });
   sortRow.querySelector("#sortAlpha").addEventListener("click", () => { sortMode = "alpha"; showList(); });
@@ -719,7 +883,7 @@ function showDetail(index){
     </div>
     <div class="tile-row">
       <div class="mini-tile key-tile">
-        <div class="label">Tono</div>
+        <div class="label">Tonalità</div>
         <div class="key-row">
           <button id="down" aria-label="Trasponi giù">–</button>
           <span class="value" id="currentKey">${song.tonalita}</span>
