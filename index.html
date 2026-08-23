@@ -206,6 +206,7 @@
   .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
   .song-title{ font-size:23px; font-weight:800; color:var(--ink); line-height:1.25; margin:0; }
   .song-meta{ font-size:13px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+  .song-meta.sede-row{ margin-top:2px; }
 
   .pill-btn{
     display:flex; align-items:center; gap:6px;
@@ -699,7 +700,8 @@ function showDetail(index){
     <div class="card-top">
       <div>
         <p class="song-title">${song.titolo}</p>
-        <p class="song-meta">${metaLine(song)}</p>
+        <p class="song-meta">${[song.anno, song.luogo, song.branca].filter(Boolean).join(" · ")}</p>
+        ${(song.sede && song.sede.length) ? `<p class="song-meta sede-row">${song.sede.join(", ")}</p>` : ""}
       </div>
       <button class="pill-btn" id="scrollToggle">${ICONS.play(15)}Scorri</button>
     </div>
@@ -741,25 +743,43 @@ function showDetail(index){
   document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
   document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
 
-  let scrolling = false;
+  const SCROLL_SPEEDS = [
+    { label: "1×", step: 1, interval: 55 },
+    { label: "2×", step: 1, interval: 30 },
+    { label: "3×", step: 2, interval: 22 }
+  ];
+  let speedIndex = -1; // -1 = fermo
   let scrollInterval = null;
   const scrollBtn = document.getElementById("scrollToggle");
+
+  function stopScroll(){
+    speedIndex = -1;
+    scrollBtn.classList.remove("active");
+    scrollBtn.innerHTML = ICONS.play(15) + "Scorri";
+    clearInterval(scrollInterval);
+  }
+
+  function startScrollAt(index){
+    speedIndex = index;
+    const speed = SCROLL_SPEEDS[speedIndex];
+    scrollBtn.classList.add("active");
+    scrollBtn.innerHTML = ICONS.pause(15) + speed.label;
+    clearInterval(scrollInterval);
+    scrollInterval = setInterval(() => {
+      window.scrollBy({ top: speed.step, behavior: "auto" });
+      if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
+        stopScroll();
+      }
+    }, speed.interval);
+  }
+
   scrollBtn.addEventListener("click", () => {
-    scrolling = !scrolling;
-    scrollBtn.classList.toggle("active", scrolling);
-    scrollBtn.innerHTML = scrolling ? (ICONS.pause(15) + "Pausa") : (ICONS.play(15) + "Scorri");
-    if(scrolling){
-      scrollInterval = setInterval(() => {
-        window.scrollBy({top: 1, behavior: "auto"});
-        if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
-          scrolling = false;
-          scrollBtn.classList.remove("active");
-          scrollBtn.innerHTML = ICONS.play(15) + "Scorri";
-          clearInterval(scrollInterval);
-        }
-      }, 60);
+    if(speedIndex === -1){
+      startScrollAt(0);
+    } else if(speedIndex < SCROLL_SPEEDS.length - 1){
+      startScrollAt(speedIndex + 1);
     } else {
-      clearInterval(scrollInterval);
+      stopScroll();
     }
   });
 
