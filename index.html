@@ -248,10 +248,6 @@ function transposeChord(chord, semitones){
   return CHROMATIC[newIdx] + suffix;
 }
 
-function isChorusText(text){
-  return text.trim() === "RIT." || /^\[?[A-Z#]*\]?Pronti all'arrembaggio/.test(text.trim());
-}
-
 function renderBlock(text, semitones){
   if(text.trim() === "RIT."){
     const el = document.createElement("div");
@@ -259,16 +255,21 @@ function renderBlock(text, semitones){
     el.innerHTML = '<span class="refrain-tag">Ritornello</span>';
     return el;
   }
+  let lines = text.split("\n");
+  const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+  const chorus = !!ritMatch;
+  const repeatCount = ritMatch && ritMatch[1] ? parseInt(ritMatch[1], 10) : null;
+  if(chorus) lines = lines.slice(1);
+
   const block = document.createElement("div");
-  const chorus = isChorusText(text);
   block.className = "verse" + (chorus ? " chorus" : "");
   if(chorus){
     const tag = document.createElement("span");
     tag.className = "refrain-tag";
-    tag.textContent = "Ritornello";
+    tag.textContent = "Ritornello" + (repeatCount ? ` (${repeatCount} volte)` : "");
     block.appendChild(tag);
   }
-  text.split("\n").forEach(rawLine => {
+  lines.forEach(rawLine => {
     const lineEl = document.createElement("div");
     lineEl.className = "line";
     const regex = /\[([^\]]+)\]/g;
@@ -368,17 +369,20 @@ bottomNav.querySelectorAll(".nav-item").forEach(btn => {
 });
 
 function matchesSearch(song, query){
-  if(!query) return true;
-  const q = query.toLowerCase();
+  if(!query.trim()) return true;
   const plainLyrics = (song.testo_accordi || "").replace(/\[[^\]]+\]/g, " ").toLowerCase();
   const sede = (song.sede || []).join(" ").toLowerCase();
-  return (
-    (song.titolo || "").toLowerCase().includes(q) ||
-    (song.luogo || "").toLowerCase().includes(q) ||
-    (song.branca || "").toLowerCase().includes(q) ||
-    sede.includes(q) ||
-    plainLyrics.includes(q)
-  );
+  const haystack = [
+    song.titolo || "",
+    String(song.anno || ""),
+    song.luogo || "",
+    song.branca || "",
+    sede,
+    plainLyrics
+  ].join(" ").toLowerCase();
+
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return tokens.every(token => haystack.includes(token));
 }
 
 function groupSongs(list){

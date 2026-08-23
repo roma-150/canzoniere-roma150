@@ -5,7 +5,97 @@
     "luogo": "Meschia",
     "tonalita": "RE",
     "branca": "L/C",
-    "sede": ["Selva Candida"],
-    "testo_accordi": "[RE]La mappa una via ti [SOL]indicherà\n[RE]Un nuovo viaggio sta per [SOL]cominciar\n[SIm]Le isole che presto [SOL]scoprirai\n[FA#m]Son parte di un [SOL]creato che [MIm]tu difende[LA]rai\n---\n[RE]Pronti all'arrembaggio\n[LA]Navigando con coraggio\n[SIm]Presto pirata tu [SOL]sarai (in fondo già lo sai)\n[RE]Che facendo del nostro meglio\n[LA]Col Branco e con il Cerchio\n[SIm]Eccomi ancora [SOL]griderai.\n===\n[RE]Meschia Cocci e Lupi [SOL]accoglierà\n[RE]Nel bosco c'è una roccia da [SOL]scalar\n[SIm]Insieme noi vivremo in [SOL]libertà\n[FA#m]Sapendo che ogni [SOL]giorno sull'[MIm]altro puoi [LA]contar\n---\nRIT.\n===\n[RE]Un giorno questo viaggio [SOL]finirà\n[RE]Il Branco e il Cerchio non [SOL]dimenticar\n[SIm]La Legge, la Promessa e le [SOL]B.A.\n[FA#m]Anche se sarai [SOL]lontano il [MIm]ricordo [LA]resterà\n---\n[RE]Pronti all'arrembaggio\n[LA]Navigando con coraggio\n[SIm]Presto pirata tu [SOL]sarai (in fondo già lo sai)\n[RE]Che facendo del nostro meglio\n[LA]Col Branco e con il Cerchio\n[SIm]Eccomi ancora [SOL]griderai.\n---\n[RE]E il tesoro troverai!"
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[RE]La mappa una via ti [SOL]indicherà\n[RE]Un nuovo viaggio sta per [SOL]cominciar\n[SIm]Le isole che presto [SOL]scoprirai\n[FA#m]Son parte di un [SOL]creato che [MIm]tu difende[LA]rai\n---\n{rit}\n[RE]Pronti all'arrembaggio\n[LA]Navigando con coraggio\n[SIm]Presto pirata tu [SOL]sarai (in fondo già lo sai)\n[RE]Che facendo del nostro meglio\n[LA]Col Branco e con il Cerchio\n[SIm]Eccomi ancora [SOL]griderai.\n---\n[RE]Meschia Cocci e Lupi [SOL]accoglierà\n[RE]Nel bosco c'è una roccia da [SOL]scalar\n[SIm]Insieme noi vivremo in [SOL]libertà\n[FA#m]Sapendo che ogni [SOL]giorno sull'[MIm]altro puoi [LA]contar\n---\n{rit}\n[RE]Pronti all'arrembaggio\n[LA]Navigando con coraggio\n[SIm]Presto pirata tu [SOL]sarai (in fondo già lo sai)\n[RE]Che facendo del nostro meglio\n[LA]Col Branco e con il Cerchio\n[SIm]Eccomi ancora [SOL]griderai.\n---\n[RE]Un giorno questo viaggio [SOL]finirà\n[RE]Il Branco e il Cerchio non [SOL]dimenticar\n[SIm]La Legge, la Promessa e le [SOL]B.A.\n[FA#m]Anche se sarai [SOL]lontano il [MIm]ricordo [LA]resterà\n---\n{rit}\n[RE]Pronti all'arrembaggio\n[LA]Navigando con coraggio\n[SIm]Presto pirata tu [SOL]sarai (in fondo già lo sai)\n[RE]Che facendo del nostro meglio\n[LA]Col Branco e con il Cerchio\n[SIm]Eccomi ancora [SOL]griderai.\n---\n[RE]E il tesoro troverai!"
+  },
+  {
+    "titolo": "Terra di mezzo",
+    "anno": 2017,
+    "luogo": "Tagliacozzo",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]La Pista e il [FA]sentier\n[LAm]Ci han portati [SOL]fin qua\n[DO]Per la Terra di [FA]Mezzo\n[LAm]Siam pronti a [SOL]lottar\n[DO]Tra nani, elfi [FA]hobbit\n[LAm]E guerrier di [SOL]valor\n[FA]Combattiamo [SOL]l'oscuro [DO]signor.\n---\n{rit}\n[DO]Cocci e [FA]lupi [SOL]insieme a [DO]cantar\n[DO]Con la Legge nel cuore inseguiam [SOL]la BA\n[FA]Tra Bosco e [SOL]Montagna o [DO]fiutando una [LAm]traccia\n[FA]Buon Volo e [SOL]Buona [DO]Caccia\n---\n[DO]L'anello nel [FA]fuoco\n[LAm]Siamo pronti a [SOL]gettar\n[DO]Così che la [FA]pace\n[LAm]Possa ri[SOL]tornar\n[DO]Con l'impegno di [FA]ognuno\n[LAm]Ci possiamo ri[SOL]uscir\n[FA]Col la gioia [SOL]vogliam pro[DO]seguir.\n---\n{rit}\n[DO]Cocci e [FA]lupi [SOL]insieme a [DO]cantar\n[DO]Con la Legge nel cuore inseguiam [SOL]la BA\n[FA]Tra Bosco e [SOL]Montagna o [DO]fiutando una [LAm]traccia\n[FA]Buon Volo e [SOL]Buona [DO]Caccia\n---\n[DO]Sulle orme di [FA]Abramo\n[LAm]Il Signore se[SOL]guiam\n[DO]Nell'attesa del [FA]Figlio\n[LAm]Che ci sal[SOL]verà\n[DO]Ed il tempo che [FA]passa\n[LAm]Non cancel[SOL]lerà\n[FA]Il ricordo dei giorni che [SOL]insieme vi[DO]viam.\n---\n{rit}\n[DO]Cocci e [FA]lupi [SOL]insieme a [DO]cantar\n[DO]Con la Legge nel cuore inseguiam [SOL]la BA\n[FA]Tra Bosco e [SOL]Montagna o [DO]fiutando una [LAm]traccia\n[FA]Buon Volo e [SOL]Buona [DO]Caccia"
+  },
+  {
+    "titolo": "Insieme a Dorchester",
+    "anno": 2018,
+    "luogo": "Sereto",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]Al suon di una [FA]canzone il [DO]viaggio ini[SOL]zierà\n[DO]Ed il regno di [FA]Dorchester siam [DO]pronti a li[SOL]berar\n[DO]E contro il vile [FA]Eric insieme [DO]combat[SOL]tiam\n[DO]Io insieme a te, [SOL]tu insieme a me,\n[DO]Io insieme a te, [SOL]tu insieme a me....\n---\n{rit}\n[FA]E con il branco in caccia\n[SOL]Akela seguirai\n[FA]In volo verso Arcanda\n[SOL]La gioia donerai\n---\n[DO]Nel cielo mille [FA]stelle possiamo [DO]am[SOL]mirar\n[DO]Disegno di un [FA]creato che insieme [DO]difen[SOL]diam\n[DO]Sulle orme di [FA]Francesco il [DO]regno costru[SOL]ir\n[DO]Io insieme a te, [SOL]tu insieme a me,\n[DO]Io insieme a te, [SOL]tu insieme a me....\n---\n{rit}\n[FA]E con il branco in caccia\n[SOL]Akela seguirai\n[FA]In volo verso Arcanda\n[SOL]La gioia donerai\n---\n[DO]La pista del [FA]fratello non si [DO]cancel[SOL]lerà\n[DO]Il volo sul [FA]sentiero non ti [DO]dimenti[SOL]car\n[DO]Ed ora chi ci [FA]lascia nessuno [DO]scorde[SOL]rà\n[DO]Io insieme a te, [SOL]tu insieme a me,\n[DO]Io insieme a te, [SOL]tu insieme a me....\n---\n{rit}\n[FA]E con il branco in caccia\n[SOL]Akela seguirai\n[FA]In volo verso Arcanda\n[SOL]La gioia donerai"
+  },
+  {
+    "titolo": "In quel di Stella Vitae",
+    "anno": 2019,
+    "luogo": "Stella Vitae",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]In quel di [SOL]Stella Vitae è [LAm]sorto il Sole\n[FA]E il nostro [SOL]campo ini[DO]zierà\n[DO]Tra balli e [SOL]yoga [LAm]coccinella\n[FA]E il lupetto che [SOL]corre [DO]già\n[DO]Tutti insieme [SOL]branco e [LAm]cerchio\n[FA]Una preghiera [SOL]signor ti [DO]offriam\n[DO]Con l'impegno di [SOL]o[LAm]gnuno\n[FA]Il torneo [SOL]comince[DO]rà.\n---\n{rit}\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Del mio meglio [SOL]son pronto a [DO]far\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Sulla pista e il [SOL]sentiero an[DO]diam (x2)\n---\n[DO]Dall'oriente ci [SOL]ha [LAm]chiamati\n[FA]Con Mulan ci siamo [SOL]arruo[DO]lati\n[DO]Contro gli unni com[SOL]battia[LAm]mo\n[FA]La giustizia noi ri[SOL]portia[DO]mo\n[DO]Nella squadra del [SOL]Sig[LAm]nore\n[FA]Ci sfidiamo con l'a[SOL]mo[DO]re\n[DO]Non sol dei santi e degli [SOL][LAm]eroi\n[FA]La vera Chiesa [SOL]siamo [DO]noi\n---\n{rit}\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Del mio meglio [SOL]son pronto a [DO]far\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Sulla pista e il [SOL]sentiero an[DO]diam (x2)\n---\n[DO]I cani rossi ci hanno at[SOL][LAm]taccato\n[FA]E insieme il dhole abbiamo [SOL]fer[DO]mato\n[DO]Per Marzolina ci [SOL]battia[LAm]mo\n[FA]E il ragno infine scon[SOL]figgia[DO]mo\n[DO]Con la legge e la pro[SOL]mes[LAm]sa\n[FA]Noi faremo caccia [SOL]gros[DO]sa\n[DO]Sempre in volo con la [SOL][LAm]gioia\n[FA]Non c'è tempo per la [SOL]no[DO]ia.\n---\n{rit}\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Del mio meglio [SOL]son pronto a [DO]far\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Sulla pista e il [SOL]sentiero an[DO]diam (x2)\n---\nFinale: Insieme si può far...\nAkela Chil Bagheera e Scibà\nArcanda Mi Kira Rama e Kaa insieme si può far…\n---\n{rit}\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Del mio meglio [SOL]son pronto a [DO]far\n[DO]Eccomi [SOL]sono [LAm]qua\n[FA]Sulla pista e il [SOL]sentiero an[DO]diam (x2)"
+  },
+  {
+    "titolo": "Expecto Felicitatem",
+    "anno": 2021,
+    "luogo": "Brittoli",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]Un gufo ci ha in[SOL]vitato\n[LAm]In un mondo di magia e tutto è [FA]cominciato\n[DO]L'oscuro vuol [SOL]tornare\n[LAm]Solo lottando insieme noi lo possiam [FA]fermare.\n---\n{rit}\n[DO]Respirerò la [SOL]magia del [LAm]campo\n[FA]Con mio fratello e mia sorella accanto\n[DO]E volerò [SOL]sempre più in [LAm]alto\n[FA]Verso la preda farò un grande salto\n---\n[DO]In giro per il [SOL]mondo\n[LAm]Abbiam scoperto che il regno non è solo un [FA]sogno\n[DO]Ma si può cos[SOL]truire\n[LAm]Con l'impegno di ognuno noi ci possiam [FA]riuscire.\n---\n{rit}\n[DO]Respirerò la [SOL]magia del [LAm]campo\n[FA]Con mio fratello e mia sorella accanto\n[DO]E volerò [SOL]sempre più in [LAm]alto\n[FA]Verso la preda farò un grande salto\n---\n[DO]E lungo il tuo [SOL]sentiero\n[LAm]Scoprirai la gioia di donarti per [FA]davvero\n[DO]Zampa non fa ru[SOL]more\n[LAm]Sulla pista fratellino vai e caccia con [FA]onore.\n---\n{rit}\n[DO]Respirerò la [SOL]magia del [LAm]campo\n[FA]Con mio fratello e mia sorella accanto\n[DO]E volerò [SOL]sempre più in [LAm]alto\n[FA]Verso la preda farò un grande salto"
+  },
+  {
+    "titolo": "Le mille e una notte",
+    "anno": 2022,
+    "luogo": "Meschia",
+    "tonalita": "LAm",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[LAm]Tra sabbia e deserto\n[REm]Il popolo è oppresso\n[MI]Malvagio è il visir [LAm]Jafar\n[LAm]Leggendo una storia\n[REm]Le mille e una notte\n[MI]Le gemme insieme tro[LAm]viam.\n---\n{rit}\n[LAm]Canta e Balla\n[REm]Fratello e sorella\n[MI]La gioia che vivo con [LAm]te\n[LAm]Canta e balla\n[REm]Vola coccinella\n[MI]Lupetto la traccia già [LAm]c'è\n---\n[LAm]Le tre missioni\n[REm]Ci hanno affidato\n[MI]Come agenti segreti [LAm]operiam\n[LAm]Testimoniare,\n[REm]Insieme pregare\n[MI]E fare poi tante [LAm]B.A.\n---\n{rit}\n[LAm]Canta e Balla\n[REm]Fratello e sorella\n[MI]La gioia che vivo con [LAm]te\n[LAm]Canta e balla\n[REm]Vola coccinella\n[MI]Lupetto la traccia già [LAm]c'è\n---\n[LAm]In ogni momento\n[REm]Anche se lontano\n[MI]La giungla ti accompagne[LAm]rà\n[LAm]Ovunque il vento\n[REm]Ti farà volare\n[MI]Unite per sempre res[LAm]tiam.\n---\n{rit}\n[LAm]Canta e Balla\n[REm]Fratello e sorella\n[MI]La gioia che vivo con [LAm]te\n[LAm]Canta e balla\n[REm]Vola coccinella\n[MI]Lupetto la traccia già [LAm]c'è"
+  },
+  {
+    "titolo": "Còmlà nì sinn – Lo faremo",
+    "anno": 2023,
+    "luogo": "Orvinio",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]Guarda l'immenso [SOL]verde intorno a [DO]te\n[LAm]Ecco il cielo infinito più [SOL]azzurro che [DO]c'è\n[DO]Di notte un milione di [SOL]stelle che brillano [DO]e\n[FA]La dolce Scozia ci ac[SOL]coglie già\n[DO]Il regno è diviso i [SOL]fratelli son pronti a [DO]lottar\n[LAm]Soltanto il talento di ognuno lo [SOL]potrà [DO]salvar\n[DO]Ed è con l'aiuto dell'altro che a[SOL]vanti si [DO]va\n[FA]Io l'ho imparato in[SOL]sieme a te\n---\n{rit}\n[DO]La forza del lupo in tutto il [SOL]branco sa[DO]rà\n[LAm]Se voli con una sorella più in [SOL]alto si an[DO]drà\n[DO]In questa terra incantata siam [SOL]pronti a so[DO]gnar\n[FA]E scopri in fondo al tuo [SOL]cuore la Feli[DO]cità\n[FA]Lalalalalala[SOL]....[DO]\n[FA]Lalalalalala[SOL]....[DO]\n---\n[DO]Ed ora \"Fausti\" oscuri in [SOL]mezzo a [DO]noi\n[LAm]Fermarli ed esser leali, siam [SOL]supere[DO]roi\n[DO]Il Patto che fu d'Israele a[SOL]desso è per [DO]noi\n[FA]Luce Promessa ci gui[SOL]derà\n[DO]Di questa natura perfetta [SOL]custodi noi [DO]siam\n[LAm]Un leccio, una quercia, un ruscello ed un [SOL]falco lib[DO]rar\n[DO]Fratello e Sorella insieme in [SOL]volo e a [DO]cacciar\n[FA]Questo ricordo non sva[SOL]nirà\n---\n{rit}\n[DO]La forza del lupo in tutto il [SOL]branco sa[DO]rà\n[LAm]Se voli con una sorella più in [SOL]alto si an[DO]drà\n[DO]In questa terra incantata siam [SOL]pronti a so[DO]gnar\n[FA]E scopri in fondo al tuo [SOL]cuore la Feli[DO]cità\n[FA]Lalalalalala[SOL]....[DO]\n[FA]Lalalalalala[SOL]....[DO]"
+  },
+  {
+    "titolo": "Montenerone – I 4 elementi (The Last Airbender)",
+    "anno": 2024,
+    "luogo": "Monte Nerone",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]E su quel monte là, ci [SOL]son nuove terre [LAm]qui per [FA]noi\n[DO]Un ragazzo nel ghiaccio poi, il [SOL]viaggio ini[LAm]zie[FA]rà.\n[DO]Acqua, terra Fuoco e [SOL]Aria, domi[LAm]nere[FA]mo\n[DO]E Con Aang ed Appa insieme, la [SOL]pace tor[LAm]ne[FA]rà.\n---\n{rit}\n[DO]Cocci la Lanterna brillerà, [SOL]con la vera [LAm]Gio[FA]ia\n[DO]Lupo sulla Pista caccerai, [SOL]dalla Rupe [LAm]Ulu[FA]la.\n---\n[DO]Dove mistero c'è, la Misteri & [SOL]Affini è lì [LAm]per [FA]te\n[DO]Ogni maschera facciam cadere, [SOL]luce porte[LAm]re[FA]mo.\n[DO]Beatitudine vivremo, il [SOL]volto di [LAm]Ge[FA]sù\n[DO]E questo l'ho scoperto grazie, sì [SOL]grazie a [LAm]Scooby-[FA]Doo.\n---\n{rit}\n[DO]Cocci la Lanterna brillerà, [SOL]con la vera [LAm]Gio[FA]ia\n[DO]Lupo sulla Pista caccerai, [SOL]dalla Rupe [LAm]Ulu[FA]la.\n---\n[DO]Con Appa insieme ad Aang, il [SOL]vento sof[LAm]fie[FA]rà\n[DO]Sconfigger Barbablù, in[SOL]sieme a [LAm]Scooby-[FA]Doo.\n[DO]La tua pista e il tuo sentiero, un [SOL]giorno fi[LAm]ni[FA]rà\n[DO]Ma nel cuore tuo davvero, il [SOL]ricordo res[LAm]te[FA]rà.\n---\n{rit}\n[DO]Cocci la Lanterna brillerà, [SOL]con la vera [LAm]Gio[FA]ia\n[DO]Lupo sulla Pista caccerai, [SOL]dalla Rupe [LAm]Ulu[FA]la."
+  },
+  {
+    "titolo": "A Brittoli ritornerò…",
+    "anno": 2025,
+    "luogo": "Brittoli",
+    "tonalita": "DO",
+    "branca": "L/C",
+    "sede": [
+      "Selva Candida"
+    ],
+    "testo_accordi": "[DO]Il bosco che ci accoglie\n[FA]È dono del creato\n[DO]La melodia si sente [SOL]già\n[DO]Tra danze e giochi insieme\n[FA]Noi ci divertiamo\n[DO]Cantando la felici[SOL]tà\n[DO]Cerca il bello non fermarti\n[FA]Sotto il cielo, guarda avanti\n[DO]Ama la tua uni[SOL]cità\n---\n{rit}\n[DO]Io seguirò\n[FA]La Pista e il Sentiero\n[DO]Così scoprirò.... Sì!\n[SOL]Come donarmi per davvero\n[DO]Eeeee [FA]incontrerò\n[DO]Nella palude\n[SOL]Un orco che non è per[DO]fetto...\nShrek!\n---\n[DO]Alza gli occhi al cielo\n[FA]La Candida Luna\n[DO]La tua caccia guide[SOL]rà\n[DO]Spiega le ali Cocci\n[FA]Spinta da quel vento\n[DO]Ed eccomi sussure[SOL]rai\n[DO]Corri avanti, non fermarti\n[FA]Suoi tuoi passi non voltarti\n[DO]Sul sentier ci rive[SOL]drem\n---\n{rit x2}\n[DO]Io seguirò\n[FA]La Pista e il Sentiero\n[DO]Così scoprirò.... Sì!\n[SOL]Come donarmi per davvero\n[DO]Eeeee [FA]incontrerò\n[DO]Nella palude\n[SOL]Un orco che non è per[DO]fetto...\nShrek!"
   }
 ]
