@@ -112,6 +112,11 @@
     align-items:center;
     justify-content:space-between;
   }
+  .app-header.sticky{
+    position:sticky;
+    top:0;
+    z-index:15;
+  }
   .header-spacer{ width:44px; flex-shrink:0; }
   .brand-text-center{ flex:1; text-align:center; }
   .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
@@ -146,7 +151,10 @@
   .search-box{
     display:flex; align-items:center; gap:8px;
     background:var(--neutral); border-radius:12px; padding:10px 14px; margin-bottom:12px;
+    position:sticky; top:0; z-index:5;
+    transition:box-shadow 0.25s ease;
   }
+  .search-box.stuck{ box-shadow:0 6px 14px rgba(28,28,30,0.10); }
   .search-box i{ color:var(--ink-soft); font-size:17px; }
   .search-box input{
     border:none; background:transparent; flex:1; font-size:14.5px;
@@ -567,6 +575,7 @@ function groupSongs(list){
 }
 
 function renderHeaderBrand(){
+  appHeader.classList.add("sticky");
   appHeader.innerHTML = `
     <div class="header-spacer"></div>
     <div class="brand-text-center">
@@ -578,6 +587,7 @@ function renderHeaderBrand(){
 }
 
 function renderHeaderBack(){
+  appHeader.classList.remove("sticky");
   appHeader.innerHTML = `
     <button class="header-back-btn" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.arrowBack(20)}</button>
     <div class="brand-text-center">
@@ -635,24 +645,28 @@ function showList(){
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   if(SONGS.length === 0){
-    content.innerHTML = '<div class="card"><p class="list-title">Canzoni</p><div class="empty">Nessuna canzone trovata.</div></div>';
+    content.innerHTML = '<div class="card"><div class="empty">Nessuna canzone trovata.</div></div>';
     return;
   }
   const card = document.createElement("div");
   card.className = "card";
 
-  const title = document.createElement("p");
-  title.className = "list-title";
-  title.textContent = SONGS.length === 1 ? "1 canzone" : SONGS.length + " canzoni";
-  card.appendChild(title);
-
   const searchBox = document.createElement("div");
   searchBox.className = "search-box";
+  searchBox.style.top = (appHeader.offsetHeight + 12) + "px";
   searchBox.innerHTML = `
     ${ICONS.search(17)}
     <input type="text" id="searchInput" placeholder="Cerca titolo, luogo, branca, testo..." value="${searchQuery.replace(/"/g, "&quot;")}">
   `;
   card.appendChild(searchBox);
+
+  const searchSentinel = document.createElement("div");
+  searchSentinel.style.cssText = "height:1px;";
+  searchBox.before(searchSentinel);
+  new IntersectionObserver(
+    ([entry]) => searchBox.classList.toggle("stuck", !entry.isIntersecting),
+    { threshold: 1 }
+  ).observe(searchSentinel);
 
   const sortRow = document.createElement("div");
   sortRow.className = "sort-row";
