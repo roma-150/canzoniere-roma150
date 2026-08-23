@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Canzoniere Roma 150</title>
+<meta name="theme-color" content="#3B2065">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --purple:#3B2065;
+    --cream:#F4F1EC;
+    --white:#FFFFFF;
+    --ink:#1B1B1F;
+    --ink-soft:#6B6B70;
+    --blue:#3556D8;
+    --green:#1E8E3E;
+    --green-tint-a:#EAF7EE;
+    --green-tint-b:#F5FBF0;
+    --amber:#A9720B;
+    --amber-tint:#FBF2DC;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    background:var(--cream);
+    min-height:100vh;
+  }
+  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:60px; }
+
+  .app-header{
+    background:var(--purple);
+    color:var(--white);
+    padding:20px 20px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-icon{
+    width:44px; height:44px; border-radius:14px;
+    background:rgba(255,255,255,0.14);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+  }
+  .brand-text .name{ font-size:18px; font-weight:800; letter-spacing:0.01em; }
+  .brand-text .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px;}
+
+  .content{ padding:18px 16px 0; flex:1; }
+
+  .card{
+    background:var(--white);
+    border-radius:24px;
+    padding:22px 20px;
+    box-shadow:0 4px 20px rgba(30,20,50,0.06);
+    margin-bottom:16px;
+  }
+
+  /* elenco */
+  .back-link{
+    display:inline-flex; align-items:center; gap:4px;
+    color:var(--purple); font-weight:700; font-size:14px;
+    background:none; border:none; padding:0 0 14px; cursor:pointer;
+  }
+  .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
+  .song-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 4px;
+    border-bottom:1px solid #F0EDE6;
+    cursor:pointer;
+  }
+  .song-row:last-child{ border-bottom:none; }
+  .song-row .row-title{ font-size:16px; font-weight:700; color:var(--ink); }
+  .song-row .row-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .song-row i{ color:var(--ink-soft); font-size:18px; }
+
+  /* dettaglio */
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .song-title{ font-size:23px; font-weight:800; color:var(--ink); line-height:1.25; margin:0; }
+  .song-meta{ font-size:13px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+
+  .pill-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--blue); color:var(--white); border:none;
+    font-size:13.5px; font-weight:700; padding:10px 16px; border-radius:999px;
+    cursor:pointer; white-space:nowrap; flex-shrink:0;
+  }
+  .pill-btn.active{ background:var(--purple); }
+  .pill-btn i{ font-size:16px; }
+
+  .key-tile{
+    position:relative; margin-top:18px;
+    background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b));
+    border-radius:20px; padding:18px 20px 20px;
+  }
+  .key-tile .label{ font-size:13.5px; font-weight:700; color:#3F7A50; }
+  .key-tile .value{ font-size:36px; font-weight:800; color:var(--green); margin-top:6px; line-height:1; }
+  .key-controls{ position:absolute; top:16px; right:16px; display:flex; gap:8px; }
+  .key-controls button{
+    width:34px; height:34px; border-radius:50%; border:1.5px solid var(--green);
+    background:var(--white); color:var(--green); font-size:18px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .key-controls button:active{ background:var(--green-tint-a); }
+
+  .verse{ margin-bottom:22px; }
+  .verse:last-child{ margin-bottom:0; }
+  .verse.chorus{ background:var(--amber-tint); border-radius:16px; padding:14px 16px 12px; }
+  .refrain-tag{
+    display:inline-block; font-size:11px; font-weight:800; letter-spacing:0.04em;
+    text-transform:uppercase; color:var(--white); background:var(--amber);
+    border-radius:999px; padding:4px 10px; margin-bottom:8px;
+  }
+  .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
+  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; }
+  .chord{ display:block; height:17px; line-height:17px; font-size:13px; font-weight:800; color:var(--blue); white-space:nowrap; }
+  .verse.chorus .chord{ color:var(--amber); }
+  .lyric{ display:block; white-space:pre; font-size:16.5px; line-height:1.55; color:var(--ink); }
+
+  .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
+  footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-music"></i></div>
+      <div class="brand-text">
+        <div class="name">Canzoniere</div>
+        <div class="sub">Roma 150</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" id="content"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
+const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
+
+function transposeChord(chord, semitones){
+  const m = chord.match(NOTE_RE);
+  if(!m) return chord;
+  const root = m[1] + (m[2] || "");
+  const suffix = m[3] || "";
+  const idx = CHROMATIC.indexOf(root);
+  if(idx === -1) return chord;
+  const newIdx = ((idx + semitones) % 12 + 12) % 12;
+  return CHROMATIC[newIdx] + suffix;
+}
+
+function isChorusText(text){
+  return text.trim() === "RIT." || /^\[?[A-Z#]*\]?Pronti all'arrembaggio/.test(text.trim());
+}
+
+function renderBlock(text, semitones){
+  if(text.trim() === "RIT."){
+    const el = document.createElement("div");
+    el.className = "verse chorus";
+    el.innerHTML = '<span class="refrain-tag">Ritornello</span>';
+    return el;
+  }
+  const block = document.createElement("div");
+  const chorus = isChorusText(text);
+  block.className = "verse" + (chorus ? " chorus" : "");
+  if(chorus){
+    const tag = document.createElement("span");
+    tag.className = "refrain-tag";
+    tag.textContent = "Ritornello";
+    block.appendChild(tag);
+  }
+  text.split("\n").forEach(rawLine => {
+    const lineEl = document.createElement("div");
+    lineEl.className = "line";
+    const regex = /\[([^\]]+)\]/g;
+    let lastIndex = 0, match, hadChord = false;
+    while((match = regex.exec(rawLine)) !== null){
+      hadChord = true;
+      const before = rawLine.slice(lastIndex, match.index);
+      if(before){
+        const span = document.createElement("span");
+        span.className = "pair";
+        span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${before}</span>`;
+        lineEl.appendChild(span);
+      }
+      lastIndex = regex.lastIndex;
+      const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
+      const lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
+      const pair = document.createElement("span");
+      pair.className = "pair";
+      const chordName = transposeChord(match[1], semitones);
+      pair.innerHTML = `<span class="chord">${chordName}</span><span class="lyric">${lyricAfter || "\u00A0"}</span>`;
+      lineEl.appendChild(pair);
+      lastIndex += lyricAfter.length;
+      regex.lastIndex = lastIndex;
+    }
+    if(!hadChord){
+      const span = document.createElement("span");
+      span.className = "pair";
+      span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${rawLine || "\u00A0"}</span>`;
+      lineEl.appendChild(span);
+    } else if(lastIndex < rawLine.length){
+      const span = document.createElement("span");
+      span.className = "pair";
+      span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${rawLine.slice(lastIndex)}</span>`;
+      lineEl.appendChild(span);
+    }
+    block.appendChild(lineEl);
+  });
+  return block;
+}
+
+let SONGS = [];
+const content = document.getElementById("content");
+const footer = document.getElementById("footer");
+
+function metaLine(song){
+  const parts = [song.anno, song.luogo, song.branca];
+  if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
+  return parts.filter(Boolean).join(" · ");
+}
+
+function showList(){
+  footer.textContent = "";
+  if(SONGS.length === 0){
+    content.innerHTML = '<div class="card"><p class="list-title">Canzoni</p><div class="empty">Nessuna canzone trovata.</div></div>';
+    return;
+  }
+  const card = document.createElement("div");
+  card.className = "card";
+  const title = document.createElement("p");
+  title.className = "list-title";
+  title.textContent = SONGS.length === 1 ? "1 canzone" : SONGS.length + " canzoni";
+  card.appendChild(title);
+
+  SONGS.forEach((song, i) => {
+    const row = document.createElement("div");
+    row.className = "song-row";
+    row.innerHTML = `
+      <div>
+        <div class="row-title">${song.titolo}</div>
+        <div class="row-meta">${metaLine(song)}</div>
+      </div>
+      <i class="ti ti-chevron-right"></i>
+    `;
+    row.addEventListener("click", () => showDetail(i));
+    card.appendChild(row);
+  });
+
+  content.innerHTML = "";
+  content.appendChild(card);
+}
+
+function showDetail(index){
+  const song = SONGS[index];
+  let semitones = 0;
+
+  content.innerHTML = "";
+
+  const back = document.createElement("button");
+  back.className = "back-link";
+  back.innerHTML = '<i class="ti ti-chevron-left"></i> Canzoni';
+  back.addEventListener("click", showList);
+  content.appendChild(back);
+
+  const card1 = document.createElement("div");
+  card1.className = "card";
+  card1.innerHTML = `
+    <div class="card-top">
+      <div>
+        <p class="song-title">${song.titolo}</p>
+        <p class="song-meta">${metaLine(song)}</p>
+      </div>
+      <button class="pill-btn" id="scrollToggle"><i class="ti ti-player-play"></i>Scorri</button>
+    </div>
+    <div class="key-tile">
+      <div class="label">Tonalità</div>
+      <div class="value" id="currentKey">${song.tonalita}</div>
+      <div class="key-controls">
+        <button id="down" aria-label="Trasponi giù">–</button>
+        <button id="up" aria-label="Trasponi su">+</button>
+      </div>
+    </div>
+  `;
+  content.appendChild(card1);
+
+  const card2 = document.createElement("div");
+  card2.className = "card";
+  const body = document.createElement("div");
+  card2.appendChild(body);
+  content.appendChild(card2);
+
+  function render(){
+    body.innerHTML = "";
+    const blocks = song.testo_accordi.split(/\n===\n/);
+    blocks.forEach(b => {
+      b.split(/\n---\n/).forEach(sub => body.appendChild(renderBlock(sub, semitones)));
+    });
+    document.getElementById("currentKey").textContent = transposeChord(song.tonalita, semitones);
+  }
+
+  document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
+  document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
+
+  let scrolling = false;
+  let scrollInterval = null;
+  const scrollBtn = document.getElementById("scrollToggle");
+  scrollBtn.addEventListener("click", () => {
+    scrolling = !scrolling;
+    scrollBtn.classList.toggle("active", scrolling);
+    scrollBtn.innerHTML = scrolling ? '<i class="ti ti-player-pause"></i>Pausa' : '<i class="ti ti-player-play"></i>Scorri';
+    if(scrolling){
+      scrollInterval = setInterval(() => {
+        window.scrollBy({top: 1, behavior: "auto"});
+        if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
+          scrolling = false;
+          scrollBtn.classList.remove("active");
+          scrollBtn.innerHTML = '<i class="ti ti-player-play"></i>Scorri';
+          clearInterval(scrollInterval);
+        }
+      }, 60);
+    } else {
+      clearInterval(scrollInterval);
+    }
+  });
+
+  render();
+  footer.textContent = "Trasposizione automatica · tonalità originale " + song.tonalita;
+}
+
+fetch("songs.json")
+  .then(r => r.json())
+  .then(data => { SONGS = data; showList(); })
+  .catch(() => {
+    content.innerHTML = '<div class="card"><div class="empty">Impossibile caricare le canzoni. Controlla la connessione e riprova.</div></div>';
+  });
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
