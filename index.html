@@ -32,7 +32,45 @@
     background:var(--cream);
     min-height:100vh;
   }
-  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:60px; }
+  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; }
+
+  .bottom-nav{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    width:calc(100% - 32px); max-width:398px;
+    display:flex;
+    background:rgba(255,255,255,0.68);
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    border:1px solid rgba(255,255,255,0.5);
+    border-radius:26px;
+    padding:9px 6px;
+    box-shadow:0 8px 28px rgba(30,20,50,0.14);
+    z-index:20;
+    transition:opacity 0.15s ease, transform 0.15s ease;
+  }
+  .bottom-nav.hidden{
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(-50%) translateY(12px);
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; cursor:pointer; color:var(--ink-soft);
+    padding:6px 0 2px;
+  }
+  .nav-item i{ font-size:21px; }
+  .nav-item span{ font-size:10.5px; font-weight:700; }
+  .nav-item.active{ color:var(--purple); }
+
+  .placeholder-card{ text-align:center; padding:36px 20px; }
+  .placeholder-icon{
+    width:56px; height:56px; border-radius:16px; margin:0 auto 14px;
+    background:#F2EFE7; color:var(--purple); font-size:26px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .placeholder-card h2{ font-size:17px; font-weight:800; margin:0 0 6px; }
+  .placeholder-card p{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin:0; }
 
   .app-header{
     background:var(--purple);
@@ -51,6 +89,22 @@
   }
   .brand-text .name{ font-size:18px; font-weight:800; letter-spacing:0.01em; }
   .brand-text .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px;}
+  .header-back{ display:flex; align-items:center; gap:12px; cursor:pointer; background:none; border:none; color:var(--white); padding:0; }
+  .header-back .back-icon{
+    width:44px; height:44px; border-radius:14px;
+    background:rgba(255,255,255,0.14);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+  }
+  .header-back .back-text{ font-size:16px; font-weight:700; }
+  .header-home{
+    width:44px; height:44px; border-radius:14px;
+    background:rgba(255,255,255,0.14);
+    border:none; color:var(--white); font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .header-home:active{ background:rgba(255,255,255,0.24); }
 
   .content{ padding:18px 16px 0; flex:1; }
 
@@ -69,6 +123,41 @@
     background:none; border:none; padding:0 0 14px; cursor:pointer;
   }
   .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
+
+  .search-box{
+    display:flex; align-items:center; gap:8px;
+    background:#F2EFE7; border-radius:12px; padding:10px 14px; margin-bottom:12px;
+  }
+  .search-box i{ color:var(--ink-soft); font-size:17px; }
+  .search-box input{
+    border:none; background:transparent; flex:1; font-size:14.5px;
+    color:var(--ink); outline:none; font-family:inherit;
+  }
+  .search-box input::placeholder{ color:var(--ink-soft); }
+
+  .sort-row{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .segmented{
+    display:flex; background:#F2EFE7; border-radius:12px; padding:3px; flex:1;
+  }
+  .segmented button{
+    flex:1; border:none; background:transparent; border-radius:9px;
+    padding:8px 10px; font-size:13.5px; font-weight:700; color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .segmented button.active{ background:var(--white); color:var(--purple); box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+  .dir-btn{
+    width:38px; height:38px; border-radius:12px; border:none;
+    background:#F2EFE7; color:var(--ink-soft); font-size:17px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .dir-btn:active{ background:#E8E3D6; }
+
+  .group-divider{
+    font-size:12px; font-weight:800; color:var(--ink-soft);
+    background:#F2EFE7; padding:6px 20px; margin:16px -20px 2px;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .group-divider:first-of-type{ margin-top:10px; }
   .song-row{
     display:flex; align-items:center; justify-content:space-between;
     padding:14px 4px;
@@ -130,19 +219,18 @@
 <body>
 <div class="phone">
 
-  <div class="app-header">
-    <div class="brand">
-      <div class="brand-icon"><i class="ti ti-music"></i></div>
-      <div class="brand-text">
-        <div class="name">Canzoniere</div>
-        <div class="sub">Roma 150</div>
-      </div>
-    </div>
-  </div>
+  <div class="app-header" id="appHeader"></div>
 
   <div class="content" id="content"></div>
 
   <footer id="footer"></footer>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-tab="canzoni"><i class="ti ti-music"></i><span>Canzoni</span></button>
+    <button class="nav-item" data-tab="categorie"><i class="ti ti-tags"></i><span>Categorie</span></button>
+    <button class="nav-item" data-tab="canzonieri"><i class="ti ti-books"></i><span>Canzonieri</span></button>
+    <button class="nav-item" data-tab="scalette"><i class="ti ti-list-check"></i><span>Scalette</span></button>
+  </div>
 </div>
 
 <script>
@@ -222,8 +310,129 @@ function renderBlock(text, semitones){
 }
 
 let SONGS = [];
+let sortMode = "alpha"; // "alpha" | "anno"
+let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
+let searchQuery = "";
+let currentTab = "canzoni";
 const content = document.getElementById("content");
 const footer = document.getElementById("footer");
+const appHeader = document.getElementById("appHeader");
+const bottomNav = document.getElementById("bottomNav");
+
+const TAB_PLACEHOLDERS = {
+  categorie: {
+    icon: "ti-tags",
+    title: "Categorie",
+    text: "Presto potrai sfogliare le canzoni per Branca, Sede e Luogo direttamente da qui."
+  },
+  canzonieri: {
+    icon: "ti-books",
+    title: "Canzonieri",
+    text: "Qui potrai raccogliere le canzoni in canzonieri personalizzati, ad esempio per campi o eventi."
+  },
+  scalette: {
+    icon: "ti-list-check",
+    title: "Scalette",
+    text: "Qui potrai creare scalette ordinate di canzoni per veglie, fuochi e momenti speciali."
+  }
+};
+
+function setActiveTab(tab){
+  currentTab = tab;
+  bottomNav.classList.remove("hidden");
+  bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+}
+
+function showTab(tab){
+  setActiveTab(tab);
+  if(tab === "canzoni"){
+    showList();
+    return;
+  }
+  renderHeaderBrand();
+  footer.textContent = "";
+  const p = TAB_PLACEHOLDERS[tab];
+  content.innerHTML = `
+    <div class="card placeholder-card">
+      <div class="placeholder-icon"><i class="ti ${p.icon}"></i></div>
+      <h2>${p.title}</h2>
+      <p>${p.text}</p>
+    </div>
+  `;
+}
+
+bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => showTab(btn.dataset.tab));
+});
+
+function matchesSearch(song, query){
+  if(!query) return true;
+  const q = query.toLowerCase();
+  const plainLyrics = (song.testo_accordi || "").replace(/\[[^\]]+\]/g, " ").toLowerCase();
+  const sede = (song.sede || []).join(" ").toLowerCase();
+  return (
+    (song.titolo || "").toLowerCase().includes(q) ||
+    (song.luogo || "").toLowerCase().includes(q) ||
+    (song.branca || "").toLowerCase().includes(q) ||
+    sede.includes(q) ||
+    plainLyrics.includes(q)
+  );
+}
+
+function groupSongs(list){
+  const sorted = [...list].sort((a, b) => {
+    if(sortMode === "alpha"){
+      return a.titolo.localeCompare(b.titolo, "it", { sensitivity: "base" }) * sortDir;
+    }
+    return (a.anno - b.anno) * sortDir;
+  });
+
+  const groups = [];
+  let lastKey = null;
+  sorted.forEach(song => {
+    let key;
+    if(sortMode === "alpha"){
+      key = (song.titolo.trim()[0] || "#").toUpperCase();
+    } else {
+      const decade = Math.floor(song.anno / 10) * 10;
+      key = "Anni " + decade;
+    }
+    if(key !== lastKey){
+      groups.push({ key, songs: [] });
+      lastKey = key;
+    }
+    groups[groups.length - 1].songs.push(song);
+  });
+  return groups;
+}
+
+function renderHeaderBrand(){
+  appHeader.innerHTML = `
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-music"></i></div>
+      <div class="brand-text">
+        <div class="name">Canzoniere</div>
+        <div class="sub">Roma 150</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderHeaderBack(){
+  appHeader.innerHTML = `
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-music"></i></div>
+      <div class="brand-text">
+        <div class="name">Canzoniere</div>
+        <div class="sub">Roma 150</div>
+      </div>
+    </div>
+    <button class="header-home" id="headerHome" aria-label="Torna all'elenco canzoni"><i class="ti ti-home"></i></button>
+  `;
+  document.getElementById("headerHome").addEventListener("click", showList);
+}
 
 function metaLine(song){
   const parts = [song.anno, song.luogo, song.branca];
@@ -231,7 +440,42 @@ function metaLine(song){
   return parts.filter(Boolean).join(" · ");
 }
 
+function renderResults(card){
+  let results = card.querySelector("#resultsArea");
+  results.innerHTML = "";
+
+  const filtered = SONGS.filter(song => matchesSearch(song, searchQuery));
+
+  if(filtered.length === 0){
+    results.innerHTML = `<div class="empty">Nessuna canzone trovata per "${searchQuery}".</div>`;
+    return;
+  }
+
+  groupSongs(filtered).forEach(group => {
+    const divider = document.createElement("div");
+    divider.className = "group-divider";
+    divider.textContent = group.key;
+    results.appendChild(divider);
+
+    group.songs.forEach(song => {
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div>
+          <div class="row-title">${song.titolo}</div>
+          <div class="row-meta">${metaLine(song)}</div>
+        </div>
+        <i class="ti ti-chevron-right"></i>
+      `;
+      row.addEventListener("click", () => showDetail(SONGS.indexOf(song)));
+      results.appendChild(row);
+    });
+  });
+}
+
 function showList(){
+  renderHeaderBrand();
+  bottomNav.classList.remove("hidden");
   footer.textContent = "";
   if(SONGS.length === 0){
     content.innerHTML = '<div class="card"><p class="list-title">Canzoni</p><div class="empty">Nessuna canzone trovata.</div></div>';
@@ -239,40 +483,58 @@ function showList(){
   }
   const card = document.createElement("div");
   card.className = "card";
+
   const title = document.createElement("p");
   title.className = "list-title";
   title.textContent = SONGS.length === 1 ? "1 canzone" : SONGS.length + " canzoni";
   card.appendChild(title);
 
-  SONGS.forEach((song, i) => {
-    const row = document.createElement("div");
-    row.className = "song-row";
-    row.innerHTML = `
-      <div>
-        <div class="row-title">${song.titolo}</div>
-        <div class="row-meta">${metaLine(song)}</div>
-      </div>
-      <i class="ti ti-chevron-right"></i>
-    `;
-    row.addEventListener("click", () => showDetail(i));
-    card.appendChild(row);
-  });
+  const searchBox = document.createElement("div");
+  searchBox.className = "search-box";
+  searchBox.innerHTML = `
+    <i class="ti ti-search"></i>
+    <input type="text" id="searchInput" placeholder="Cerca titolo, luogo, branca, testo..." value="${searchQuery.replace(/"/g, "&quot;")}">
+  `;
+  card.appendChild(searchBox);
+
+  const sortRow = document.createElement("div");
+  sortRow.className = "sort-row";
+  sortRow.innerHTML = `
+    <div class="segmented">
+      <button id="sortAlpha" class="${sortMode === "alpha" ? "active" : ""}">A-Z</button>
+      <button id="sortAnno" class="${sortMode === "anno" ? "active" : ""}">Anno</button>
+    </div>
+    <button class="dir-btn" id="dirToggle" aria-label="Inverti ordine">
+      <i class="ti ${sortDir === 1 ? "ti-sort-ascending" : "ti-sort-descending"}"></i>
+    </button>
+  `;
+  card.appendChild(sortRow);
+
+  const results = document.createElement("div");
+  results.id = "resultsArea";
+  card.appendChild(results);
 
   content.innerHTML = "";
   content.appendChild(card);
+
+  card.querySelector("#searchInput").addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    renderResults(card);
+  });
+  sortRow.querySelector("#sortAlpha").addEventListener("click", () => { sortMode = "alpha"; showList(); });
+  sortRow.querySelector("#sortAnno").addEventListener("click", () => { sortMode = "anno"; showList(); });
+  sortRow.querySelector("#dirToggle").addEventListener("click", () => { sortDir *= -1; showList(); });
+
+  renderResults(card);
 }
 
 function showDetail(index){
   const song = SONGS[index];
   let semitones = 0;
 
+  renderHeaderBack();
+  bottomNav.classList.add("hidden");
   content.innerHTML = "";
-
-  const back = document.createElement("button");
-  back.className = "back-link";
-  back.innerHTML = '<i class="ti ti-chevron-left"></i> Canzoni';
-  back.addEventListener("click", showList);
-  content.appendChild(back);
 
   const card1 = document.createElement("div");
   card1.className = "card";
@@ -338,6 +600,9 @@ function showDetail(index){
   render();
   footer.textContent = "Trasposizione automatica · tonalità originale " + song.tonalita;
 }
+
+renderHeaderBrand();
+setActiveTab("canzoni");
 
 fetch("songs.json")
   .then(r => r.json())
