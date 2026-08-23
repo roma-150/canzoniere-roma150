@@ -9,6 +9,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
   :root{
+    --text-scale:1;
     --purple:#381E60;
     --gold:#D89B00;
     --green:#00AE04;
@@ -111,33 +112,18 @@
     align-items:center;
     justify-content:space-between;
   }
-  .brand{ display:flex; align-items:center; gap:12px; }
-  .brand-icon{
-    width:44px; height:44px; border-radius:14px;
-    background:#FFFFFF;
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-    padding:4px;
-  }
-  .brand-icon img{ width:100%; height:100%; object-fit:contain; }
-  .brand-text .name{ font-size:18px; font-weight:800; letter-spacing:0.01em; }
-  .brand-text .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px;}
-  .header-back{ display:flex; align-items:center; gap:12px; cursor:pointer; background:none; border:none; color:var(--white); padding:0; }
-  .header-back .back-icon{
-    width:44px; height:44px; border-radius:14px;
-    background:rgba(255,255,255,0.14);
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px;
-  }
-  .header-back .back-text{ font-size:16px; font-weight:700; }
-  .header-home{
+  .header-spacer{ width:44px; flex-shrink:0; }
+  .brand-text-center{ flex:1; text-align:center; }
+  .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
+  .brand-text-center .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px; }
+  .header-back-btn{
     width:44px; height:44px; border-radius:14px;
     background:rgba(255,255,255,0.14);
     border:none; color:var(--white); font-size:20px;
     display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
+    cursor:pointer; flex-shrink:0;
   }
-  .header-home:active{ background:rgba(255,255,255,0.24); }
+  .header-back-btn:active{ background:rgba(255,255,255,0.24); }
 
   .content{ padding:18px 16px 0; flex:1; }
 
@@ -217,20 +203,34 @@
   .pill-btn.active{ background:var(--purple); }
   .pill-btn i{ font-size:16px; }
 
-  .key-tile{
-    position:relative; margin-top:18px;
-    background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b));
-    border-radius:20px; padding:18px 20px 20px;
+  .tile-row{ display:flex; gap:8px; margin-top:18px; }
+  .mini-tile{
+    flex:1; min-width:0; border-radius:18px;
+    padding:12px 8px 10px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
   }
-  .key-tile .label{ font-size:13.5px; font-weight:700; color:#3F7A50; }
-  .key-tile .value{ font-size:36px; font-weight:800; color:var(--green); margin-top:6px; line-height:1; }
-  .key-controls{ position:absolute; top:16px; right:16px; display:flex; gap:8px; }
-  .key-controls button{
-    width:34px; height:34px; border-radius:50%; border:1.5px solid var(--green);
-    background:var(--white); color:var(--green); font-size:18px; font-weight:700;
-    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  .mini-tile .label{ font-size:11px; font-weight:700; }
+
+  .key-tile{ background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b)); }
+  .key-tile .label{ color:#3F7A50; }
+  .key-row{ display:flex; align-items:center; gap:6px; margin-top:5px; }
+  .key-row .value{ font-size:19px; font-weight:800; color:var(--green); min-width:34px; }
+  .key-row button{
+    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--green);
+    background:var(--white); color:var(--green); font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
-  .key-controls button:active{ background:var(--green-tint-a); }
+  .key-row button:active{ background:var(--green-tint-a); }
+
+  .fontsize-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
+  .fontsize-tile .label{ color:var(--ink-soft); }
+  .fontsize-tile .a-sample{ font-size:20px; font-weight:800; color:var(--purple); line-height:1; margin-top:6px; }
+  .fontsize-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
+
+  .scroll-tile{ background:var(--purple); cursor:pointer; user-select:none; color:var(--white); }
+  .scroll-tile .label{ color:rgba(255,255,255,0.75); }
+  .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; }
+  .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--white); margin-top:4px; min-height:13px; }
 
   .verse{ margin-bottom:22px; }
   .verse:last-child{ margin-bottom:0; }
@@ -241,10 +241,10 @@
     border-radius:999px; padding:4px 10px; margin-bottom:8px;
   }
   .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
-  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; }
-  .chord{ display:block; height:17px; line-height:17px; font-size:13px; font-weight:800; color:var(--gold); white-space:nowrap; }
+  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; }
+  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; }
   .verse.chorus .chord{ color:var(--amber); }
-  .lyric{ display:block; white-space:pre; font-size:16.5px; line-height:1.55; color:var(--ink); }
+  .lyric{ display:block; white-space:pre-wrap; overflow-wrap:break-word; font-size:calc(16.5px * var(--text-scale)); line-height:1.55; color:var(--ink); }
 
   .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
   footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
@@ -274,6 +274,7 @@ const ICONS = {
   music: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
   home: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>`,
   chevronRight: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 6l6 6-6 6"/></svg>`,
+  arrowBack: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
   tags: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 2H4v8l10 10 8-8L12 2z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
   books: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3.5" y="4" width="5" height="16"/><rect x="10.5" y="4" width="5" height="16"/><path d="M17.5 5.3l4 .9-3 14.7-4-.9z"/></svg>`,
   listCheck: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M3.5 6l1.3 1.3L7.5 4.5M3.5 12l1.3 1.3 2.7-2.8M3.5 18l1.3 1.3 2.7-2.8"/></svg>`,
@@ -282,7 +283,8 @@ const ICONS = {
   sortDesc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`,
   play: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>`,
   pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`,
-  arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`
+  arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`,
+  chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -364,6 +366,7 @@ let SONGS = [];
 let sortMode = "alpha"; // "alpha" | "anno"
 let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
 let searchQuery = "";
+let fontScaleIndex = 0;
 let currentTab = "canzoni";
 let inDetailView = false;
 const content = document.getElementById("content");
@@ -565,26 +568,23 @@ function groupSongs(list){
 
 function renderHeaderBrand(){
   appHeader.innerHTML = `
-    <div class="brand">
-      <div class="brand-icon"><img src="icons/logo-roma150.png" alt="Roma 150"></div>
-      <div class="brand-text">
-        <div class="name">Canzoniere</div>
-        <div class="sub">Roma 150</div>
-      </div>
+    <div class="header-spacer"></div>
+    <div class="brand-text-center">
+      <div class="name">Canzoniere di gruppo</div>
+      <div class="sub">Roma 150</div>
     </div>
+    <div class="header-spacer"></div>
   `;
 }
 
 function renderHeaderBack(){
   appHeader.innerHTML = `
-    <div class="brand">
-      <div class="brand-icon"><img src="icons/logo-roma150.png" alt="Roma 150"></div>
-      <div class="brand-text">
-        <div class="name">Canzoniere</div>
-        <div class="sub">Roma 150</div>
-      </div>
+    <button class="header-back-btn" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.arrowBack(20)}</button>
+    <div class="brand-text-center">
+      <div class="name">Canzoniere di gruppo</div>
+      <div class="sub">Roma 150</div>
     </div>
-    <button class="header-home" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.home(20)}</button>
+    <div class="header-spacer"></div>
   `;
   document.getElementById("headerHome").addEventListener("click", showList);
 }
@@ -700,21 +700,53 @@ function showDetail(index){
     <div class="card-top">
       <div>
         <p class="song-title">${song.titolo}</p>
-        <p class="song-meta">${[song.anno, song.luogo, song.branca].filter(Boolean).join(" · ")}</p>
-        ${(song.sede && song.sede.length) ? `<p class="song-meta sede-row">${song.sede.join(", ")}</p>` : ""}
+        <p class="song-meta">${metaLine(song)}</p>
       </div>
-      <button class="pill-btn" id="scrollToggle">${ICONS.play(15)}Scorri</button>
     </div>
-    <div class="key-tile">
-      <div class="label">Tonalità</div>
-      <div class="value" id="currentKey">${song.tonalita}</div>
-      <div class="key-controls">
-        <button id="down" aria-label="Trasponi giù">–</button>
-        <button id="up" aria-label="Trasponi su">+</button>
+    <div class="tile-row">
+      <div class="mini-tile key-tile">
+        <div class="label">Tono</div>
+        <div class="key-row">
+          <button id="down" aria-label="Trasponi giù">–</button>
+          <span class="value" id="currentKey">${song.tonalita}</span>
+          <button id="up" aria-label="Trasponi su">+</button>
+        </div>
+      </div>
+      <div class="mini-tile fontsize-tile" id="fontSizeTile">
+        <div class="label">Testo</div>
+        <div class="a-sample" id="aSample">A</div>
+        <div class="state-name" id="fontStateName">Normale</div>
+      </div>
+      <div class="mini-tile scroll-tile" id="scrollToggle">
+        <div class="label">Scorri</div>
+        <div class="scroll-icon" id="scrollIcon">${ICONS.play(20)}</div>
+        <div class="state-name" id="scrollStateName"></div>
       </div>
     </div>
   `;
   content.appendChild(card1);
+
+  const FONT_STATES = [
+    { name: "Normale", scale: 1 },
+    { name: "Grande", scale: 1.2 },
+    { name: "Molto grande", scale: 1.45 },
+    { name: "Piccolo", scale: 0.82 }
+  ];
+  const fontSizeTile = document.getElementById("fontSizeTile");
+  const aSample = document.getElementById("aSample");
+  const fontStateName = document.getElementById("fontStateName");
+
+  function applyFontState(){
+    const state = FONT_STATES[fontScaleIndex];
+    document.documentElement.style.setProperty("--text-scale", state.scale);
+    fontStateName.textContent = state.name;
+  }
+  applyFontState();
+
+  fontSizeTile.addEventListener("click", () => {
+    fontScaleIndex = (fontScaleIndex + 1) % FONT_STATES.length;
+    applyFontState();
+  });
 
   const card2 = document.createElement("div");
   card2.className = "card";
@@ -727,7 +759,7 @@ function showDetail(index){
   backBtn.style.width = "100%";
   backBtn.style.justifyContent = "center";
   backBtn.style.marginTop = "4px";
-  backBtn.innerHTML = `${ICONS.home(16)}Torna all'elenco`;
+  backBtn.innerHTML = `${ICONS.arrowBack(16)}Torna all'elenco`;
   backBtn.addEventListener("click", showList);
   content.appendChild(backBtn);
 
@@ -751,11 +783,14 @@ function showDetail(index){
   let speedIndex = -1; // -1 = fermo
   let scrollInterval = null;
   const scrollBtn = document.getElementById("scrollToggle");
+  const scrollIcon = document.getElementById("scrollIcon");
+  const scrollStateName = document.getElementById("scrollStateName");
 
   function stopScroll(){
     speedIndex = -1;
     scrollBtn.classList.remove("active");
-    scrollBtn.innerHTML = ICONS.play(15) + "Scorri";
+    scrollIcon.innerHTML = ICONS.play(20);
+    scrollStateName.textContent = "";
     clearInterval(scrollInterval);
   }
 
@@ -763,7 +798,8 @@ function showDetail(index){
     speedIndex = index;
     const speed = SCROLL_SPEEDS[speedIndex];
     scrollBtn.classList.add("active");
-    scrollBtn.innerHTML = ICONS.pause(15) + speed.label;
+    scrollIcon.innerHTML = ICONS.pause(20);
+    scrollStateName.textContent = speed.label;
     clearInterval(scrollInterval);
     scrollInterval = setInterval(() => {
       window.scrollBy({ top: speed.step, behavior: "auto" });
