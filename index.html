@@ -64,12 +64,20 @@
   .nav-pill{
     display:flex; flex-direction:column; align-items:center; gap:3px;
     padding:6px 10px 5px; border-radius:16px;
-    transition:background 0.25s ease, box-shadow 0.25s ease;
+    transition:background 0.25s ease, box-shadow 0.25s ease, transform 0.12s ease-out;
+    transform-origin:center bottom;
   }
   .nav-item i{ font-size:21px; }
   .nav-item span{ font-size:10.5px; font-weight:700; }
   .nav-item.active{ color:var(--purple); }
   .nav-item.active .nav-pill{
+    background:rgba(56,30,96,0.14);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 3px rgba(56,30,96,0.15);
+  }
+  .bottom-nav.dragging .nav-item.active{ color:#8E8E93; }
+  .bottom-nav.dragging .nav-item.active .nav-pill{ background:transparent; box-shadow:none; }
+  .nav-item.drag-preview{ color:var(--purple); }
+  .nav-item.drag-preview .nav-pill{
     background:rgba(56,30,96,0.14);
     box-shadow:inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 3px rgba(56,30,96,0.15);
   }
@@ -423,6 +431,82 @@ function showTab(tab){
 bottomNav.querySelectorAll(".nav-item").forEach(btn => {
   btn.addEventListener("click", () => showTab(btn.dataset.tab));
 });
+
+// Effetto lente/magnete al tocco prolungato, stile Dock
+(function initMagnifierNav(){
+  const bottoni = Array.from(bottomNav.querySelectorAll(".nav-item"));
+  let pressando = false;
+
+  function trovaBottonePiuVicino(clientX){
+    let btnPiuVicino = null, distanzaMinima = Infinity;
+    bottoni.forEach(btn => {
+      const rect = btn.getBoundingClientRect();
+      const centro = rect.left + rect.width / 2;
+      const distanza = Math.abs(clientX - centro);
+      if(distanza < distanzaMinima){ distanzaMinima = distanza; btnPiuVicino = btn; }
+    });
+    return btnPiuVicino;
+  }
+
+  function aggiornaMagnificazione(clientX){
+    bottoni.forEach(btn => {
+      const rect = btn.getBoundingClientRect();
+      const centro = rect.left + rect.width / 2;
+      const distanza = Math.abs(clientX - centro);
+      const raggio = 90;
+      const scala = distanza < raggio ? 1 + (1 - distanza / raggio) * 0.525 : 1;
+      const pill = btn.querySelector(".nav-pill");
+      if(pill) pill.style.transform = "scale(" + scala.toFixed(3) + ")";
+    });
+  }
+
+  function resetMagnificazione(){
+    bottoni.forEach(btn => {
+      const pill = btn.querySelector(".nav-pill");
+      if(pill) pill.style.transform = "";
+    });
+  }
+
+  function aggiornaAnteprimaSelezione(clientX){
+    const vicino = trovaBottonePiuVicino(clientX);
+    bottoni.forEach(btn => btn.classList.toggle("drag-preview", btn === vicino));
+  }
+
+  function pulisciAnteprimaSelezione(){
+    bottoni.forEach(btn => btn.classList.remove("drag-preview"));
+  }
+
+  bottomNav.addEventListener("touchstart", (e) => {
+    pressando = true;
+    bottomNav.classList.add("dragging");
+    aggiornaMagnificazione(e.touches[0].clientX);
+    aggiornaAnteprimaSelezione(e.touches[0].clientX);
+  }, { passive: true });
+
+  bottomNav.addEventListener("touchmove", (e) => {
+    if(!pressando) return;
+    aggiornaMagnificazione(e.touches[0].clientX);
+    aggiornaAnteprimaSelezione(e.touches[0].clientX);
+  }, { passive: true });
+
+  bottomNav.addEventListener("touchend", (e) => {
+    if(!pressando) return;
+    pressando = false;
+    bottomNav.classList.remove("dragging");
+    const ultimoTouch = e.changedTouches[0];
+    const btnPiuVicino = trovaBottonePiuVicino(ultimoTouch.clientX);
+    if(btnPiuVicino) showTab(btnPiuVicino.dataset.tab);
+    resetMagnificazione();
+    pulisciAnteprimaSelezione();
+  });
+
+  bottomNav.addEventListener("touchcancel", () => {
+    pressando = false;
+    bottomNav.classList.remove("dragging");
+    resetMagnificazione();
+    pulisciAnteprimaSelezione();
+  });
+})();
 
 const backToTopBtn = document.getElementById("backToTop");
 backToTopBtn.innerHTML = ICONS.arrowUp(20);
