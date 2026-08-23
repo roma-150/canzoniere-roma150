@@ -2,12 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 <title>Canzoniere Roma 150</title>
 <meta name="theme-color" content="#3B2065">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 <style>
   :root{
     --purple:#3B2065;
@@ -36,7 +35,7 @@
 
   .bottom-nav{
     position:fixed; left:50%; transform:translateX(-50%);
-    bottom:calc(16px + env(safe-area-inset-bottom));
+    bottom:calc(22px + env(safe-area-inset-bottom));
     width:calc(100% - 32px); max-width:398px;
     display:flex;
     background:rgba(255,255,255,0.68);
@@ -226,14 +225,27 @@
   <footer id="footer"></footer>
 
   <div class="bottom-nav" id="bottomNav">
-    <button class="nav-item" data-tab="canzoni"><i class="ti ti-music"></i><span>Canzoni</span></button>
-    <button class="nav-item" data-tab="categorie"><i class="ti ti-tags"></i><span>Categorie</span></button>
-    <button class="nav-item" data-tab="canzonieri"><i class="ti ti-books"></i><span>Canzonieri</span></button>
-    <button class="nav-item" data-tab="scalette"><i class="ti ti-list-check"></i><span>Scalette</span></button>
+    <button class="nav-item" data-tab="canzoni"></button>
+    <button class="nav-item" data-tab="categorie"></button>
+    <button class="nav-item" data-tab="canzonieri"></button>
+    <button class="nav-item" data-tab="scalette"></button>
   </div>
 </div>
 
 <script>
+const ICONS = {
+  music: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+  home: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>`,
+  chevronRight: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 6l6 6-6 6"/></svg>`,
+  tags: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 2H4v8l10 10 8-8L12 2z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
+  books: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3.5" y="4" width="5" height="16"/><rect x="10.5" y="4" width="5" height="16"/><path d="M17.5 5.3l4 .9-3 14.7-4-.9z"/></svg>`,
+  listCheck: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M3.5 6l1.3 1.3L7.5 4.5M3.5 12l1.3 1.3 2.7-2.8M3.5 18l1.3 1.3 2.7-2.8"/></svg>`,
+  search: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>`,
+  sortAsc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V5M6 11l6-6 6 6"/></svg>`,
+  sortDesc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`,
+  play: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>`,
+  pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`
+};
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
 
@@ -322,21 +334,33 @@ const bottomNav = document.getElementById("bottomNav");
 
 const TAB_PLACEHOLDERS = {
   categorie: {
-    icon: "ti-tags",
+    icon: ICONS.tags,
     title: "Categorie",
     text: "Presto potrai sfogliare le canzoni per Branca, Sede e Luogo direttamente da qui."
   },
   canzonieri: {
-    icon: "ti-books",
+    icon: ICONS.books,
     title: "Canzonieri",
     text: "Qui potrai raccogliere le canzoni in canzonieri personalizzati, ad esempio per campi o eventi."
   },
   scalette: {
-    icon: "ti-list-check",
+    icon: ICONS.listCheck,
     title: "Scalette",
     text: "Qui potrai creare scalette ordinate di canzoni per veglie, fuochi e momenti speciali."
   }
 };
+
+const NAV_TABS = [
+  { tab: "canzoni", icon: ICONS.music, label: "Canzoni" },
+  { tab: "categorie", icon: ICONS.tags, label: "Categorie" },
+  { tab: "canzonieri", icon: ICONS.books, label: "Canzonieri" },
+  { tab: "scalette", icon: ICONS.listCheck, label: "Scalette" }
+];
+
+bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+  const info = NAV_TABS.find(t => t.tab === btn.dataset.tab);
+  btn.innerHTML = `${info.icon(21)}<span>${info.label}</span>`;
+});
 
 function setActiveTab(tab){
   currentTab = tab;
@@ -357,7 +381,7 @@ function showTab(tab){
   const p = TAB_PLACEHOLDERS[tab];
   content.innerHTML = `
     <div class="card placeholder-card">
-      <div class="placeholder-icon"><i class="ti ${p.icon}"></i></div>
+      <div class="placeholder-icon">${p.icon(26)}</div>
       <h2>${p.title}</h2>
       <p>${p.text}</p>
     </div>
@@ -415,7 +439,7 @@ function groupSongs(list){
 function renderHeaderBrand(){
   appHeader.innerHTML = `
     <div class="brand">
-      <div class="brand-icon"><i class="ti ti-music"></i></div>
+      <div class="brand-icon">${ICONS.music(20)}</div>
       <div class="brand-text">
         <div class="name">Canzoniere</div>
         <div class="sub">Roma 150</div>
@@ -427,13 +451,13 @@ function renderHeaderBrand(){
 function renderHeaderBack(){
   appHeader.innerHTML = `
     <div class="brand">
-      <div class="brand-icon"><i class="ti ti-music"></i></div>
+      <div class="brand-icon">${ICONS.music(20)}</div>
       <div class="brand-text">
         <div class="name">Canzoniere</div>
         <div class="sub">Roma 150</div>
       </div>
     </div>
-    <button class="header-home" id="headerHome" aria-label="Torna all'elenco canzoni"><i class="ti ti-home"></i></button>
+    <button class="header-home" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.home(20)}</button>
   `;
   document.getElementById("headerHome").addEventListener("click", showList);
 }
@@ -469,7 +493,7 @@ function renderResults(card){
           <div class="row-title">${song.titolo}</div>
           <div class="row-meta">${metaLine(song)}</div>
         </div>
-        <i class="ti ti-chevron-right"></i>
+        ${ICONS.chevronRight(18)}
       `;
       row.addEventListener("click", () => showDetail(SONGS.indexOf(song)));
       results.appendChild(row);
@@ -496,7 +520,7 @@ function showList(){
   const searchBox = document.createElement("div");
   searchBox.className = "search-box";
   searchBox.innerHTML = `
-    <i class="ti ti-search"></i>
+    ${ICONS.search(17)}
     <input type="text" id="searchInput" placeholder="Cerca titolo, luogo, branca, testo..." value="${searchQuery.replace(/"/g, "&quot;")}">
   `;
   card.appendChild(searchBox);
@@ -509,7 +533,7 @@ function showList(){
       <button id="sortAnno" class="${sortMode === "anno" ? "active" : ""}">Anno</button>
     </div>
     <button class="dir-btn" id="dirToggle" aria-label="Inverti ordine">
-      <i class="ti ${sortDir === 1 ? "ti-sort-ascending" : "ti-sort-descending"}"></i>
+      ${sortDir === 1 ? ICONS.sortAsc(17) : ICONS.sortDesc(17)}
     </button>
   `;
   card.appendChild(sortRow);
@@ -548,7 +572,7 @@ function showDetail(index){
         <p class="song-title">${song.titolo}</p>
         <p class="song-meta">${metaLine(song)}</p>
       </div>
-      <button class="pill-btn" id="scrollToggle"><i class="ti ti-player-play"></i>Scorri</button>
+      <button class="pill-btn" id="scrollToggle">${ICONS.play(15)}Scorri</button>
     </div>
     <div class="key-tile">
       <div class="label">Tonalità</div>
@@ -585,14 +609,14 @@ function showDetail(index){
   scrollBtn.addEventListener("click", () => {
     scrolling = !scrolling;
     scrollBtn.classList.toggle("active", scrolling);
-    scrollBtn.innerHTML = scrolling ? '<i class="ti ti-player-pause"></i>Pausa' : '<i class="ti ti-player-play"></i>Scorri';
+    scrollBtn.innerHTML = scrolling ? (ICONS.pause(15) + "Pausa") : (ICONS.play(15) + "Scorri");
     if(scrolling){
       scrollInterval = setInterval(() => {
         window.scrollBy({top: 1, behavior: "auto"});
         if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
           scrolling = false;
           scrollBtn.classList.remove("active");
-          scrollBtn.innerHTML = '<i class="ti ti-player-play"></i>Scorri';
+          scrollBtn.innerHTML = ICONS.play(15) + "Scorri";
           clearInterval(scrollInterval);
         }
       }, 60);
