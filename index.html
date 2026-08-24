@@ -466,6 +466,9 @@ let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
 let searchQuery = "";
 let selectedBranche = new Set();
 let selectedSedi = new Set();
+let selectedDecadi = new Set();
+let selectedGeneri = new Set();
+let filterOriginale = false;
 
 const APP_VERSION = "0.103";
 let updateAvailable = false;
@@ -489,6 +492,73 @@ const content = document.getElementById("content");
 const footer = document.getElementById("footer");
 const appHeader = document.getElementById("appHeader");
 const bottomNav = document.getElementById("bottomNav");
+
+const CATEGORIES = [
+  { label: "L/C Casalotti", branca: "L/C", sede: "Casalotti" originale: true },
+  { label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida" originale: true },
+  { label: "E/G Casalotti", branca: "E/G", sede: "Casalotti" originale: true },
+  { label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida" originale: true },
+  { label: "ORIGINALI R/S", branca: "R/S", originale: true },
+  { label: "Anni '80", decade: "1980" },
+  { label: "Anni '90", decade: "1990" },
+  { label: "Anni '00", decade: "2000" },
+  { label: "Anni '10", decade: "2010" },
+  { label: "Anni '20", decade: "2020" },
+  { label: "Selva Candida", sede: "Selva Candida" },
+  { label: "Casalotti", sede: "Casalotti" },
+  { label: "Canti di Gruppo", branca: "Gruppo" },
+  { label: "Canti di Chiesa", genere: "chiesa" },
+  { label: "Canti L/C", branca: "L/C" },
+  { label: "Canti E/G", branca: "E/G" },
+  { label: "Canti R/S", branca: "R/S" },
+  { label: "Cantautori", genere: "cantautori" },
+  { label: "Irish", genere: "irish" },
+  { label: "Modena", genere: "modena" }
+];
+
+function categoryCount(cat){
+  return SONGS.filter(song => {
+    if(cat.branca && song.branca !== cat.branca) return false;
+    if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
+    if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
+    if(cat.genere && song.genere !== cat.genere) return false;
+    if(cat.originale && song.originale !== true) return false;
+    return true;
+  }).length;
+}
+
+function applyCategory(cat){
+  selectedBranche = new Set(cat.branca ? [cat.branca] : []);
+  selectedSedi = new Set(cat.sede ? [cat.sede] : []);
+  selectedDecadi = new Set(cat.decade ? [cat.decade] : []);
+  selectedGeneri = new Set(cat.genere ? [cat.genere] : []);
+  filterOriginale = !!cat.originale;
+  showOnlyFavorites = false;
+  searchQuery = "";
+  setActiveTab("canzoni");
+  showList();
+}
+
+function renderCategorie(){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = '<div class="list-title">Categorie</div>';
+  CATEGORIES.forEach(cat => {
+    const row = document.createElement("div");
+    row.className = "song-row";
+    row.innerHTML = `
+      <div class="row-title">${cat.label}</div>
+      <div class="row-end">
+        <span class="key-badge">${categoryCount(cat)}</span>
+        ${ICONS.chevronRight(18)}
+      </div>
+    `;
+    row.addEventListener("click", () => applyCategory(cat));
+    card.appendChild(row);
+  });
+  content.innerHTML = "";
+  content.appendChild(card);
+}
 
 const TAB_PLACEHOLDERS = {
   categorie: {
@@ -538,6 +608,10 @@ function showTab(tab){
   inDetailView = false;
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
+  if(tab === "categorie"){
+    renderCategorie();
+    return;
+  }
   const p = TAB_PLACEHOLDERS[tab];
   content.innerHTML = `
     <div class="card placeholder-card">
@@ -762,8 +836,11 @@ function metaLine(song){
 function matchesFilters(song){
   const brancaOk = selectedBranche.size === 0 || selectedBranche.has(song.branca);
   const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
+  const decadeOk = selectedDecadi.size === 0 || selectedDecadi.has("" + Math.floor(song.anno / 10) * 10);
+  const genereOk = selectedGeneri.size === 0 || selectedGeneri.has(song.genere);
+  const originaleOk = !filterOriginale || song.originale === true;
   const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
-  return brancaOk && sedeOk && favOk;
+  return brancaOk && sedeOk && decadeOk && genereOk && originaleOk && favOk;
 }
 
 function renderResults(card){
@@ -862,12 +939,13 @@ function showList(){
     ).observe(searchSentinel);
   });
 
-  function buildFilterRow(label, values, selectedSet){
+  function buildFilterRow(label, values, selectedSet, formatFn){
     if(values.length < 2) return null;
+    formatFn = formatFn || (v => v);
     const row = document.createElement("div");
     row.className = "filter-row";
     const chipsHtml = values.map(v =>
-      `<button class="filter-chip ${selectedSet.has(v) ? "active" : ""}" data-value="${v}">${v}</button>`
+      `<button class="filter-chip ${selectedSet.has(v) ? "active" : ""}" data-value="${v}">${formatFn(v)}</button>`
     ).join("");
     row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips">${chipsHtml}</div>`;
     row.querySelectorAll(".filter-chip").forEach(chip => {
@@ -914,7 +992,7 @@ function showList(){
     });
 
     function updateFilterBtnState(){
-      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || showOnlyFavorites;
+      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || selectedDecadi.size > 0 || showOnlyFavorites;
       filterBtn.classList.toggle("active", anyActive);
     }
     updateFilterBtnState();
