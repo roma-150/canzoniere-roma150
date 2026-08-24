@@ -119,6 +119,10 @@
     z-index:15;
   }
   .header-spacer{ width:44px; flex-shrink:0; }
+  .header-version{
+    font-size:11px; font-weight:600; letter-spacing:0.02em;
+    color:rgba(255,255,255,0.6); flex-shrink:0;
+  }
   .header-update-btn{
     width:44px; height:44px; border-radius:14px; flex-shrink:0;
     background:rgba(255,255,255,0.14); border:none; color:var(--white);
@@ -128,6 +132,12 @@
   .header-update-btn:active{ background:rgba(255,255,255,0.24); }
   .header-update-btn.offline{ opacity:0.35; pointer-events:none; }
   .header-update-btn.updating svg{ animation:spin 0.8s linear infinite; }
+  .header-update-btn.has-update::after{
+    content:""; position:absolute; top:6px; right:6px;
+    width:9px; height:9px; border-radius:50%;
+    background:#E4573D; border:1.5px solid var(--purple);
+  }
+  .header-update-btn{ position:relative; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
   .brand-text-center{ flex:1; text-align:center; }
   .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
@@ -443,6 +453,9 @@ let searchQuery = "";
 let selectedBranche = new Set();
 let selectedSedi = new Set();
 
+const APP_VERSION = "0.101";
+let updateAvailable = false;
+
 const FAV_KEY = "canzoniere_preferiti_v1";
 function loadFavorites(){
   try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
@@ -661,6 +674,7 @@ function wireUpdateBtn(){
   const btn = document.getElementById("headerUpdate");
   if(!btn) return;
   btn.classList.toggle("offline", !navigator.onLine);
+  btn.classList.toggle("has-update", updateAvailable);
   btn.addEventListener("click", async () => {
     if(!navigator.onLine || btn.classList.contains("updating")) return;
     btn.classList.add("updating");
@@ -679,7 +693,20 @@ function wireUpdateBtn(){
 window.addEventListener("online", () => {
   const btn = document.getElementById("headerUpdate");
   if(btn) btn.classList.remove("offline");
+  checkForUpdate();
 });
+
+function checkForUpdate(){
+  if(!navigator.onLine) return;
+  fetch("version.json", { cache: "no-store" })
+    .then(r => r.json())
+    .then(data => {
+      updateAvailable = !!data.version && data.version !== APP_VERSION;
+      const btn = document.getElementById("headerUpdate");
+      if(btn) btn.classList.toggle("has-update", updateAvailable);
+    })
+    .catch(() => {});
+}
 window.addEventListener("offline", () => {
   const btn = document.getElementById("headerUpdate");
   if(btn) btn.classList.add("offline");
@@ -688,7 +715,7 @@ window.addEventListener("offline", () => {
 function renderHeaderBrand(){
   appHeader.classList.add("sticky");
   appHeader.innerHTML = `
-    <div class="header-spacer"></div>
+    <div class="header-version">v${APP_VERSION}</div>
     <div class="brand-text-center">
       <div class="name">Canzoniere di gruppo</div>
       <div class="sub">Roma 150</div>
@@ -1078,6 +1105,7 @@ function showDetail(index){
 
 renderHeaderBrand();
 setActiveTab("canzoni");
+checkForUpdate();
 
 fetch("songs.json")
   .then(r => r.json())

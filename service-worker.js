@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v1';
+const CACHE_NAME = 'canzoniere-v2';
 
 const APP_SHELL = [
   './',
@@ -48,6 +48,11 @@ self.addEventListener('message', (event) => {
 // - tutto il resto (guscio app): cache prima, rete come riserva
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  if (url.pathname.endsWith('version.json')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
 
   if (url.pathname.endsWith('songs.json')) {
     event.respondWith(
