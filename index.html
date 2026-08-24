@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#3B2065">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" href="icons/favicon.png">
 <style>
   :root{
     --text-scale:1;
@@ -316,9 +317,14 @@
     border-radius:999px; padding:4px 10px; margin-bottom:8px;
   }
   .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
-  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:3px; }
+  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:0; }
+  .pair.pair-space{ margin-right:3px; }
   .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; }
   .verse.chorus .chord{ color:var(--amber); }
+  .verse.instrumental{ background:var(--green-tint-a); border-radius:16px; padding:14px 16px 12px; }
+  .verse.instrumental .refrain-tag{ background:var(--green); }
+  .verse.instrumental .chord{ color:var(--green); }
+  .verse.instrumental .lyric{ display:none; }
   .lyric{ display:block; white-space:pre-wrap; overflow-wrap:break-word; font-size:calc(16.5px * var(--text-scale)); line-height:1.55; color:var(--ink); }
 
   .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
@@ -390,16 +396,24 @@ function renderBlock(text, semitones){
   }
   let lines = text.split("\n");
   const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+  const instrMatch = lines[0].trim().match(/^\{strumentale\}$/i);
   const chorus = !!ritMatch;
+  const instrumental = !!instrMatch;
   const repeatCount = ritMatch && ritMatch[1] ? parseInt(ritMatch[1], 10) : null;
-  if(chorus) lines = lines.slice(1);
+  if(chorus || instrumental) lines = lines.slice(1);
 
   const block = document.createElement("div");
-  block.className = "verse" + (chorus ? " chorus" : "");
+  block.className = "verse" + (chorus ? " chorus" : "") + (instrumental ? " instrumental" : "");
   if(chorus){
     const tag = document.createElement("span");
     tag.className = "refrain-tag";
     tag.textContent = "Ritornello" + (repeatCount ? ` (${repeatCount} volte)` : "");
+    block.appendChild(tag);
+  }
+  if(instrumental){
+    const tag = document.createElement("span");
+    tag.className = "refrain-tag";
+    tag.textContent = "Strumentale";
     block.appendChild(tag);
   }
   lines.forEach(rawLine => {
@@ -412,7 +426,7 @@ function renderBlock(text, semitones){
       const before = rawLine.slice(lastIndex, match.index);
       if(before){
         const span = document.createElement("span");
-        span.className = "pair";
+        span.className = "pair" + (/\s$/.test(before) ? " pair-space" : "");
         span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${before}</span>`;
         lineEl.appendChild(span);
       }
@@ -420,7 +434,7 @@ function renderBlock(text, semitones){
       const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
       let lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
       const pair = document.createElement("span");
-      pair.className = "pair";
+      pair.className = "pair" + ((lyricAfter === "" || /\s$/.test(lyricAfter)) ? " pair-space" : "");
       const chordName = transposeChord(match[1], semitones);
       const displayLyric = lyricAfter.trim() === "" && lyricAfter.length > 0
         ? "\u00A0\u00A0\u00A0"
