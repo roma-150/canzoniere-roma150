@@ -30,6 +30,18 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Su richiesta esplicita (pulsante "Cerca aggiornamenti" nell'app),
+// svuota la cache del guscio app così il prossimo ricaricamento scarica tutto di nuovo
+self.addEventListener('message', (event) => {
+  if (event.data === 'CLEAR_APP_SHELL_CACHE') {
+    event.waitUntil(
+      caches.open(CACHE_NAME).then((cache) =>
+        Promise.all(APP_SHELL.map((url) => cache.delete(url)))
+      )
+    );
+  }
+});
+
 // Strategie di risposta:
 // - songs.json: prova sempre la rete per avere le canzoni aggiornate,
 //   se non c'è connessione usa l'ultima copia salvata in cache
