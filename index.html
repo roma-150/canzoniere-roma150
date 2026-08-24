@@ -149,12 +149,13 @@
   .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
 
   .search-filter-row{
-    display:flex; align-items:center; gap:8px; margin-bottom:12px;
+    display:flex; align-items:center; margin-bottom:12px;
     position:sticky; top:0; z-index:5;
   }
   .search-box{
     display:flex; align-items:center; gap:8px; flex:1; min-width:0;
     background:var(--neutral); border-radius:12px; padding:10px 14px;
+    transition:width 0.32s cubic-bezier(0.4,0,0.2,1);
   }
   .search-filter-row.stuck{ box-shadow:0 6px 14px rgba(28,28,30,0.10); border-radius:12px; }
   .search-box i{ color:var(--ink-soft); font-size:17px; }
@@ -172,10 +173,15 @@
 
   .filter-toggle-btn{
     flex-shrink:0; width:38px; height:38px; border-radius:12px; border:none;
-    background:var(--neutral); color:var(--ink-soft);
+    margin-left:8px; background:var(--neutral); color:var(--ink-soft);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
+    overflow:hidden;
+    transition:width 0.32s cubic-bezier(0.4,0,0.2,1), margin-left 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease;
   }
   .filter-toggle-btn.active{ background:var(--purple); color:var(--white); }
+  .search-filter-row.collapsed .filter-toggle-btn{
+    width:0; margin-left:0; opacity:0; pointer-events:none;
+  }
 
   .filter-panel{ max-height:0; overflow:hidden; transition:max-height 0.28s ease; }
   .filter-panel.open{ max-height:320px; }
@@ -187,6 +193,7 @@
     flex-shrink:0; border:none; border-radius:999px; padding:7px 14px;
     font-size:12.5px; font-weight:700; background:var(--neutral); color:var(--ink-soft);
     cursor:pointer; white-space:nowrap;
+    display:inline-flex; align-items:center; gap:5px;
   }
   .filter-chip.active{ background:var(--purple); color:var(--white); }
 
@@ -587,10 +594,12 @@ backToTopBtn.innerHTML = ICONS.arrowUp(20);
 backToTopBtn.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-window.addEventListener("scroll", () => {
-  const show = inDetailView && window.scrollY > 260;
+let listFilterCollapsed = false;
+function updateBackToTopVisibility(){
+  const show = (inDetailView && window.scrollY > 260) || listFilterCollapsed;
   backToTopBtn.classList.toggle("visible", show);
-});
+}
+window.addEventListener("scroll", updateBackToTopVisibility);
 
 function matchesSearch(song, query){
   if(!query.trim()) return true;
@@ -723,6 +732,7 @@ function showList(){
   renderHeaderBrand();
   bottomNav.classList.remove("hidden");
   inDetailView = false;
+  listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   if(SONGS.length === 0){
@@ -838,6 +848,19 @@ function showList(){
   `;
   card.appendChild(sortRow);
 
+  const filterCollapseSentinel = document.createElement("div");
+  filterCollapseSentinel.style.cssText = "height:1px;";
+  sortRow.after(filterCollapseSentinel);
+  new IntersectionObserver(
+    ([entry]) => {
+      const collapsed = !entry.isIntersecting;
+      searchFilterRow.classList.toggle("collapsed", collapsed);
+      listFilterCollapsed = collapsed;
+      updateBackToTopVisibility();
+    },
+    { threshold: 0, rootMargin: `-${appHeader.offsetHeight + 12}px 0px 0px 0px` }
+  ).observe(filterCollapseSentinel);
+
   const results = document.createElement("div");
   results.id = "resultsArea";
   card.appendChild(results);
@@ -874,6 +897,8 @@ function showDetail(index){
   renderHeaderBack();
   bottomNav.classList.add("hidden");
   inDetailView = true;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
   content.innerHTML = "";
 
   const card1 = document.createElement("div");
