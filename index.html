@@ -32,10 +32,10 @@
     color:var(--ink);
     display:flex;
     justify-content:center;
-    background:var(--bg);
+    background:var(--purple);
     min-height:100vh;
   }
-  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; }
+  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; background:var(--bg); }
 
   .bottom-nav{
     position:fixed; left:50%; transform:translateX(-50%);
@@ -288,7 +288,7 @@
     border-radius:999px; padding:4px 10px; margin-bottom:8px;
   }
   .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
-  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; }
+  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:3px; }
   .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; }
   .verse.chorus .chord{ color:var(--amber); }
   .lyric{ display:block; white-space:pre-wrap; overflow-wrap:break-word; font-size:calc(16.5px * var(--text-scale)); line-height:1.55; color:var(--ink); }
@@ -341,6 +341,7 @@ const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#"
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
 
 function transposeChord(chord, semitones){
+  if(!chord) return chord;
   const m = chord.match(NOTE_RE);
   if(!m) return chord;
   const root = m[1] + (m[2] || "");
@@ -388,11 +389,14 @@ function renderBlock(text, semitones){
       }
       lastIndex = regex.lastIndex;
       const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
-      const lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
+      let lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
       const pair = document.createElement("span");
       pair.className = "pair";
       const chordName = transposeChord(match[1], semitones);
-      pair.innerHTML = `<span class="chord">${chordName}</span><span class="lyric">${lyricAfter || "\u00A0"}</span>`;
+      const displayLyric = lyricAfter.trim() === "" && lyricAfter.length > 0
+        ? "\u00A0\u00A0\u00A0"
+        : (lyricAfter || "\u00A0");
+      pair.innerHTML = `<span class="chord">${chordName}</span><span class="lyric">${displayLyric}</span>`;
       lineEl.appendChild(pair);
       lastIndex += lyricAfter.length;
       regex.lastIndex = lastIndex;
@@ -697,7 +701,7 @@ function renderResults(card){
           <div class="row-meta">${metaLine(song)}</div>
         </div>
         <div class="row-end">
-          <span class="key-badge">${ICONS.music(12)}${song.tonalita}</span>
+          <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
           <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
           ${ICONS.chevronRight(18)}
         </div>
@@ -800,7 +804,7 @@ function showList(){
     const filterPanel = document.createElement("div");
     filterPanel.className = "filter-panel";
     filterPanel.appendChild(buildToggleFilterRow(
-      "Preferite", `${ICONS.star(13, true)} Solo preferite`,
+      "Preferite", `${ICONS.star(13, true)} Preferiti`,
       () => showOnlyFavorites, (v) => { showOnlyFavorites = v; }
     ));
     const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
@@ -886,7 +890,7 @@ function showDetail(index){
         <div class="label">Tonalità</div>
         <div class="key-row">
           <button id="down" aria-label="Trasponi giù">–</button>
-          <span class="value" id="currentKey">${song.tonalita}</span>
+          <span class="value" id="currentKey">${song.tonalita || "—"}</span>
           <button id="up" aria-label="Trasponi su">+</button>
         </div>
       </div>
@@ -947,7 +951,7 @@ function showDetail(index){
     blocks.forEach(b => {
       b.split(/\n---\n/).forEach(sub => body.appendChild(renderBlock(sub, semitones)));
     });
-    document.getElementById("currentKey").textContent = transposeChord(song.tonalita, semitones);
+    document.getElementById("currentKey").textContent = song.tonalita ? transposeChord(song.tonalita, semitones) : "—";
   }
 
   document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
@@ -998,7 +1002,7 @@ function showDetail(index){
   });
 
   render();
-  footer.textContent = "Trasposizione automatica · tonalità originale " + song.tonalita;
+  footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
 }
 
 renderHeaderBrand();
