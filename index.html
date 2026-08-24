@@ -1,0 +1,1096 @@
+<!-- Test sincronizzazione GitHub -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>Canzoniere Roma 150</title>
+<meta name="theme-color" content="#3B2065">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+  :root{
+    --text-scale:1;
+    --purple:#381E60;
+    --gold:#D89B00;
+    --green:#00AE04;
+    --bg:#F8F9FC;
+    --white:#FFFFFF;
+    --ink:#1C1C1E;
+    --ink-soft:#6E6E73;
+    --neutral:#F0F0F3;
+    --border:#E5E5EA;
+    --lilac:#F1EDF7;
+    --green-tint-a:#EAF9EA;
+    --green-tint-b:#F5FCF5;
+    --amber:#A9720B;
+    --amber-tint:#FBF2DC;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    background:var(--purple);
+    min-height:100vh;
+  }
+  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; background:var(--bg); }
+
+  .bottom-nav{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(env(safe-area-inset-bottom) * 0.6);
+    width:calc(100% - 24px); max-width:406px;
+    display:flex;
+    background:rgba(255,255,255,0.55);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    backdrop-filter:blur(24px) saturate(180%);
+    border:1px solid rgba(255,255,255,0.6);
+    border-radius:28px;
+    padding:6px 10px;
+    box-shadow:0 8px 32px rgba(56,30,96,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+    z-index:20;
+    transition:opacity 0.15s ease, transform 0.15s ease;
+  }
+  .bottom-nav.hidden{
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(-50%) translateY(12px);
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center;
+    background:none; border:none; cursor:pointer; color:#8E8E93;
+    padding:2px 0;
+  }
+  .nav-pill{
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:6px 10px 5px; border-radius:16px;
+    transition:background 0.25s ease, box-shadow 0.25s ease, transform 0.12s ease-out;
+    transform-origin:center bottom;
+  }
+  .nav-item i{ font-size:21px; }
+  .nav-item span{ font-size:10.5px; font-weight:700; }
+  .nav-item.active{ color:var(--purple); }
+  .nav-item.active .nav-pill{
+    background:rgba(56,30,96,0.14);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 3px rgba(56,30,96,0.15);
+  }
+  .bottom-nav.dragging .nav-item.active{ color:#8E8E93; }
+  .bottom-nav.dragging .nav-item.active .nav-pill{ background:transparent; box-shadow:none; }
+  .nav-item.drag-preview{ color:var(--purple); }
+  .nav-item.drag-preview .nav-pill{
+    background:rgba(56,30,96,0.14);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 3px rgba(56,30,96,0.15);
+  }
+
+  .placeholder-card{ text-align:center; padding:36px 20px; }
+
+  .back-to-top{
+    position:fixed; right:18px; bottom:calc(78px + env(safe-area-inset-bottom));
+    width:46px; height:46px; border-radius:50%; border:none;
+    background:var(--purple); color:var(--white);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(30,20,50,0.22);
+    cursor:pointer; z-index:19;
+    opacity:0; pointer-events:none; transform:translateY(8px);
+    transition:opacity 0.15s ease, transform 0.15s ease;
+  }
+  .back-to-top.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .placeholder-icon{
+    width:56px; height:56px; border-radius:16px; margin:0 auto 14px;
+    background:var(--neutral); color:var(--purple); font-size:26px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .placeholder-card h2{ font-size:17px; font-weight:800; margin:0 0 6px; }
+  .placeholder-card p{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; margin:0; }
+
+  .app-header{
+    background:var(--purple);
+    color:var(--white);
+    padding:12px 20px 13px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .app-header.sticky{
+    position:sticky;
+    top:0;
+    z-index:15;
+  }
+  .header-spacer{ width:44px; flex-shrink:0; }
+  .header-update-btn{
+    width:44px; height:44px; border-radius:14px; flex-shrink:0;
+    background:rgba(255,255,255,0.14); border:none; color:var(--white);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:opacity 0.2s ease;
+  }
+  .header-update-btn:active{ background:rgba(255,255,255,0.24); }
+  .header-update-btn.offline{ opacity:0.35; pointer-events:none; }
+  .header-update-btn.updating svg{ animation:spin 0.8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .brand-text-center{ flex:1; text-align:center; }
+  .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
+  .brand-text-center .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px; }
+  .header-back-btn{
+    width:44px; height:44px; border-radius:14px;
+    background:rgba(255,255,255,0.14);
+    border:none; color:var(--white); font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+  }
+  .header-back-btn:active{ background:rgba(255,255,255,0.24); }
+
+  .content{ padding:18px 16px 0; flex:1; }
+
+  .card{
+    background:var(--white);
+    border-radius:24px;
+    padding:22px 20px;
+    box-shadow:0 4px 20px rgba(30,20,50,0.06);
+    margin-bottom:16px;
+  }
+
+  /* elenco */
+  .back-link{
+    display:inline-flex; align-items:center; gap:4px;
+    color:var(--purple); font-weight:700; font-size:14px;
+    background:none; border:none; padding:0 0 14px; cursor:pointer;
+  }
+  .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
+
+  .search-filter-row{
+    display:flex; align-items:center; margin-bottom:12px;
+    position:sticky; top:0; z-index:5;
+  }
+  .search-box{
+    display:flex; align-items:center; gap:8px; flex:1; min-width:0;
+    background:var(--neutral); border-radius:12px; padding:10px 14px;
+    transition:width 0.32s cubic-bezier(0.4,0,0.2,1);
+  }
+  .search-filter-row.stuck{ box-shadow:0 6px 14px rgba(28,28,30,0.10); border-radius:12px; }
+  .search-box i{ color:var(--ink-soft); font-size:17px; }
+  .search-box input{
+    border:none; background:transparent; flex:1; font-size:14.5px;
+    color:var(--ink); outline:none; font-family:inherit;
+  }
+  .search-box input::placeholder{ color:var(--ink-soft); }
+  .search-clear-btn{
+    display:none; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:50%; border:none; flex-shrink:0;
+    background:var(--border); color:var(--ink-soft); cursor:pointer; padding:0;
+  }
+  .search-clear-btn.visible{ display:flex; }
+
+  .filter-toggle-btn{
+    flex:0 0 38px; width:38px; height:38px; border-radius:12px; border:none;
+    margin-left:8px; padding:0; min-width:0; background:var(--neutral); color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    overflow:hidden;
+    transition:flex-basis 0.32s cubic-bezier(0.4,0,0.2,1), width 0.32s cubic-bezier(0.4,0,0.2,1), margin-left 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease;
+  }
+  .filter-toggle-btn.active{ background:var(--purple); color:var(--white); }
+  .search-filter-row.collapsed .filter-toggle-btn{
+    flex-basis:0; width:0; margin-left:0; opacity:0; pointer-events:none;
+  }
+
+  .filter-panel{ max-height:0; overflow:hidden; transition:max-height 0.28s ease; }
+  .filter-panel.open{ max-height:320px; }
+  .filter-row{ margin-bottom:10px; padding-top:2px; }
+  .filter-row .filter-label{ font-size:11px; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; }
+  .filter-chips{ display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+  .filter-chips::-webkit-scrollbar{ display:none; }
+  .filter-chip{
+    flex-shrink:0; border:none; border-radius:999px; padding:7px 14px;
+    font-size:12.5px; font-weight:700; background:var(--neutral); color:var(--ink-soft);
+    cursor:pointer; white-space:nowrap;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .filter-chip.active{ background:var(--purple); color:var(--white); }
+
+  .sort-row{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .segmented{
+    display:flex; background:var(--neutral); border-radius:12px; padding:3px; flex:1;
+  }
+  .segmented button{
+    flex:1; border:none; background:transparent; border-radius:9px;
+    padding:8px 10px; font-size:13.5px; font-weight:700; color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .segmented button.active{ background:var(--purple); color:var(--white); box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+  .dir-btn{
+    width:38px; height:38px; border-radius:12px; border:none;
+    background:var(--neutral); color:var(--ink-soft); font-size:17px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .dir-btn:active{ background:var(--border); }
+
+  .group-divider{
+    font-size:12px; font-weight:800; color:var(--purple);
+    background:var(--lilac); padding:6px 20px; margin:16px -20px 2px;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .group-divider:first-of-type{ margin-top:10px; }
+  .song-row{
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+    padding:14px 4px;
+    border-bottom:1px solid var(--border);
+    cursor:pointer;
+  }
+  .song-row:last-child{ border-bottom:none; }
+  .song-row .row-title{ font-size:16px; font-weight:700; color:var(--ink); }
+  .song-row .row-meta{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .song-row i{ color:var(--ink-soft); font-size:18px; }
+  .row-end{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .fav-star{
+    border:none; background:none; padding:6px; margin:-6px;
+    color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
+  }
+  .fav-star.active{ color:var(--gold); }
+  .key-badge{
+    display:flex; align-items:center; gap:3px; flex-shrink:0;
+    font-size:11.5px; font-weight:800; color:var(--gold);
+    background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
+  }
+
+  /* dettaglio */
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .song-title{ font-size:23px; font-weight:800; color:var(--ink); line-height:1.25; margin:0; }
+  .song-meta{ font-size:13px; color:var(--ink-soft); font-weight:600; margin-top:4px; }
+  .song-meta.sede-row{ margin-top:2px; }
+
+  .pill-btn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--purple); color:var(--white); border:none;
+    font-size:13.5px; font-weight:700; padding:10px 16px; border-radius:999px;
+    cursor:pointer; white-space:nowrap; flex-shrink:0;
+  }
+  .pill-btn.active{ background:var(--purple); }
+  .pill-btn i{ font-size:16px; }
+
+  .tile-row{ display:flex; gap:8px; margin-top:18px; }
+  .mini-tile{
+    flex:1; min-width:0; border-radius:18px;
+    padding:12px 8px 10px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+  }
+  .mini-tile .label{ font-size:11px; font-weight:700; }
+
+  .key-tile{ background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b)); }
+  .key-tile .label{ color:#3F7A50; }
+  .key-row{ display:flex; align-items:center; gap:6px; margin-top:5px; }
+  .key-row .value{ font-size:19px; font-weight:800; color:var(--green); min-width:34px; }
+  .key-row button{
+    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--green);
+    background:var(--white); color:var(--green); font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .key-row button:active{ background:var(--green-tint-a); }
+
+  .fontsize-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
+  .fontsize-tile .label{ color:var(--ink-soft); }
+  .fontsize-tile .a-sample{ font-size:20px; font-weight:800; color:var(--purple); line-height:1; margin-top:6px; }
+  .fontsize-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
+
+  .scroll-tile{ background:var(--purple); cursor:pointer; user-select:none; color:var(--white); }
+  .scroll-tile .label{ color:rgba(255,255,255,0.75); }
+  .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; }
+  .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--white); margin-top:4px; min-height:13px; }
+
+  .verse{ margin-bottom:22px; }
+  .verse:last-child{ margin-bottom:0; }
+  .verse.chorus{ background:var(--amber-tint); border-radius:16px; padding:14px 16px 12px; }
+  .refrain-tag{
+    display:inline-block; font-size:11px; font-weight:800; letter-spacing:0.04em;
+    text-transform:uppercase; color:var(--white); background:var(--amber);
+    border-radius:999px; padding:4px 10px; margin-bottom:8px;
+  }
+  .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
+  .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:3px; }
+  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; }
+  .verse.chorus .chord{ color:var(--amber); }
+  .lyric{ display:block; white-space:pre-wrap; overflow-wrap:break-word; font-size:calc(16.5px * var(--text-scale)); line-height:1.55; color:var(--ink); }
+
+  .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
+  footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="app-header" id="appHeader"></div>
+
+  <div class="content" id="content"></div>
+
+  <footer id="footer"></footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Torna su"></button>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-tab="canzoni"></button>
+    <button class="nav-item" data-tab="categorie"></button>
+    <button class="nav-item" data-tab="canzonieri"></button>
+    <button class="nav-item" data-tab="scalette"></button>
+  </div>
+</div>
+
+<script>
+const ICONS = {
+  music: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+  home: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>`,
+  chevronRight: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 6l6 6-6 6"/></svg>`,
+  filter: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M4 5h16l-6.5 7.5v6L10.5 20v-7.5z"/></svg>`,
+  star: (s=18, filled=false) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 3.5l2.65 5.61 6.1.58-4.6 4.2 1.3 6.06L12 16.9l-5.45 3.05 1.3-6.06-4.6-4.2 6.1-.58L12 3.5z"/></svg>`,
+  refresh: (s=19) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M20 11A8 8 0 1 0 18 16"/><path d="M20 5v6h-6"/></svg>`,
+  flag: (s=13) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>`,
+  clear: (s=14) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  arrowBack: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>`,
+  tags: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 2H4v8l10 10 8-8L12 2z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
+  books: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3.5" y="4" width="5" height="16"/><rect x="10.5" y="4" width="5" height="16"/><path d="M17.5 5.3l4 .9-3 14.7-4-.9z"/></svg>`,
+  listCheck: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M3.5 6l1.3 1.3L7.5 4.5M3.5 12l1.3 1.3 2.7-2.8M3.5 18l1.3 1.3 2.7-2.8"/></svg>`,
+  search: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>`,
+  sortAsc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V5M6 11l6-6 6 6"/></svg>`,
+  sortDesc: (s=17) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`,
+  play: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>`,
+  pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`,
+  arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`,
+  chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`
+};
+const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
+const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
+
+function transposeChord(chord, semitones){
+  if(!chord) return chord;
+  const m = chord.match(NOTE_RE);
+  if(!m) return chord;
+  const root = m[1] + (m[2] || "");
+  const suffix = m[3] || "";
+  const idx = CHROMATIC.indexOf(root);
+  if(idx === -1) return chord;
+  const newIdx = ((idx + semitones) % 12 + 12) % 12;
+  return CHROMATIC[newIdx] + suffix;
+}
+
+function renderBlock(text, semitones){
+  if(text.trim() === "RIT."){
+    const el = document.createElement("div");
+    el.className = "verse chorus";
+    el.innerHTML = '<span class="refrain-tag">Ritornello</span>';
+    return el;
+  }
+  let lines = text.split("\n");
+  const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+  const chorus = !!ritMatch;
+  const repeatCount = ritMatch && ritMatch[1] ? parseInt(ritMatch[1], 10) : null;
+  if(chorus) lines = lines.slice(1);
+
+  const block = document.createElement("div");
+  block.className = "verse" + (chorus ? " chorus" : "");
+  if(chorus){
+    const tag = document.createElement("span");
+    tag.className = "refrain-tag";
+    tag.textContent = "Ritornello" + (repeatCount ? ` (${repeatCount} volte)` : "");
+    block.appendChild(tag);
+  }
+  lines.forEach(rawLine => {
+    const lineEl = document.createElement("div");
+    lineEl.className = "line";
+    const regex = /\[([^\]]+)\]/g;
+    let lastIndex = 0, match, hadChord = false;
+    while((match = regex.exec(rawLine)) !== null){
+      hadChord = true;
+      const before = rawLine.slice(lastIndex, match.index);
+      if(before){
+        const span = document.createElement("span");
+        span.className = "pair";
+        span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${before}</span>`;
+        lineEl.appendChild(span);
+      }
+      lastIndex = regex.lastIndex;
+      const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
+      let lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
+      const pair = document.createElement("span");
+      pair.className = "pair";
+      const chordName = transposeChord(match[1], semitones);
+      const displayLyric = lyricAfter.trim() === "" && lyricAfter.length > 0
+        ? "\u00A0\u00A0\u00A0"
+        : (lyricAfter || "\u00A0");
+      pair.innerHTML = `<span class="chord">${chordName}</span><span class="lyric">${displayLyric}</span>`;
+      lineEl.appendChild(pair);
+      lastIndex += lyricAfter.length;
+      regex.lastIndex = lastIndex;
+    }
+    if(!hadChord){
+      const span = document.createElement("span");
+      span.className = "pair";
+      span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${rawLine || "\u00A0"}</span>`;
+      lineEl.appendChild(span);
+    } else if(lastIndex < rawLine.length){
+      const span = document.createElement("span");
+      span.className = "pair";
+      span.innerHTML = `<span class="chord">&nbsp;</span><span class="lyric">${rawLine.slice(lastIndex)}</span>`;
+      lineEl.appendChild(span);
+    }
+    block.appendChild(lineEl);
+  });
+  return block;
+}
+
+let SONGS = [];
+let sortMode = "alpha"; // "alpha" | "anno"
+let sortDir = 1; // 1 = crescente (A-Z, anno vecchio-nuovo), -1 = decrescente
+let searchQuery = "";
+let selectedBranche = new Set();
+let selectedSedi = new Set();
+
+const FAV_KEY = "canzoniere_preferiti_v1";
+function loadFavorites(){
+  try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
+  catch(e){ return new Set(); }
+}
+function saveFavorites(){
+  try { localStorage.setItem(FAV_KEY, JSON.stringify([...favoriti])); }
+  catch(e){ /* localStorage non disponibile, i preferiti non persisteranno */ }
+}
+function favKey(song){ return song.titolo + "__" + song.anno; }
+let favoriti = loadFavorites();
+let showOnlyFavorites = false;
+let fontScaleIndex = 0;
+let currentTab = "canzoni";
+let inDetailView = false;
+const content = document.getElementById("content");
+const footer = document.getElementById("footer");
+const appHeader = document.getElementById("appHeader");
+const bottomNav = document.getElementById("bottomNav");
+
+const TAB_PLACEHOLDERS = {
+  categorie: {
+    icon: ICONS.tags,
+    title: "Categorie",
+    text: "Presto potrai sfogliare le canzoni per Branca, Sede e Luogo direttamente da qui."
+  },
+  canzonieri: {
+    icon: ICONS.books,
+    title: "Canzonieri",
+    text: "Qui potrai raccogliere le canzoni in canzonieri personalizzati, ad esempio per campi o eventi."
+  },
+  scalette: {
+    icon: ICONS.listCheck,
+    title: "Scalette",
+    text: "Qui potrai creare scalette ordinate di canzoni per veglie, fuochi e momenti speciali."
+  }
+};
+
+const NAV_TABS = [
+  { tab: "canzoni", icon: ICONS.music, label: "Canzoni" },
+  { tab: "categorie", icon: ICONS.tags, label: "Categorie" },
+  { tab: "canzonieri", icon: ICONS.books, label: "Canzonieri" },
+  { tab: "scalette", icon: ICONS.listCheck, label: "Scalette" }
+];
+
+bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+  const info = NAV_TABS.find(t => t.tab === btn.dataset.tab);
+  btn.innerHTML = `<span class="nav-pill">${info.icon(21)}<span>${info.label}</span></span>`;
+});
+
+function setActiveTab(tab){
+  currentTab = tab;
+  bottomNav.classList.remove("hidden");
+  bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+}
+
+function showTab(tab){
+  setActiveTab(tab);
+  if(tab === "canzoni"){
+    showList();
+    return;
+  }
+  renderHeaderBrand();
+  inDetailView = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  const p = TAB_PLACEHOLDERS[tab];
+  content.innerHTML = `
+    <div class="card placeholder-card">
+      <div class="placeholder-icon">${p.icon(26)}</div>
+      <h2>${p.title}</h2>
+      <p>${p.text}</p>
+    </div>
+  `;
+}
+
+bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => showTab(btn.dataset.tab));
+});
+
+// Effetto lente/magnete al tocco prolungato, stile Dock
+(function initMagnifierNav(){
+  const bottoni = Array.from(bottomNav.querySelectorAll(".nav-item"));
+  let pressando = false;
+
+  function trovaBottonePiuVicino(clientX){
+    let btnPiuVicino = null, distanzaMinima = Infinity;
+    bottoni.forEach(btn => {
+      const rect = btn.getBoundingClientRect();
+      const centro = rect.left + rect.width / 2;
+      const distanza = Math.abs(clientX - centro);
+      if(distanza < distanzaMinima){ distanzaMinima = distanza; btnPiuVicino = btn; }
+    });
+    return btnPiuVicino;
+  }
+
+  function aggiornaMagnificazione(clientX){
+    bottoni.forEach(btn => {
+      const rect = btn.getBoundingClientRect();
+      const centro = rect.left + rect.width / 2;
+      const distanza = Math.abs(clientX - centro);
+      const raggio = 90;
+      const scala = distanza < raggio ? 1 + (1 - distanza / raggio) * 0.525 : 1;
+      const pill = btn.querySelector(".nav-pill");
+      if(pill) pill.style.transform = "scale(" + scala.toFixed(3) + ")";
+    });
+  }
+
+  function resetMagnificazione(){
+    bottoni.forEach(btn => {
+      const pill = btn.querySelector(".nav-pill");
+      if(pill) pill.style.transform = "";
+    });
+  }
+
+  function aggiornaAnteprimaSelezione(clientX){
+    const vicino = trovaBottonePiuVicino(clientX);
+    bottoni.forEach(btn => btn.classList.toggle("drag-preview", btn === vicino));
+  }
+
+  function pulisciAnteprimaSelezione(){
+    bottoni.forEach(btn => btn.classList.remove("drag-preview"));
+  }
+
+  bottomNav.addEventListener("touchstart", (e) => {
+    pressando = true;
+    bottomNav.classList.add("dragging");
+    aggiornaMagnificazione(e.touches[0].clientX);
+    aggiornaAnteprimaSelezione(e.touches[0].clientX);
+  }, { passive: true });
+
+  bottomNav.addEventListener("touchmove", (e) => {
+    if(!pressando) return;
+    aggiornaMagnificazione(e.touches[0].clientX);
+    aggiornaAnteprimaSelezione(e.touches[0].clientX);
+  }, { passive: true });
+
+  bottomNav.addEventListener("touchend", (e) => {
+    if(!pressando) return;
+    pressando = false;
+    bottomNav.classList.remove("dragging");
+    const ultimoTouch = e.changedTouches[0];
+    const btnPiuVicino = trovaBottonePiuVicino(ultimoTouch.clientX);
+    if(btnPiuVicino) showTab(btnPiuVicino.dataset.tab);
+    resetMagnificazione();
+    pulisciAnteprimaSelezione();
+  });
+
+  bottomNav.addEventListener("touchcancel", () => {
+    pressando = false;
+    bottomNav.classList.remove("dragging");
+    resetMagnificazione();
+    pulisciAnteprimaSelezione();
+  });
+})();
+
+const backToTopBtn = document.getElementById("backToTop");
+backToTopBtn.innerHTML = ICONS.arrowUp(20);
+backToTopBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+let listFilterCollapsed = false;
+function updateBackToTopVisibility(){
+  const show = (inDetailView && window.scrollY > 260) || listFilterCollapsed;
+  backToTopBtn.classList.toggle("visible", show);
+}
+window.addEventListener("scroll", updateBackToTopVisibility);
+
+function matchesSearch(song, query){
+  if(!query.trim()) return true;
+  const plainLyrics = (song.testo_accordi || "").replace(/\[[^\]]+\]/g, " ").toLowerCase();
+  const sede = (song.sede || []).join(" ").toLowerCase();
+  const haystack = [
+    song.titolo || "",
+    String(song.anno || ""),
+    song.luogo || "",
+    song.branca || "",
+    sede,
+    plainLyrics
+  ].join(" ").toLowerCase();
+
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return tokens.every(token => haystack.includes(token));
+}
+
+function groupSongs(list){
+  const sorted = [...list].sort((a, b) => {
+    if(sortMode === "alpha"){
+      return a.titolo.localeCompare(b.titolo, "it", { sensitivity: "base" }) * sortDir;
+    }
+    return (a.anno - b.anno) * sortDir;
+  });
+
+  const groups = [];
+  let lastKey = null;
+  sorted.forEach(song => {
+    let key;
+    if(sortMode === "alpha"){
+      key = (song.titolo.trim()[0] || "#").toUpperCase();
+    } else {
+      const decade = Math.floor(song.anno / 10) * 10;
+      key = "Anni " + decade;
+    }
+    if(key !== lastKey){
+      groups.push({ key, songs: [] });
+      lastKey = key;
+    }
+    groups[groups.length - 1].songs.push(song);
+  });
+  return groups;
+}
+
+function wireUpdateBtn(){
+  const btn = document.getElementById("headerUpdate");
+  if(!btn) return;
+  btn.classList.toggle("offline", !navigator.onLine);
+  btn.addEventListener("click", async () => {
+    if(!navigator.onLine || btn.classList.contains("updating")) return;
+    btn.classList.add("updating");
+    try{
+      if("serviceWorker" in navigator){
+        const reg = await navigator.serviceWorker.getRegistration();
+        if(reg && reg.active){
+          reg.active.postMessage("CLEAR_APP_SHELL_CACHE");
+        }
+        if(reg) await reg.update();
+      }
+    } catch(e){ /* proseguo comunque con il ricaricamento */ }
+    setTimeout(() => window.location.reload(), 400);
+  });
+}
+window.addEventListener("online", () => {
+  const btn = document.getElementById("headerUpdate");
+  if(btn) btn.classList.remove("offline");
+});
+window.addEventListener("offline", () => {
+  const btn = document.getElementById("headerUpdate");
+  if(btn) btn.classList.add("offline");
+});
+
+function renderHeaderBrand(){
+  appHeader.classList.add("sticky");
+  appHeader.innerHTML = `
+    <div class="header-spacer"></div>
+    <div class="brand-text-center">
+      <div class="name">Canzoniere di gruppo</div>
+      <div class="sub">Roma 150</div>
+    </div>
+    <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+  `;
+  wireUpdateBtn();
+}
+
+function renderHeaderBack(){
+  appHeader.classList.remove("sticky");
+  appHeader.innerHTML = `
+    <button class="header-back-btn" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.arrowBack(20)}</button>
+    <div class="brand-text-center">
+      <div class="name">Canzoniere di gruppo</div>
+      <div class="sub">Roma 150</div>
+    </div>
+    <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+  `;
+  wireUpdateBtn();
+  document.getElementById("headerHome").addEventListener("click", showList);
+}
+
+function metaLine(song){
+  const parts = [song.anno, song.luogo, song.branca];
+  if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
+  return parts.filter(Boolean).join(" · ");
+}
+
+function matchesFilters(song){
+  const brancaOk = selectedBranche.size === 0 || selectedBranche.has(song.branca);
+  const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
+  const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
+  return brancaOk && sedeOk && favOk;
+}
+
+function renderResults(card){
+  let results = card.querySelector("#resultsArea");
+  results.innerHTML = "";
+
+  const filtered = SONGS.filter(song => matchesFilters(song) && matchesSearch(song, searchQuery));
+
+  if(filtered.length === 0){
+    results.innerHTML = `<div class="empty">Nessuna canzone trovata${searchQuery ? ` per "${searchQuery}"` : ""}.</div>`;
+    return;
+  }
+
+  groupSongs(filtered).forEach(group => {
+    const divider = document.createElement("div");
+    divider.className = "group-divider";
+    divider.textContent = group.key;
+    results.appendChild(divider);
+
+    group.songs.forEach(song => {
+      const isFav = favoriti.has(favKey(song));
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div>
+          <div class="row-title">${song.titolo}</div>
+          <div class="row-meta">${metaLine(song)}</div>
+        </div>
+        <div class="row-end">
+          <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
+          <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
+          ${ICONS.chevronRight(18)}
+        </div>
+      `;
+      row.addEventListener("click", () => showDetail(SONGS.indexOf(song)));
+      row.querySelector(".fav-star").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if(favoriti.has(favKey(song))) favoriti.delete(favKey(song));
+        else favoriti.add(favKey(song));
+        saveFavorites();
+        renderResults(card);
+      });
+      results.appendChild(row);
+    });
+  });
+}
+
+function showList(){
+  renderHeaderBrand();
+  bottomNav.classList.remove("hidden");
+  inDetailView = false;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  if(SONGS.length === 0){
+    content.innerHTML = '<div class="card"><div class="empty">Nessuna canzone trovata.</div></div>';
+    return;
+  }
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const brancheDisponibili = [...new Set(SONGS.map(s => s.branca).filter(Boolean))].sort();
+  const sediDisponibili = [...new Set(SONGS.flatMap(s => s.sede || []))].sort();
+  const filtriDisponibili = true;
+
+  const searchFilterRow = document.createElement("div");
+  searchFilterRow.className = "search-filter-row";
+  searchFilterRow.style.top = (appHeader.offsetHeight + 12) + "px";
+
+  const searchBox = document.createElement("div");
+  searchBox.className = "search-box";
+  searchBox.innerHTML = `
+    ${ICONS.search(17)}
+    <input type="text" id="searchInput" placeholder="Cerca titolo, luogo, branca, testo..." value="${searchQuery.replace(/"/g, "&quot;")}">
+    <button class="search-clear-btn ${searchQuery ? "visible" : ""}" id="searchClear" aria-label="Cancella ricerca">${ICONS.clear(14)}</button>
+  `;
+  searchFilterRow.appendChild(searchBox);
+
+  if(filtriDisponibili){
+    const filterBtn = document.createElement("button");
+    filterBtn.className = "filter-toggle-btn";
+    filterBtn.setAttribute("aria-label", "Filtra");
+    filterBtn.innerHTML = ICONS.filter(17);
+    searchFilterRow.appendChild(filterBtn);
+  }
+
+  card.appendChild(searchFilterRow);
+
+  const searchSentinel = document.createElement("div");
+  searchSentinel.style.cssText = "height:1px;";
+  searchFilterRow.before(searchSentinel);
+  requestAnimationFrame(() => {
+    new IntersectionObserver(
+      ([entry]) => searchFilterRow.classList.toggle("stuck", !entry.isIntersecting),
+      { threshold: 1 }
+    ).observe(searchSentinel);
+  });
+
+  function buildFilterRow(label, values, selectedSet){
+    if(values.length < 2) return null;
+    const row = document.createElement("div");
+    row.className = "filter-row";
+    const chipsHtml = values.map(v =>
+      `<button class="filter-chip ${selectedSet.has(v) ? "active" : ""}" data-value="${v}">${v}</button>`
+    ).join("");
+    row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips">${chipsHtml}</div>`;
+    row.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const v = chip.dataset.value;
+        if(selectedSet.has(v)) selectedSet.delete(v); else selectedSet.add(v);
+        chip.classList.toggle("active");
+        updateFilterBtnState();
+        renderResults(card);
+      });
+    });
+    return row;
+  }
+
+  function buildToggleFilterRow(label, chipText, getState, setState){
+    const row = document.createElement("div");
+    row.className = "filter-row";
+    row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips"><button class="filter-chip ${getState() ? "active" : ""}">${chipText}</button></div>`;
+    row.querySelector(".filter-chip").addEventListener("click", (e) => {
+      setState(!getState());
+      e.target.classList.toggle("active", getState());
+      updateFilterBtnState();
+      renderResults(card);
+    });
+    return row;
+  }
+
+  if(filtriDisponibili){
+    const filterPanel = document.createElement("div");
+    filterPanel.className = "filter-panel";
+    filterPanel.appendChild(buildToggleFilterRow(
+      "Preferite", `${ICONS.star(13, true)} Preferiti`,
+      () => showOnlyFavorites, (v) => { showOnlyFavorites = v; }
+    ));
+    const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
+    if(brancaRow) filterPanel.appendChild(brancaRow);
+    const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi);
+    if(sedeRow) filterPanel.appendChild(sedeRow);
+    card.appendChild(filterPanel);
+
+    const filterBtn = searchFilterRow.querySelector(".filter-toggle-btn");
+    filterBtn.addEventListener("click", () => {
+      filterPanel.classList.toggle("open");
+    });
+
+    function updateFilterBtnState(){
+      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || showOnlyFavorites;
+      filterBtn.classList.toggle("active", anyActive);
+    }
+    updateFilterBtnState();
+  }
+
+  const sortRow = document.createElement("div");
+  sortRow.className = "sort-row";
+  sortRow.innerHTML = `
+    <div class="segmented">
+      <button id="sortAlpha" class="${sortMode === "alpha" ? "active" : ""}">A-Z</button>
+      <button id="sortAnno" class="${sortMode === "anno" ? "active" : ""}">Anno</button>
+    </div>
+    <button class="dir-btn" id="dirToggle" aria-label="Inverti ordine">
+      ${sortDir === 1 ? ICONS.sortAsc(17) : ICONS.sortDesc(17)}
+    </button>
+  `;
+  card.appendChild(sortRow);
+
+  const filterCollapseSentinel = document.createElement("div");
+  filterCollapseSentinel.style.cssText = "height:1px;";
+  sortRow.after(filterCollapseSentinel);
+  requestAnimationFrame(() => {
+    new IntersectionObserver(
+      ([entry]) => {
+        const collapsed = !entry.isIntersecting;
+        searchFilterRow.classList.toggle("collapsed", collapsed);
+        listFilterCollapsed = collapsed;
+        updateBackToTopVisibility();
+      },
+      { threshold: 0, rootMargin: `-${appHeader.offsetHeight + 12}px 0px 0px 0px` }
+    ).observe(filterCollapseSentinel);
+  });
+
+  const results = document.createElement("div");
+  results.id = "resultsArea";
+  card.appendChild(results);
+
+  content.innerHTML = "";
+  content.appendChild(card);
+
+  const searchInputEl = card.querySelector("#searchInput");
+  const searchClearBtn = card.querySelector("#searchClear");
+
+  searchInputEl.addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    searchClearBtn.classList.toggle("visible", searchQuery.length > 0);
+    renderResults(card);
+  });
+  searchClearBtn.addEventListener("click", () => {
+    searchQuery = "";
+    searchInputEl.value = "";
+    searchClearBtn.classList.remove("visible");
+    searchInputEl.focus();
+    renderResults(card);
+  });
+  sortRow.querySelector("#sortAlpha").addEventListener("click", () => { sortMode = "alpha"; showList(); });
+  sortRow.querySelector("#sortAnno").addEventListener("click", () => { sortMode = "anno"; showList(); });
+  sortRow.querySelector("#dirToggle").addEventListener("click", () => { sortDir *= -1; showList(); });
+
+  renderResults(card);
+}
+
+function showDetail(index){
+  const song = SONGS[index];
+  let semitones = 0;
+
+  renderHeaderBack();
+  bottomNav.classList.add("hidden");
+  inDetailView = true;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  content.innerHTML = "";
+
+  const card1 = document.createElement("div");
+  card1.className = "card";
+  card1.innerHTML = `
+    <div class="card-top">
+      <div>
+        <p class="song-title">${song.titolo}</p>
+        <p class="song-meta">${metaLine(song)}</p>
+      </div>
+    </div>
+    <div class="tile-row">
+      <div class="mini-tile key-tile">
+        <div class="label">Tonalità</div>
+        <div class="key-row">
+          <button id="down" aria-label="Trasponi giù">–</button>
+          <span class="value" id="currentKey">${song.tonalita || "—"}</span>
+          <button id="up" aria-label="Trasponi su">+</button>
+        </div>
+      </div>
+      <div class="mini-tile fontsize-tile" id="fontSizeTile">
+        <div class="label">Testo</div>
+        <div class="a-sample" id="aSample">A</div>
+        <div class="state-name" id="fontStateName">Normale</div>
+      </div>
+      <div class="mini-tile scroll-tile" id="scrollToggle">
+        <div class="label">Scorri</div>
+        <div class="scroll-icon" id="scrollIcon">${ICONS.play(20)}</div>
+        <div class="state-name" id="scrollStateName"></div>
+      </div>
+    </div>
+  `;
+  content.appendChild(card1);
+
+  const FONT_STATES = [
+    { name: "Normale", scale: 1 },
+    { name: "Grande", scale: 1.2 },
+    { name: "Molto grande", scale: 1.45 },
+    { name: "Piccolo", scale: 0.82 }
+  ];
+  const fontSizeTile = document.getElementById("fontSizeTile");
+  const aSample = document.getElementById("aSample");
+  const fontStateName = document.getElementById("fontStateName");
+
+  function applyFontState(){
+    const state = FONT_STATES[fontScaleIndex];
+    document.documentElement.style.setProperty("--text-scale", state.scale);
+    fontStateName.textContent = state.name;
+  }
+  applyFontState();
+
+  fontSizeTile.addEventListener("click", () => {
+    fontScaleIndex = (fontScaleIndex + 1) % FONT_STATES.length;
+    applyFontState();
+  });
+
+  const card2 = document.createElement("div");
+  card2.className = "card";
+  const body = document.createElement("div");
+  card2.appendChild(body);
+  content.appendChild(card2);
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "pill-btn active";
+  backBtn.style.width = "100%";
+  backBtn.style.justifyContent = "center";
+  backBtn.style.marginTop = "4px";
+  backBtn.innerHTML = `${ICONS.arrowBack(16)}Torna all'elenco`;
+  backBtn.addEventListener("click", showList);
+  content.appendChild(backBtn);
+
+  function render(){
+    body.innerHTML = "";
+    const blocks = song.testo_accordi.split(/\n===\n/);
+    blocks.forEach(b => {
+      b.split(/\n---\n/).forEach(sub => body.appendChild(renderBlock(sub, semitones)));
+    });
+    document.getElementById("currentKey").textContent = song.tonalita ? transposeChord(song.tonalita, semitones) : "—";
+  }
+
+  document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
+  document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
+
+  const SCROLL_SPEEDS = [
+    { label: "1×", step: 1, interval: 55 },
+    { label: "2×", step: 1, interval: 30 },
+    { label: "3×", step: 2, interval: 22 }
+  ];
+  let speedIndex = -1; // -1 = fermo
+  let scrollInterval = null;
+  const scrollBtn = document.getElementById("scrollToggle");
+  const scrollIcon = document.getElementById("scrollIcon");
+  const scrollStateName = document.getElementById("scrollStateName");
+
+  function stopScroll(){
+    speedIndex = -1;
+    scrollBtn.classList.remove("active");
+    scrollIcon.innerHTML = ICONS.play(20);
+    scrollStateName.textContent = "";
+    clearInterval(scrollInterval);
+  }
+
+  function startScrollAt(index){
+    speedIndex = index;
+    const speed = SCROLL_SPEEDS[speedIndex];
+    scrollBtn.classList.add("active");
+    scrollIcon.innerHTML = ICONS.pause(20);
+    scrollStateName.textContent = speed.label;
+    clearInterval(scrollInterval);
+    scrollInterval = setInterval(() => {
+      window.scrollBy({ top: speed.step, behavior: "auto" });
+      if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
+        stopScroll();
+      }
+    }, speed.interval);
+  }
+
+  scrollBtn.addEventListener("click", () => {
+    if(speedIndex === -1){
+      startScrollAt(0);
+    } else if(speedIndex < SCROLL_SPEEDS.length - 1){
+      startScrollAt(speedIndex + 1);
+    } else {
+      stopScroll();
+    }
+  });
+
+  render();
+  footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
+}
+
+renderHeaderBrand();
+setActiveTab("canzoni");
+
+fetch("songs.json")
+  .then(r => r.json())
+  .then(data => { SONGS = data; showList(); })
+  .catch(() => {
+    content.innerHTML = '<div class="card"><div class="empty">Impossibile caricare le canzoni. Controlla la connessione e riprova.</div></div>';
+  });
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
