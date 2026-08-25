@@ -4,7 +4,8 @@ const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon.jpg'
+  './icons/icon-ios.jpg',
+  './icons/icon-android.jpg'
 ];
 
 // Installazione: mette in cache i file base dell'app (guscio)
