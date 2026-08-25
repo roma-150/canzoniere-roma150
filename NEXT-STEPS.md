@@ -1,8 +1,40 @@
 VERSIONI E MODIFICHE DA FARE
 ---------------------------------------------------------------------------------------------------------
 CANZONI DA VERIFICARE:
-1992 L/C fuori dal sacco: CHECK PARTICOLARE...
+1992 L/C fuori dal sacco tutte quelle teste: CHECK PARTICOLARE...
 ---------------------------------------------------------------------------------------------------------
+CANTI NON MESSI, DA METTERE NELLA NOSTRA VERSIONE:
+- COME LA PIOGGIA E LA NEVE (OGNI MIA PAROLA)
+- ATTINGIAMO CON GIOIA ALLA FONTE DELLA SALVEZZA
+- VIENI GESù VIENI, PAG 14
+- LA TUA CHIESA SU QUESTA TERRA
+- AMBASCIATA PAGINA 16
+- SIGNORE TU SEI LA VITE - PAGINA 17
+- AMAREZZA - PAGINA 21
+- SANTO PAGINA 22
+- ECCO QUEL CHE ABBIAMO PAGINA 25
+- 
+CANTI DA AGGIUNGERE.
+- AGNELLO DI DIO
+- SANTO GEN VERDE (QUELLO NUOVO)
+- ALLELUIA GEN VERDE (QUELLO NUOVO)
+- I WILL FOLLOW
+- CANTI CANZONIERE MESSA DA PAGINA 29 INCLUSA IN POI
+- E/G CASALOTTI
+- ANNI 80
+- ANNI 90
+- ANNI 00
+- ANNI 10
+- ANNI 20
+- CANTI GRUPPO
+- CANTI BOSCO
+- CANTI SCOUT E/G
+- CANTI SCOUT R/S
+- CANTI SCOUT L/C NON DI BRANCA
+
+---------------------------------------------------------------------------------------------------------
+GLORIA GIOMBINI (CAMBIA ANCHE TITOLO, METTI GIOMBINI)
+
 2003-CIAO JOSE
 2026-INNO REPARTO FEMMINILE SELVA
 L/C CASALOTTI:
@@ -84,11 +116,18 @@ v0.110 RELEASED
 - Cambio nome "Canti famosi"
 - TASTO ACCORDI ON/OFF
 ---------------------------------------------------------------------------------------------------------
-v0.111
+v0.111 RELEASED
 Ragiona su categorie messa.
-- tempo liturgico
-- momento della messa
-
+- fix scorrimento verticale OK
+- tempo liturgico OK
+- momento della messa OK
+- Aggiunti canti canzoniere messa di gruppo FINO A PAGINA 28 INCLUSA
+---------------------------------------------------------------------------------------------------------
+v0.112
+-
+-
+-
+-
 
 
 

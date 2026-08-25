@@ -490,8 +490,10 @@ let selectedOrigini = new Set();
 let filterPanelOpen = false;
 let categorySearchQuery = "";
 let returnToView = () => showList();
+let savedScrollY = 0;
+let savedCategoriesScrollY = 0;
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.110";
+const APP_VERSION = "0.111";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -507,6 +509,17 @@ function favKey(song){ return song.titolo + "__" + song.anno; }
 function brancheOf(song){
   if(Array.isArray(song.branca)) return song.branca.filter(Boolean);
   return song.branca ? [song.branca] : [];
+}
+function splitField(value){
+  if(Array.isArray(value)) return value.map(v => String(v).trim()).filter(Boolean);
+  if(!value) return [];
+  return String(value).split(",").map(v => v.trim()).filter(Boolean);
+}
+function momentiOf(song){
+  return splitField(song.momento_liturgico);
+}
+function tempiOf(song){
+  return splitField(song.tempo_liturgico);
 }
 let favoriti = loadFavorites();
 let showOnlyFavorites = false;
@@ -567,11 +580,14 @@ function renderCategorie(){
 }
 
 function showCategoryDetail(cat){
+  savedCategoriesScrollY = window.scrollY;
   returnToView = () => showCategoryDetail(cat);
   returnToViewLabel = "Torna a " + cat.label;
-  renderHeaderBack(() => showTab("categorie"));
-  appHeader.classList.add("sticky");
-  bottomNav.classList.add("hidden");
+  renderHeaderBack(() => {
+    showTab("categorie");
+    requestAnimationFrame(() => window.scrollTo(0, savedCategoriesScrollY));
+  });
+  appHeader.classList.add("sticky");  bottomNav.classList.add("hidden");
   inDetailView = false;
   listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
@@ -903,8 +919,8 @@ function matchesSearch(song, query){
     song.autore || "",
     song.genere || "",
     song.tipo || "",
-    song.momento_liturgico || "",
-    song.tempo_liturgico || "",
+    momentiOf(song).join(" "),
+    tempiOf(song).join(" "),
     song.ambientazione || "",
     plainLyrics
   ].join(" ").toLowerCase();
@@ -927,6 +943,9 @@ function groupSongs(list){
     let key;
     if(sortMode === "alpha"){
       key = (song.titolo.trim()[0] || "#").toUpperCase();
+    } else if(song.anno < 1900){
+      const century = Math.floor(song.anno / 100) * 100;
+      key = String(century);
     } else {
       const decade = Math.floor(song.anno / 10) * 10;
       key = "Anni " + decade;
@@ -1028,8 +1047,7 @@ function metaLine(song){
   if(song.tipo === "musica"){
     parts = [annoLabel(song), song.autore, song.genere];
   } else if(song.tipo === "messa"){
-    parts = [annoLabel(song), song.momento_liturgico, song.tempo_liturgico];
-  } else {
+    parts = [annoLabel(song), momentiOf(song).join(" - "), tempiOf(song).join(" - ")];  } else {
     parts = [annoLabel(song), song.luogo, brancheOf(song).join(" / "), song.ambientazione];
     if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
   }
@@ -1042,8 +1060,8 @@ function matchesFilters(song){
   const decadeOk = selectedDecadi.size === 0 || selectedDecadi.has("" + Math.floor(song.anno / 10) * 10);
   const genereOk = selectedGeneri.size === 0 || selectedGeneri.has(song.genere);
   const autoreOk = selectedAutori.size === 0 || selectedAutori.has(song.autore);
-  const momentoOk = selectedMomenti.size === 0 || selectedMomenti.has(song.momento_liturgico);
-  const tempoOk = selectedTempi.size === 0 || selectedTempi.has(song.tempo_liturgico);
+  const momentoOk = selectedMomenti.size === 0 || momentiOf(song).some(m => selectedMomenti.has(m));
+  const tempoOk = selectedTempi.size === 0 || tempiOf(song).some(t => selectedTempi.has(t));
   const tipoOk = selectedTipi.size === 0 || selectedTipi.has(song.tipo);
   const origineOk = selectedOrigini.size === 0 || song.tipo !== "scout" || selectedOrigini.has(song.origine);
   const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
@@ -1262,10 +1280,10 @@ function showList(){
       if(genereRow) filterPanel.appendChild(genereRow);
     }
     if(showMessa){
-      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").map(s => s.momento_liturgico).filter(Boolean))];
+      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => momentiOf(s)))];
       const momentoRow = buildFilterRow("Momento liturgico", momentoDisponibili, selectedMomenti);
       if(momentoRow) filterPanel.appendChild(momentoRow);
-      const tempoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").map(s => s.tempo_liturgico).filter(Boolean))];
+      const tempoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => tempiOf(s)))];
       const tempoRow = buildFilterRow("Tempo liturgico", tempoDisponibili, selectedTempi);
       if(tempoRow) filterPanel.appendChild(tempoRow);
     }
@@ -1340,10 +1358,16 @@ function showList(){
 }
 
 function showDetail(index){
+  savedScrollY = window.scrollY;
   const song = SONGS[index];
   let semitones = 0;
 
-  renderHeaderBack();
+  function goBack(){
+    returnToView();
+    requestAnimationFrame(() => window.scrollTo(0, savedScrollY));
+  }
+
+  renderHeaderBack(goBack);
   bottomNav.classList.add("hidden");
   inDetailView = true;
   listFilterCollapsed = false;
@@ -1432,7 +1456,7 @@ function showDetail(index){
   backBtn.style.justifyContent = "center";
   backBtn.style.marginTop = "4px";
   backBtn.innerHTML = `${ICONS.arrowBack(16)}${returnToViewLabel}`;
-  backBtn.addEventListener("click", () => returnToView());
+  backBtn.addEventListener("click", goBack);
   content.appendChild(backBtn);
 
   function render(){
