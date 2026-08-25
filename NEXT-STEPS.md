@@ -55,10 +55,27 @@ v0.104
 - CREATA ezione categorie OK
 - Aggiunta la variabile categoria OK
 - Aggiunta la variabile originale o no OK
+---------------------------------------------------------------------------------------------------------
 v0.105
 - Prova varie icone OK
+---------------------------------------------------------------------------------------------------------
 v0.106
 - Cambiato logo android OK
 - Canti L/C dal 2010 
+---------------------------------------------------------------------------------------------------------
 v0.107
-- Canti L/C dall'inizio
+- Canti L/C dall'inizio OK
+---------------------------------------------------------------------------------------------------------
+v0.108 RELEASED
+- Nuova logica categorie OK
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+Ragiona su categorie messa.
+- tempo liturgico
+- momento della messa
+
+Ragiona su generi musicali
+- Modena non sono un genere ma autore...

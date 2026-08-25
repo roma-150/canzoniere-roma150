@@ -1,4 +1,3 @@
-<!-- Test da terminale -->
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -471,9 +470,15 @@ let selectedBranche = new Set();
 let selectedSedi = new Set();
 let selectedDecadi = new Set();
 let selectedGeneri = new Set();
-let filterOriginale = false;
-
-const APP_VERSION = "0.107";
+let selectedAutori = new Set();
+let selectedMomenti = new Set();
+let selectedTempi = new Set();
+let selectedTipi = new Set();
+let selectedOrigini = new Set();
+let filterPanelOpen = false;
+let categorySearchQuery = "";
+let returnToView = () => showList();
+const APP_VERSION = "0.108";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -497,26 +502,15 @@ const appHeader = document.getElementById("appHeader");
 const bottomNav = document.getElementById("bottomNav");
 
 const CATEGORIES = [
-  { label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", originale: true },
-  { label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", originale: true },
-  { label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", originale: true },
-  { label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida", originale: true },
-  { label: "ORIGINALI R/S", branca: "R/S", originale: true },
-  { label: "Anni '80", decade: "1980" },
-  { label: "Anni '90", decade: "1990" },
-  { label: "Anni '00", decade: "2000" },
-  { label: "Anni '10", decade: "2010" },
-  { label: "Anni '20", decade: "2020" },
+  { label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
+  { label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
+  { label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
+  { label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
+  { label: "R/S", branca: "R/S", tipo: "scout", origine: "Roma 150" },
   { label: "Selva Candida", sede: "Selva Candida" },
   { label: "Casalotti", sede: "Casalotti" },
-  { label: "Canti di Gruppo", branca: "Gruppo" },
-  { label: "Canti di Chiesa", genere: "chiesa" },
-  { label: "Canti L/C", branca: "L/C" },
-  { label: "Canti E/G", branca: "E/G" },
-  { label: "Canti R/S", branca: "R/S" },
-  { label: "Cantautori", genere: "cantautori" },
-  { label: "Irish", genere: "irish" },
-  { label: "Modena", genere: "modena" }
+  { label: "Canti di Chiesa", tipo: "messa" },
+  { label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" }
 ];
 
 function categoryCount(cat){
@@ -525,21 +519,11 @@ function categoryCount(cat){
     if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
     if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
     if(cat.genere && song.genere !== cat.genere) return false;
-    if(cat.originale && song.originale !== true) return false;
+    if(cat.autore && song.autore !== cat.autore) return false;
+    if(cat.tipo && song.tipo !== cat.tipo) return false;
+    if(cat.origine && song.origine !== cat.origine) return false;
     return true;
   }).length;
-}
-
-function applyCategory(cat){
-  selectedBranche = new Set(cat.branca ? [cat.branca] : []);
-  selectedSedi = new Set(cat.sede ? [cat.sede] : []);
-  selectedDecadi = new Set(cat.decade ? [cat.decade] : []);
-  selectedGeneri = new Set(cat.genere ? [cat.genere] : []);
-  filterOriginale = !!cat.originale;
-  showOnlyFavorites = false;
-  searchQuery = "";
-  setActiveTab("canzoni");
-  showList();
 }
 
 function renderCategorie(){
@@ -556,11 +540,177 @@ function renderCategorie(){
         ${ICONS.chevronRight(18)}
       </div>
     `;
-    row.addEventListener("click", () => applyCategory(cat));
+    row.addEventListener("click", () => showCategoryDetail(cat));
     card.appendChild(row);
   });
   content.innerHTML = "";
   content.appendChild(card);
+}
+
+function showCategoryDetail(cat){
+  returnToView = () => showCategoryDetail(cat);
+  renderHeaderBack(() => showTab("categorie"));
+  bottomNav.classList.add("hidden");
+  inDetailView = false;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  categorySearchQuery = "";
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const catTitle = document.createElement("div");
+  catTitle.className = "list-title";
+  catTitle.textContent = cat.label;
+  card.appendChild(catTitle);
+
+  const searchFilterRow = document.createElement("div");
+  searchFilterRow.className = "search-filter-row";
+  searchFilterRow.style.top = (appHeader.offsetHeight + 12) + "px";
+
+  const searchBox = document.createElement("div");
+  searchBox.className = "search-box";
+  searchBox.innerHTML = `
+    ${ICONS.search(17)}
+    <input type="text" id="catSearchInput" placeholder="Cerca in ${cat.label}...">
+    <button class="search-clear-btn" id="catSearchClear" aria-label="Cancella ricerca">${ICONS.clear(14)}</button>
+  `;
+  searchFilterRow.appendChild(searchBox);
+  card.appendChild(searchFilterRow);
+
+  const searchSentinel = document.createElement("div");
+  searchSentinel.style.cssText = "height:1px;";
+  searchFilterRow.before(searchSentinel);
+  requestAnimationFrame(() => {
+    new IntersectionObserver(
+      ([entry]) => searchFilterRow.classList.toggle("stuck", !entry.isIntersecting),
+      { threshold: 1 }
+    ).observe(searchSentinel);
+  });
+
+  const sortRow = document.createElement("div");
+  sortRow.className = "sort-row";
+  sortRow.innerHTML = `
+    <div class="segmented">
+      <button id="catSortAlpha" class="${sortMode === "alpha" ? "active" : ""}">A-Z</button>
+      <button id="catSortAnno" class="${sortMode === "anno" ? "active" : ""}">Anno</button>
+    </div>
+    <button class="dir-btn" id="catDirToggle" aria-label="Inverti ordine">
+      ${sortDir === 1 ? ICONS.sortAsc(17) : ICONS.sortDesc(17)}
+    </button>
+  `;
+  card.appendChild(sortRow);
+
+  const filterCollapseSentinel = document.createElement("div");
+  filterCollapseSentinel.style.cssText = "height:1px;";
+  sortRow.after(filterCollapseSentinel);
+  requestAnimationFrame(() => {
+    new IntersectionObserver(
+      ([entry]) => {
+        const collapsed = !entry.isIntersecting;
+        searchFilterRow.classList.toggle("collapsed", collapsed);
+        listFilterCollapsed = collapsed;
+        updateBackToTopVisibility();
+      },
+      { threshold: 0, rootMargin: `-${appHeader.offsetHeight + 12}px 0px 0px 0px` }
+    ).observe(filterCollapseSentinel);
+  });
+
+  const results = document.createElement("div");
+  results.id = "catResultsArea";
+  card.appendChild(results);
+
+  content.innerHTML = "";
+  content.appendChild(card);
+
+  function renderCategoryResults(){
+    results.innerHTML = "";
+    const filtered = SONGS.filter(song => matchesCategory(song, cat) && matchesSearch(song, categorySearchQuery));
+    if(filtered.length === 0){
+      results.innerHTML = `<div class="empty">Nessuna canzone trovata${categorySearchQuery ? ` per "${categorySearchQuery}"` : ""}.</div>`;
+      return;
+    }
+    groupSongs(filtered).forEach(group => {
+      const divider = document.createElement("div");
+      divider.className = "group-divider";
+      divider.textContent = group.key;
+      results.appendChild(divider);
+      group.songs.forEach(song => {
+        const isFav = favoriti.has(favKey(song));
+        const row = document.createElement("div");
+        row.className = "song-row";
+        row.innerHTML = `
+          <div>
+            <div class="row-title">${song.titolo}</div>
+            <div class="row-meta">${metaLine(song)}</div>
+          </div>
+          <div class="row-end">
+            <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
+            <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
+            ${ICONS.chevronRight(18)}
+          </div>
+        `;
+        row.addEventListener("click", () => showDetail(SONGS.indexOf(song)));
+        row.querySelector(".fav-star").addEventListener("click", (e) => {
+          e.stopPropagation();
+          if(favoriti.has(favKey(song))) favoriti.delete(favKey(song));
+          else favoriti.add(favKey(song));
+          saveFavorites();
+          renderCategoryResults();
+        });
+        results.appendChild(row);
+      });
+    });
+  }
+
+  const catSearchInputEl = card.querySelector("#catSearchInput");
+  const catSearchClearBtn = card.querySelector("#catSearchClear");
+  catSearchInputEl.addEventListener("input", (e) => {
+    categorySearchQuery = e.target.value;
+    catSearchClearBtn.classList.toggle("visible", categorySearchQuery.length > 0);
+    renderCategoryResults();
+  });
+  catSearchClearBtn.addEventListener("click", () => {
+    categorySearchQuery = "";
+    catSearchInputEl.value = "";
+    catSearchClearBtn.classList.remove("visible");
+    catSearchInputEl.focus();
+    renderCategoryResults();
+  });
+  sortRow.querySelector("#catSortAlpha").addEventListener("click", () => { sortMode = "alpha"; showCategoryDetail(cat); });
+  sortRow.querySelector("#catSortAnno").addEventListener("click", () => { sortMode = "anno"; showCategoryDetail(cat); });
+  sortRow.querySelector("#catDirToggle").addEventListener("click", () => { sortDir *= -1; showCategoryDetail(cat); });
+
+  renderCategoryResults();
+}
+
+function categoryCount(cat){
+  return SONGS.filter(song => {
+    if(cat.branca && song.branca !== cat.branca) return false;
+    if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
+    if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
+    if(cat.genere && song.genere !== cat.genere) return false;
+    if(cat.autore && song.autore !== cat.autore) return false;
+    if(cat.tipo && song.tipo !== cat.tipo) return false;
+    if(cat.origine && song.origine !== cat.origine) return false;
+    return true;
+  }).length;
+}
+
+function matchesCategory(song, cat){
+  if(cat.branca && song.branca !== cat.branca) return false;
+  if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
+  if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
+  if(cat.genere && song.genere !== cat.genere) return false;
+  if(cat.autore && song.autore !== cat.autore) return false;
+  if(cat.tipo && song.tipo !== cat.tipo) return false;
+  if(cat.origine && song.origine !== cat.origine) return false;
+  return true;
+}
+
+function categoryCount(cat){
+  return SONGS.filter(song => matchesCategory(song, cat)).length;
 }
 
 const TAB_PLACEHOLDERS = {
@@ -727,6 +877,12 @@ function matchesSearch(song, query){
     song.luogo || "",
     song.branca || "",
     sede,
+    song.tonalita || "",
+    song.autore || "",
+    song.genere || "",
+    song.tipo || "",
+    song.momento_liturgico || "",
+    song.tempo_liturgico || "",
     plainLyrics
   ].join(" ").toLowerCase();
 
@@ -816,10 +972,11 @@ function renderHeaderBrand(){
   wireUpdateBtn();
 }
 
-function renderHeaderBack(){
+function renderHeaderBack(onBack){
+  onBack = onBack || (() => returnToView());
   appHeader.classList.remove("sticky");
   appHeader.innerHTML = `
-    <button class="header-back-btn" id="headerHome" aria-label="Torna all'elenco canzoni">${ICONS.arrowBack(20)}</button>
+    <button class="header-back-btn" id="headerHome" aria-label="Indietro">${ICONS.arrowBack(20)}</button>
     <div class="brand-text-center">
       <div class="name">Canzoniere di gruppo</div>
       <div class="sub">Roma 150</div>
@@ -827,12 +984,19 @@ function renderHeaderBack(){
     <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
   `;
   wireUpdateBtn();
-  document.getElementById("headerHome").addEventListener("click", showList);
+  document.getElementById("headerHome").addEventListener("click", onBack);
 }
 
 function metaLine(song){
-  const parts = [song.anno, song.luogo, song.branca];
-  if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
+  let parts;
+  if(song.tipo === "musica"){
+    parts = [song.anno, song.autore, song.genere];
+  } else if(song.tipo === "messa"){
+    parts = [song.anno, song.momento_liturgico, song.tempo_liturgico];
+  } else {
+    parts = [song.anno, song.luogo, song.branca];
+    if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
+  }
   return parts.filter(Boolean).join(" · ");
 }
 
@@ -841,10 +1005,13 @@ function matchesFilters(song){
   const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
   const decadeOk = selectedDecadi.size === 0 || selectedDecadi.has("" + Math.floor(song.anno / 10) * 10);
   const genereOk = selectedGeneri.size === 0 || selectedGeneri.has(song.genere);
-  const originaleOk = !filterOriginale || song.originale === true;
+  const autoreOk = selectedAutori.size === 0 || selectedAutori.has(song.autore);
+  const momentoOk = selectedMomenti.size === 0 || selectedMomenti.has(song.momento_liturgico);
+  const tempoOk = selectedTempi.size === 0 || selectedTempi.has(song.tempo_liturgico);
+  const tipoOk = selectedTipi.size === 0 || selectedTipi.has(song.tipo);
+  const origineOk = selectedOrigini.size === 0 || selectedOrigini.has(song.origine);
   const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
-  return brancaOk && sedeOk && decadeOk && genereOk && originaleOk && favOk;
-}
+  return brancaOk && sedeOk && decadeOk && genereOk && autoreOk && momentoOk && tempoOk && tipoOk && origineOk && favOk;}
 
 function renderResults(card){
   let results = card.querySelector("#resultsArea");
@@ -892,6 +1059,7 @@ function renderResults(card){
 }
 
 function showList(){
+  returnToView = () => showList();
   renderHeaderBrand();
   bottomNav.classList.remove("hidden");
   inDetailView = false;
@@ -905,7 +1073,14 @@ function showList(){
   const card = document.createElement("div");
   card.className = "card";
 
-  const brancheDisponibili = [...new Set(SONGS.map(s => s.branca).filter(Boolean))].sort();
+  const ORDINE_BRANCHE = ["L/C", "E/G", "R/S"];
+  const brancheDisponibili = [...new Set(SONGS.map(s => s.branca).filter(Boolean))].sort((a, b) => {
+    const ia = ORDINE_BRANCHE.indexOf(a), ib = ORDINE_BRANCHE.indexOf(b);
+    if(ia === -1 && ib === -1) return a.localeCompare(b, "it");
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
   const sediDisponibili = [...new Set(SONGS.flatMap(s => s.sede || []))].sort();
   const filtriDisponibili = true;
 
@@ -942,7 +1117,7 @@ function showList(){
     ).observe(searchSentinel);
   });
 
-  function buildFilterRow(label, values, selectedSet, formatFn){
+  function buildFilterRow(label, values, selectedSet, formatFn, rebuildPanel){
     if(values.length < 2) return null;
     formatFn = formatFn || (v => v);
     const row = document.createElement("div");
@@ -955,9 +1130,13 @@ function showList(){
       chip.addEventListener("click", () => {
         const v = chip.dataset.value;
         if(selectedSet.has(v)) selectedSet.delete(v); else selectedSet.add(v);
-        chip.classList.toggle("active");
-        updateFilterBtnState();
-        renderResults(card);
+        if(rebuildPanel){
+          showList();
+        } else {
+          chip.classList.toggle("active");
+          updateFilterBtnState();
+          renderResults(card);
+        }
       });
     });
     return row;
@@ -978,25 +1157,76 @@ function showList(){
 
   if(filtriDisponibili){
     const filterPanel = document.createElement("div");
-    filterPanel.className = "filter-panel";
-    filterPanel.appendChild(buildToggleFilterRow(
-      "Preferite", `${ICONS.star(13, true)} Preferiti`,
-      () => showOnlyFavorites, (v) => { showOnlyFavorites = v; }
-    ));
-    const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
-    if(brancaRow) filterPanel.appendChild(brancaRow);
-    const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi);
-    if(sedeRow) filterPanel.appendChild(sedeRow);
+    filterPanel.className = "filter-panel" + (filterPanelOpen ? " open" : "");
+    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Musica" };
+    const tipiDisponibili = ["scout", "messa", "musica"].filter(t => SONGS.some(s => s.tipo === t));
+    const quickRow = document.createElement("div");
+    quickRow.className = "filter-row";
+    const favChipHtml = `<button class="filter-chip fav-chip ${showOnlyFavorites ? "active" : ""}">${ICONS.star(13, true)} Preferiti</button>`;
+    const tipoChipsHtml = tipiDisponibili.map(v =>
+      `<button class="filter-chip" data-value="${v}">${tipiLabel[v] || v}</button>`
+    ).join("");
+    quickRow.innerHTML = `<div class="filter-chips">${tipoChipsHtml}${favChipHtml}</div>`;
+    const favChip = quickRow.querySelector(".fav-chip");
+    favChip.addEventListener("click", () => {
+      showOnlyFavorites = !showOnlyFavorites;
+      favChip.classList.toggle("active", showOnlyFavorites);
+      updateFilterBtnState();
+      renderResults(card);
+    });
+    quickRow.querySelectorAll(".filter-chip[data-value]").forEach(chip => {
+      if(selectedTipi.has(chip.dataset.value)) chip.classList.add("active");
+      chip.addEventListener("click", () => {
+        const v = chip.dataset.value;
+        if(selectedTipi.has(v)) selectedTipi.delete(v); else selectedTipi.add(v);
+        showList();
+      });
+    });
+    filterPanel.appendChild(quickRow);
+
+    const tipiVuoto = selectedTipi.size === 0;
+    const scoutSelezionato = selectedTipi.has("scout");
+    const origineVuoto = selectedOrigini.size === 0;
+    const showBrancaSede = tipiVuoto || scoutSelezionato;
+    const showOrigine = scoutSelezionato;
+    const showSede = tipiVuoto || (scoutSelezionato && (origineVuoto || selectedOrigini.has("Roma 150")));
+    const showGenere = selectedTipi.has("musica");
+    const showMessa = selectedTipi.has("messa");
+
+    if(showBrancaSede){
+      const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
+      if(brancaRow) filterPanel.appendChild(brancaRow);
+    }
+    if(showOrigine){
+      const origineDisponibili = [...new Set(SONGS.filter(s => s.tipo === "scout").map(s => s.origine).filter(Boolean))];
+      const origineRow = buildFilterRow("Origine", origineDisponibili, selectedOrigini, null, true);
+      if(origineRow) filterPanel.appendChild(origineRow);
+    }
+    if(showSede){
+      const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi);
+      if(sedeRow) filterPanel.appendChild(sedeRow);
+    }    if(showGenere){
+      const genereDisponibili = [...new Set(SONGS.filter(s => s.tipo === "musica").map(s => s.genere).filter(Boolean))].sort();
+      const genereRow = buildFilterRow("Genere", genereDisponibili, selectedGeneri);
+      if(genereRow) filterPanel.appendChild(genereRow);
+    }
+    if(showMessa){
+      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").map(s => s.momento_liturgico).filter(Boolean))];
+      const momentoRow = buildFilterRow("Momento liturgico", momentoDisponibili, selectedMomenti);
+      if(momentoRow) filterPanel.appendChild(momentoRow);
+      const tempoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").map(s => s.tempo_liturgico).filter(Boolean))];
+      const tempoRow = buildFilterRow("Tempo liturgico", tempoDisponibili, selectedTempi);
+      if(tempoRow) filterPanel.appendChild(tempoRow);
+    }
     card.appendChild(filterPanel);
 
     const filterBtn = searchFilterRow.querySelector(".filter-toggle-btn");
     filterBtn.addEventListener("click", () => {
-      filterPanel.classList.toggle("open");
+      filterPanelOpen = filterPanel.classList.toggle("open");
     });
 
     function updateFilterBtnState(){
-      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || selectedDecadi.size > 0 || showOnlyFavorites;
-      filterBtn.classList.toggle("active", anyActive);
+      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || selectedDecadi.size > 0 || selectedTipi.size > 0 || selectedOrigini.size > 0 || selectedGeneri.size > 0 || selectedMomenti.size > 0 || selectedTempi.size > 0 || showOnlyFavorites;      filterBtn.classList.toggle("active", anyActive);
     }
     updateFilterBtnState();
   }
@@ -1135,7 +1365,7 @@ function showDetail(index){
   backBtn.style.justifyContent = "center";
   backBtn.style.marginTop = "4px";
   backBtn.innerHTML = `${ICONS.arrowBack(16)}Torna all'elenco`;
-  backBtn.addEventListener("click", showList);
+  backBtn.addEventListener("click", () => returnToView());
   content.appendChild(backBtn);
 
   function render(){
