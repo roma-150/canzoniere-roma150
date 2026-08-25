@@ -493,7 +493,7 @@ let returnToView = () => showList();
 let savedScrollY = 0;
 let savedCategoriesScrollY = 0;
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.111";
+const APP_VERSION = "0.112";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1235,11 +1235,21 @@ function showList(){
       chip.addEventListener("click", () => {
         const v = chip.dataset.value;
         const wasSelected = selectedTipi.has(v);
-        if(wasSelected) selectedTipi.delete(v); else selectedTipi.add(v);
-        if(v === "scout" && wasSelected){
-          selectedBranche.clear();
-          selectedOrigini.clear();
-          selectedSedi.clear();
+        if(wasSelected){
+          selectedTipi.delete(v);
+          if(v === "scout"){
+            selectedBranche.clear();
+            selectedOrigini.clear();
+            selectedSedi.clear();
+          }
+        } else {
+          selectedTipi.clear();
+          selectedTipi.add(v);
+          if(v !== "scout"){
+            selectedBranche.clear();
+            selectedOrigini.clear();
+            selectedSedi.clear();
+          }
         }
         showList();
       });

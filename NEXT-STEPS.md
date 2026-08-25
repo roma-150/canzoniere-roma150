@@ -123,11 +123,14 @@ Ragiona su categorie messa.
 - momento della messa OK
 - Aggiunti canti canzoniere messa di gruppo FINO A PAGINA 28 INCLUSA
 ---------------------------------------------------------------------------------------------------------
-v0.112
--
--
--
--
+v0.112 RELEASED
+- Filtri principali ora sono alternativi
+- Aggiunti vari canti dei Modena city Ramblers
+- Aggiunti vari canti famosi
+- Iniziato step canzoniere di clan
+---------------------------------------------------------------------------------------------------------
+v0.113
+- Ragionamenti su genere e autore, filtro per canti famosi
 
 
 
