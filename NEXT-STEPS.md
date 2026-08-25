@@ -1,10 +1,43 @@
 VERSIONI E MODIFICHE DA FARE
+---------------------------------------------------------------------------------------------------------
 CANZONI DA VERIFICARE:
+1992 L/C fuori dal sacco: CHECK PARTICOLARE...
+---------------------------------------------------------------------------------------------------------
 2003-CIAO JOSE
 2026-INNO REPARTO FEMMINILE SELVA
+L/C CASALOTTI:
+1992 x2
+1993 x2
+1994 x4
+1995
+1996
+1997
+1998
+1999
+2000
+01
+02
+03
+040
+05
+06
+07
+07cambu
+08
+09
+2012
+2013
+2014
+2015
+2016
+2017
+2018
+2019
 
-
-
+---------------------------------------------------------------------------------------------------------
+CORREZIONI NEI FILE PDF:
+L/C CASALOTTI - CAPPADOCIA 1993 IN SOL (MANCA LA L NELLA PAROLA SOL, PRIMA STROFA)
+L/C CASALOTTI - CAPPADOCIA 93 cocci, titolo (confronta con app)
 ---------------------------------------------------------------------------------------------------------
 v0.102-Released
 - Pallino Rosso UPDATE OK
@@ -27,3 +60,5 @@ v0.105
 v0.106
 - Cambiato logo android OK
 - Canti L/C dal 2010 
+v0.107
+- Canti L/C dall'inizio
