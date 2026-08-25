@@ -59,6 +59,9 @@
     pointer-events:none;
     transform:translateX(-50%) translateY(12px);
   }
+  body.is-android .bottom-nav{
+    bottom:calc(env(safe-area-inset-bottom) * 0.6 + 10px);
+  }
   .nav-item{
     flex:1; display:flex; flex-direction:column; align-items:center;
     background:none; border:none; cursor:pointer; color:#8E8E93;
@@ -470,7 +473,7 @@ let selectedDecadi = new Set();
 let selectedGeneri = new Set();
 let filterOriginale = false;
 
-const APP_VERSION = "0.105";
+const APP_VERSION = "0.106";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1193,6 +1196,10 @@ function showDetail(index){
 
   render();
   footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
+}
+
+if(/Android/i.test(navigator.userAgent)){
+  document.body.classList.add("is-android");
 }
 
 renderHeaderBrand();
