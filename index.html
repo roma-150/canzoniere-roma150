@@ -310,6 +310,11 @@
   .fontsize-tile .a-sample{ font-size:20px; font-weight:800; color:var(--purple); line-height:1; margin-top:6px; }
   .fontsize-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
 
+  .chords-hidden .chord{ display:none; }
+  .chordtoggle-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
+  .chordtoggle-tile .label{ color:var(--ink-soft); }
+  .chordtoggle-tile .chordtoggle-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
+  .chordtoggle-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
   .scroll-tile{ background:var(--purple); cursor:pointer; user-select:none; color:var(--white); }
   .scroll-tile .label{ color:rgba(255,255,255,0.75); }
   .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; }
@@ -377,6 +382,8 @@ const ICONS = {
   play: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>`,
   pause: (s=16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>`,
   arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`,
+  chordsOn: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+  chordsOff: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M4 4l16 16" stroke-width="2.2"/></svg>`,
   chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
@@ -484,7 +491,7 @@ let filterPanelOpen = false;
 let categorySearchQuery = "";
 let returnToView = () => showList();
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.109";
+const APP_VERSION = "0.110";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -768,6 +775,7 @@ function setActiveTab(tab){
 
 function showTab(tab){
   setActiveTab(tab);
+  window.scrollTo(0, 0);
   if(tab === "canzoni"){
     showList();
     return;
@@ -1029,14 +1037,15 @@ function metaLine(song){
 }
 
 function matchesFilters(song){
-  const brancaOk = selectedBranche.size === 0 || brancheOf(song).some(b => selectedBranche.has(b));  const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
+  const brancaOk = selectedBranche.size === 0 || song.tipo !== "scout" || brancheOf(song).some(b => selectedBranche.has(b));
+  const sedeOk = selectedSedi.size === 0 || song.tipo !== "scout" || (song.sede || []).some(s => selectedSedi.has(s));
   const decadeOk = selectedDecadi.size === 0 || selectedDecadi.has("" + Math.floor(song.anno / 10) * 10);
   const genereOk = selectedGeneri.size === 0 || selectedGeneri.has(song.genere);
   const autoreOk = selectedAutori.size === 0 || selectedAutori.has(song.autore);
   const momentoOk = selectedMomenti.size === 0 || selectedMomenti.has(song.momento_liturgico);
   const tempoOk = selectedTempi.size === 0 || selectedTempi.has(song.tempo_liturgico);
   const tipoOk = selectedTipi.size === 0 || selectedTipi.has(song.tipo);
-  const origineOk = selectedOrigini.size === 0 || selectedOrigini.has(song.origine);
+  const origineOk = selectedOrigini.size === 0 || song.tipo !== "scout" || selectedOrigini.has(song.origine);
   const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
   return brancaOk && sedeOk && decadeOk && genereOk && autoreOk && momentoOk && tempoOk && tipoOk && origineOk && favOk;}
 
@@ -1145,7 +1154,7 @@ function showList(){
     ).observe(searchSentinel);
   });
 
-  function buildFilterRow(label, values, selectedSet, formatFn, rebuildPanel){
+  function buildFilterRow(label, values, selectedSet, formatFn, rebuildPanel, onToggle){
     if(values.length < 2) return null;
     formatFn = formatFn || (v => v);
     const row = document.createElement("div");
@@ -1157,7 +1166,9 @@ function showList(){
     row.querySelectorAll(".filter-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         const v = chip.dataset.value;
-        if(selectedSet.has(v)) selectedSet.delete(v); else selectedSet.add(v);
+        const wasSelected = selectedSet.has(v);
+        if(wasSelected) selectedSet.delete(v); else selectedSet.add(v);
+        if(onToggle) onToggle(v, !wasSelected);
         if(rebuildPanel){
           showList();
         } else {
@@ -1169,7 +1180,6 @@ function showList(){
     });
     return row;
   }
-
   function buildToggleFilterRow(label, chipText, getState, setState){
     const row = document.createElement("div");
     row.className = "filter-row";
@@ -1186,7 +1196,7 @@ function showList(){
   if(filtriDisponibili){
     const filterPanel = document.createElement("div");
     filterPanel.className = "filter-panel" + (filterPanelOpen ? " open" : "");
-    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Musica" };
+    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Canti famosi" };
     const tipiDisponibili = ["scout", "messa", "musica"].filter(t => SONGS.some(s => s.tipo === t));
     const quickRow = document.createElement("div");
     quickRow.className = "filter-row";
@@ -1206,7 +1216,13 @@ function showList(){
       if(selectedTipi.has(chip.dataset.value)) chip.classList.add("active");
       chip.addEventListener("click", () => {
         const v = chip.dataset.value;
-        if(selectedTipi.has(v)) selectedTipi.delete(v); else selectedTipi.add(v);
+        const wasSelected = selectedTipi.has(v);
+        if(wasSelected) selectedTipi.delete(v); else selectedTipi.add(v);
+        if(v === "scout" && wasSelected){
+          selectedBranche.clear();
+          selectedOrigini.clear();
+          selectedSedi.clear();
+        }
         showList();
       });
     });
@@ -1222,7 +1238,9 @@ function showList(){
     const showMessa = selectedTipi.has("messa");
 
     if(showBrancaSede){
-      const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche);
+      const brancaRow = buildFilterRow("Branca", brancheDisponibili, selectedBranche, null, true, (v, isActive) => {
+        if(isActive) selectedTipi.add("scout");
+      });
       if(brancaRow) filterPanel.appendChild(brancaRow);
     }
     if(showOrigine){
@@ -1231,7 +1249,12 @@ function showList(){
       if(origineRow) filterPanel.appendChild(origineRow);
     }
     if(showSede){
-      const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi);
+      const sedeRow = buildFilterRow("Sede", sediDisponibili, selectedSedi, null, true, (v, isActive) => {
+        if(isActive){
+          selectedTipi.add("scout");
+          selectedOrigini.add("Roma 150");
+        }
+      });
       if(sedeRow) filterPanel.appendChild(sedeRow);
     }    if(showGenere){
       const genereDisponibili = [...new Set(SONGS.filter(s => s.tipo === "musica").map(s => s.genere).filter(Boolean))].sort();
@@ -1350,6 +1373,11 @@ function showDetail(index){
         <div class="a-sample" id="aSample">A</div>
         <div class="state-name" id="fontStateName">Normale</div>
       </div>
+      <div class="mini-tile chordtoggle-tile" id="chordToggleTile">
+        <div class="label">Accordi</div>
+        <div class="chordtoggle-icon" id="chordToggleIcon">${ICONS.chordsOn(20)}</div>
+        <div class="state-name" id="chordToggleStateName">Mostra</div>
+      </div>
       <div class="mini-tile scroll-tile" id="scrollToggle">
         <div class="label">Scorri</div>
         <div class="scroll-icon" id="scrollIcon">${ICONS.play(20)}</div>
@@ -1379,6 +1407,17 @@ function showDetail(index){
   fontSizeTile.addEventListener("click", () => {
     fontScaleIndex = (fontScaleIndex + 1) % FONT_STATES.length;
     applyFontState();
+  });
+
+  let chordsVisible = true;
+  const chordToggleTile = document.getElementById("chordToggleTile");
+  const chordToggleIcon = document.getElementById("chordToggleIcon");
+  const chordToggleStateName = document.getElementById("chordToggleStateName");
+  chordToggleTile.addEventListener("click", () => {
+    chordsVisible = !chordsVisible;
+    card2.classList.toggle("chords-hidden", !chordsVisible);
+    chordToggleIcon.innerHTML = chordsVisible ? ICONS.chordsOn(20) : ICONS.chordsOff(20);
+    chordToggleStateName.textContent = chordsVisible ? "Mostra" : "Nascondi";
   });
 
   const card2 = document.createElement("div");

@@ -71,19 +71,28 @@ v0.107
 v0.108 RELEASED
 - Nuova logica categorie OK
 ---------------------------------------------------------------------------------------------------------
-v0.109
+v0.109 RELEASED
 - fix barra viola in categorie OK
-- fix canzone vista da dentro a una categoria
-
-
-
-
-TASTO ACCORDI ON/OFF
-
-
+- fix canzone vista da dentro a una categoria OK
+- inseriti canti GIUNGLA OK
+- inseriti canti In un giorno di Pioggia e Scouting for Boys OK
+---------------------------------------------------------------------------------------------------------
+v0.110 RELEASED
+- Fix filtro scout e branca
+- Fix scrollo in basso cambio categoria
+- Fix filtri collegati a cascata
+- Cambio nome "Canti famosi"
+- TASTO ACCORDI ON/OFF
+---------------------------------------------------------------------------------------------------------
+v0.111
 Ragiona su categorie messa.
 - tempo liturgico
 - momento della messa
+
+
+
+
+
 
 Ragiona su generi musicali
 - Modena non sono un genere ma autore...
