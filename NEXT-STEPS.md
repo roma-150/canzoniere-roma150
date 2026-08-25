@@ -129,12 +129,13 @@ v0.112 RELEASED
 - Aggiunti vari canti famosi
 - Iniziato step canzoniere di clan
 ---------------------------------------------------------------------------------------------------------
-v0.113
+v0.113 RELEASED
 - Ragionamenti su genere e autore, filtro per canti famosi
-
-
-
-
-
-Ragiona su generi musicali
-- Modena non sono un genere ma autore...
+- Fix categorie
+- Categorie in Ordine
+- Logica delle categorie completata
+---------------------------------------------------------------------------------------------------------
+v0.114
+- 
+- 
+- 

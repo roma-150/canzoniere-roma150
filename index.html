@@ -491,9 +491,16 @@ let filterPanelOpen = false;
 let categorySearchQuery = "";
 let returnToView = () => showList();
 let savedScrollY = 0;
-let savedCategoriesScrollY = 0;
+let savedCategoriesHomeScrollY = 0;
+let savedCategoriesSezioneScrollY = 0;
+
+const CATEGORY_SECTIONS = [
+  { label: "Canti Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
+  { label: "Canti Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
+  { label: "Canti Famosi", gruppi: ["Canti famosi"] }
+];
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.112";
+const APP_VERSION = "0.113";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -532,17 +539,40 @@ const appHeader = document.getElementById("appHeader");
 const bottomNav = document.getElementById("bottomNav");
 
 const CATEGORIES = [
-  { label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
-  { label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
-  { label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
-  { label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
-  { label: "R/S", branca: "R/S", tipo: "scout", origine: "Roma 150" },
-  { label: "Selva Candida", sede: "Selva Candida" },
-  { label: "Casalotti", sede: "Casalotti" },
-  { label: "Canti di Chiesa", tipo: "messa" },
-  { label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" },
-  { label: "Canti Giungla", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Giungla" },
-  { label: "Canti Bosco", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Bosco" }
+  { gruppo: "Canti del Roma 150", label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "R/S", branca: "R/S", tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "Selva Candida", sede: "Selva Candida" },
+  { gruppo: "Canti del Roma 150", label: "Casalotti", sede: "Casalotti" },
+  { gruppo: "Canti AGESCI", label: "Canti Giungla", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Giungla" },
+  { gruppo: "Canti AGESCI", label: "Canti Bosco", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Bosco" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Avvento", tipo: "messa", tempo: "Avvento" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Natale", tipo: "messa", tempo: "Natale" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Quaresima", tipo: "messa", tempo: "Quaresima" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Pasqua", tipo: "messa", tempo: "Pasqua" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Tempo Ordinario", tipo: "messa", tempo: "Tempo Ordinario" },
+  { gruppo: "Momenti dell'anno liturgico", label: "Pentecoste", tipo: "messa", tempo: "Pentecoste" },
+  { gruppo: "Sacramenti e cerimonie", label: "Funerale", tipo: "messa", tempo: "Funerale" },
+  { gruppo: "Sacramenti e cerimonie", label: "Matrimonio", tipo: "messa", tempo: "Matrimonio" },
+  { gruppo: "Sacramenti e cerimonie", label: "Battesimo", tipo: "messa", tempo: "Battesimo" },
+  { gruppo: "Sacramenti e cerimonie", label: "Comunione", tipo: "messa", tempo: "Comunione" },
+  { gruppo: "Sacramenti e cerimonie", label: "Cresima", tipo: "messa", tempo: "Cresima" },
+  { gruppo: "Momenti della liturgia", label: "Ingresso", tipo: "messa", momento: "Ingresso" },
+  { gruppo: "Momenti della liturgia", label: "Gloria", tipo: "messa", momento: "Gloria" },
+  { gruppo: "Momenti della liturgia", label: "Salmo/Alleluia", tipo: "messa", momento: "Salmo/Alleluia" },
+  { gruppo: "Momenti della liturgia", label: "Offertorio", tipo: "messa", momento: "Offertorio" },
+  { gruppo: "Momenti della liturgia", label: "Santo", tipo: "messa", momento: "Santo" },
+  { gruppo: "Momenti della liturgia", label: "Comunione", tipo: "messa", momento: "Comunione" },
+  { gruppo: "Momenti della liturgia", label: "Pace", tipo: "messa", momento: "Pace" },
+  { gruppo: "Momenti della liturgia", label: "Finale", tipo: "messa", momento: "Finale" },
+  { gruppo: "Canti famosi", label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" },
+  { gruppo: "Canti famosi", label: "Cantautori", tipo: "musica", genere: "Cantautori" },
+  { gruppo: "Canti famosi", label: "Fabrizio De André", tipo: "musica", autore: "Fabrizio De André" },
+  { gruppo: "Canti famosi", label: "Lucio Battisti", tipo: "musica", autore: "Lucio Battisti" },
+  { gruppo: "Canti famosi", label: "Irish", tipo: "musica", genere: "Irish" },
+  { gruppo: "Canti famosi", label: "Canti Partigiani", tipo: "musica", genere: "Canti partigiani" }
 ];
 
 function categoryCount(cat){
@@ -559,33 +589,77 @@ function categoryCount(cat){
 }
 
 function renderCategorie(){
+  content.innerHTML = "";
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = '<div class="list-title">Categorie</div>';
-  CATEGORIES.forEach(cat => {
+  CATEGORY_SECTIONS.forEach(sez => {
     const row = document.createElement("div");
     row.className = "song-row";
     row.innerHTML = `
-      <div class="row-title">${cat.label}</div>
+      <div class="row-title">${sez.label}</div>
       <div class="row-end">
-        <span class="key-badge">${categoryCount(cat)}</span>
         ${ICONS.chevronRight(18)}
       </div>
     `;
-    row.addEventListener("click", () => showCategoryDetail(cat));
+    row.addEventListener("click", () => showCategorieSezione(sez));
     card.appendChild(row);
   });
-  content.innerHTML = "";
   content.appendChild(card);
 }
 
-function showCategoryDetail(cat){
-  savedCategoriesScrollY = window.scrollY;
-  returnToView = () => showCategoryDetail(cat);
-  returnToViewLabel = "Torna a " + cat.label;
+function showCategorieSezione(sez){
+  savedCategoriesHomeScrollY = window.scrollY;
   renderHeaderBack(() => {
     showTab("categorie");
-    requestAnimationFrame(() => window.scrollTo(0, savedCategoriesScrollY));
+    requestAnimationFrame(() => window.scrollTo(0, savedCategoriesHomeScrollY));
+  });
+  appHeader.classList.add("sticky");
+  bottomNav.classList.remove("hidden");
+  inDetailView = false;  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  content.innerHTML = "";
+
+  const sezTitle = document.createElement("div");
+  sezTitle.className = "list-title";
+  sezTitle.style.marginTop = "4px";
+  sezTitle.textContent = sez.label;
+  content.appendChild(sezTitle);
+
+  const gruppi = sez.gruppi.map(nome => ({
+    nome,
+    categorie: CATEGORIES.filter(cat => cat.gruppo === nome)
+  })).filter(g => g.categorie.length > 0);
+  gruppi.forEach(g => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<div class="list-title">${g.nome}</div>`;
+    const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie")
+      ? g.categorie
+      : [...g.categorie].sort((a, b) => a.label.localeCompare(b.label, "it", { sensitivity: "base" }));
+    categorieOrdinate.forEach(cat => {
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div class="row-title">${cat.label}</div>
+        <div class="row-end">
+          <span class="key-badge">${categoryCount(cat)}</span>
+          ${ICONS.chevronRight(18)}
+        </div>
+      `;
+      row.addEventListener("click", () => showCategoryDetail(cat, sez));
+      card.appendChild(row);
+    });
+    content.appendChild(card);
+  });
+}
+function showCategoryDetail(cat, sez){
+  savedCategoriesSezioneScrollY = window.scrollY;
+  returnToView = () => showCategoryDetail(cat, sez);
+  returnToViewLabel = "Torna a " + cat.label;
+  renderHeaderBack(() => {
+    showCategorieSezione(sez);
+    requestAnimationFrame(() => window.scrollTo(0, savedCategoriesSezioneScrollY));
   });
   appHeader.classList.add("sticky");  bottomNav.classList.add("hidden");
   inDetailView = false;
@@ -715,9 +789,9 @@ function showCategoryDetail(cat){
     catSearchInputEl.focus();
     renderCategoryResults();
   });
-  sortRow.querySelector("#catSortAlpha").addEventListener("click", () => { sortMode = "alpha"; showCategoryDetail(cat); });
-  sortRow.querySelector("#catSortAnno").addEventListener("click", () => { sortMode = "anno"; showCategoryDetail(cat); });
-  sortRow.querySelector("#catDirToggle").addEventListener("click", () => { sortDir *= -1; showCategoryDetail(cat); });
+  sortRow.querySelector("#catSortAlpha").addEventListener("click", () => { sortMode = "alpha"; showCategoryDetail(cat, sez); });
+  sortRow.querySelector("#catSortAnno").addEventListener("click", () => { sortMode = "anno"; showCategoryDetail(cat, sez); });
+  sortRow.querySelector("#catDirToggle").addEventListener("click", () => { sortDir *= -1; showCategoryDetail(cat, sez); });
 
   renderCategoryResults();
 }
@@ -736,7 +810,7 @@ function categoryCount(cat){
 }
 
 function matchesCategory(song, cat){
-  if(cat.branca && song.branca !== cat.branca) return false;
+  if(cat.branca && !brancheOf(song).includes(cat.branca)) return false;
   if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
   if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
   if(cat.genere && song.genere !== cat.genere) return false;
@@ -744,6 +818,8 @@ function matchesCategory(song, cat){
   if(cat.tipo && song.tipo !== cat.tipo) return false;
   if(cat.origine && song.origine !== cat.origine) return false;
   if(cat.ambientazione && song.ambientazione !== cat.ambientazione) return false;
+  if(cat.momento && !momentiOf(song).includes(cat.momento)) return false;
+  if(cat.tempo && !tempiOf(song).includes(cat.tempo)) return false;
   return true;
 }
 
