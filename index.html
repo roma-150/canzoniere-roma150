@@ -265,6 +265,11 @@
     font-size:11.5px; font-weight:800; color:var(--gold);
     background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
   }
+  .origin-dot{
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--green); border:1.5px solid var(--white);
+    margin-left:6px; flex-shrink:0; vertical-align:middle;
+  }
 
   /* dettaglio */
   .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
@@ -478,6 +483,7 @@ let selectedOrigini = new Set();
 let filterPanelOpen = false;
 let categorySearchQuery = "";
 let returnToView = () => showList();
+let returnToViewLabel = "Torna all'elenco";
 const APP_VERSION = "0.108";
 let updateAvailable = false;
 
@@ -491,6 +497,10 @@ function saveFavorites(){
   catch(e){ /* localStorage non disponibile, i preferiti non persisteranno */ }
 }
 function favKey(song){ return song.titolo + "__" + song.anno; }
+function brancheOf(song){
+  if(Array.isArray(song.branca)) return song.branca.filter(Boolean);
+  return song.branca ? [song.branca] : [];
+}
 let favoriti = loadFavorites();
 let showOnlyFavorites = false;
 let fontScaleIndex = 0;
@@ -510,12 +520,14 @@ const CATEGORIES = [
   { label: "Selva Candida", sede: "Selva Candida" },
   { label: "Casalotti", sede: "Casalotti" },
   { label: "Canti di Chiesa", tipo: "messa" },
-  { label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" }
+  { label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" },
+  { label: "Canti Giungla", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Giungla" },
+  { label: "Canti Bosco", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Bosco" }
 ];
 
 function categoryCount(cat){
   return SONGS.filter(song => {
-    if(cat.branca && song.branca !== cat.branca) return false;
+    if(cat.branca && !brancheOf(song).includes(cat.branca)) return false;
     if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
     if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
     if(cat.genere && song.genere !== cat.genere) return false;
@@ -549,7 +561,9 @@ function renderCategorie(){
 
 function showCategoryDetail(cat){
   returnToView = () => showCategoryDetail(cat);
+  returnToViewLabel = "Torna a " + cat.label;
   renderHeaderBack(() => showTab("categorie"));
+  appHeader.classList.add("sticky");
   bottomNav.classList.add("hidden");
   inDetailView = false;
   listFilterCollapsed = false;
@@ -642,7 +656,7 @@ function showCategoryDetail(cat){
         row.className = "song-row";
         row.innerHTML = `
           <div>
-            <div class="row-title">${song.titolo}</div>
+            <div class="row-title">${song.titolo}${originDot(song)}</div>
             <div class="row-meta">${metaLine(song)}</div>
           </div>
           <div class="row-end">
@@ -706,6 +720,7 @@ function matchesCategory(song, cat){
   if(cat.autore && song.autore !== cat.autore) return false;
   if(cat.tipo && song.tipo !== cat.tipo) return false;
   if(cat.origine && song.origine !== cat.origine) return false;
+  if(cat.ambientazione && song.ambientazione !== cat.ambientazione) return false;
   return true;
 }
 
@@ -875,14 +890,14 @@ function matchesSearch(song, query){
     song.titolo || "",
     String(song.anno || ""),
     song.luogo || "",
-    song.branca || "",
-    sede,
-    song.tonalita || "",
+    brancheOf(song).join(" "),
+    sede,    song.tonalita || "",
     song.autore || "",
     song.genere || "",
     song.tipo || "",
     song.momento_liturgico || "",
     song.tempo_liturgico || "",
+    song.ambientazione || "",
     plainLyrics
   ].join(" ").toLowerCase();
 
@@ -987,22 +1002,34 @@ function renderHeaderBack(onBack){
   document.getElementById("headerHome").addEventListener("click", onBack);
 }
 
+function originDot(song){
+  return (song.tipo === "scout" && song.origine === "Roma 150") ? '<span class="origin-dot"></span>' : "";
+}
+
+function annoLabel(song){
+  if(song.anno == null) return "";
+  if(song.anno_incerto){
+    const decade = Math.floor(song.anno / 10) * 10;
+    return "Anni '" + String(decade).slice(-2);
+  }
+  return String(song.anno);
+}
+
 function metaLine(song){
   let parts;
   if(song.tipo === "musica"){
-    parts = [song.anno, song.autore, song.genere];
+    parts = [annoLabel(song), song.autore, song.genere];
   } else if(song.tipo === "messa"){
-    parts = [song.anno, song.momento_liturgico, song.tempo_liturgico];
+    parts = [annoLabel(song), song.momento_liturgico, song.tempo_liturgico];
   } else {
-    parts = [song.anno, song.luogo, song.branca];
+    parts = [annoLabel(song), song.luogo, brancheOf(song).join(" / "), song.ambientazione];
     if(song.sede && song.sede.length) parts.push(song.sede.join(", "));
   }
   return parts.filter(Boolean).join(" · ");
 }
 
 function matchesFilters(song){
-  const brancaOk = selectedBranche.size === 0 || selectedBranche.has(song.branca);
-  const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
+  const brancaOk = selectedBranche.size === 0 || brancheOf(song).some(b => selectedBranche.has(b));  const sedeOk = selectedSedi.size === 0 || (song.sede || []).some(s => selectedSedi.has(s));
   const decadeOk = selectedDecadi.size === 0 || selectedDecadi.has("" + Math.floor(song.anno / 10) * 10);
   const genereOk = selectedGeneri.size === 0 || selectedGeneri.has(song.genere);
   const autoreOk = selectedAutori.size === 0 || selectedAutori.has(song.autore);
@@ -1036,7 +1063,7 @@ function renderResults(card){
       row.className = "song-row";
       row.innerHTML = `
         <div>
-          <div class="row-title">${song.titolo}</div>
+          <div class="row-title">${song.titolo}${originDot(song)}</div>
           <div class="row-meta">${metaLine(song)}</div>
         </div>
         <div class="row-end">
@@ -1060,6 +1087,7 @@ function renderResults(card){
 
 function showList(){
   returnToView = () => showList();
+  returnToViewLabel = "Torna all'elenco";
   renderHeaderBrand();
   bottomNav.classList.remove("hidden");
   inDetailView = false;
@@ -1074,7 +1102,7 @@ function showList(){
   card.className = "card";
 
   const ORDINE_BRANCHE = ["L/C", "E/G", "R/S"];
-  const brancheDisponibili = [...new Set(SONGS.map(s => s.branca).filter(Boolean))].sort((a, b) => {
+  const brancheDisponibili = [...new Set(SONGS.flatMap(s => brancheOf(s)))].sort((a, b) => {
     const ia = ORDINE_BRANCHE.indexOf(a), ib = ORDINE_BRANCHE.indexOf(b);
     if(ia === -1 && ib === -1) return a.localeCompare(b, "it");
     if(ia === -1) return 1;
@@ -1364,7 +1392,7 @@ function showDetail(index){
   backBtn.style.width = "100%";
   backBtn.style.justifyContent = "center";
   backBtn.style.marginTop = "4px";
-  backBtn.innerHTML = `${ICONS.arrowBack(16)}Torna all'elenco`;
+  backBtn.innerHTML = `${ICONS.arrowBack(16)}${returnToViewLabel}`;
   backBtn.addEventListener("click", () => returnToView());
   content.appendChild(backBtn);
 

@@ -34,6 +34,8 @@ L/C CASALOTTI:
 2018
 2019
 
+CANTI L/C AGESCI
+
 ---------------------------------------------------------------------------------------------------------
 CORREZIONI NEI FILE PDF:
 L/C CASALOTTI - CAPPADOCIA 1993 IN SOL (MANCA LA L NELLA PAROLA SOL, PRIMA STROFA)
@@ -69,8 +71,14 @@ v0.107
 v0.108 RELEASED
 - Nuova logica categorie OK
 ---------------------------------------------------------------------------------------------------------
+v0.109
+- fix barra viola in categorie OK
+- fix canzone vista da dentro a una categoria
 
 
+
+
+TASTO ACCORDI ON/OFF
 
 
 Ragiona su categorie messa.
