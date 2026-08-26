@@ -119,7 +119,7 @@ v0.114 RELEASED
 v0.115 RELEASED
 - ICONA ROMA 150 FAZZOLETTONE
 ---------------------------------------------------------------------------------------------------------
-v0.116
+v0.116 RELEASED
 - AGGIORNAMENTO NOMI CATEGORIE K
 - Alleluia K
 - fix filtri sottostanti K
@@ -127,10 +127,11 @@ v0.116
 - tolta icona fazzolettone K
 ---------------------------------------------------------------------------------------------------------
 v0.117
-- fix elementi nascosti in dark mode
-- FIX BARRA LIQUID GLASS
-- blocco modalità orizzontale
-
+- fix elementi nascosti in dark mode K
+- FIX BARRA LIQUID GLASS K
+---------------------------------------------------------------------------------------------------------
+v0.117
+- MODALITA ORIZZONTALE/DESKTOP
 
 
 
