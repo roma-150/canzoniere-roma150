@@ -8,7 +8,6 @@ const APP_SHELL = [
   './icons/icon-android.jpg',
   './icons/fazzolettone.png',
   './icons/agesci.png',
-  './icons/fazzolettone-logo.png'
 ];// Installazione: mette in cache i file base dell'app (guscio)
 self.addEventListener('install', (event) => {
   event.waitUntil(

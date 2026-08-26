@@ -115,6 +115,7 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
+    position:relative;
   }
   .app-header.sticky{
     position:sticky;
@@ -142,7 +143,11 @@
   }
   .header-update-btn{ position:relative; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-  .brand-text-center{ flex:1; text-align:center; }
+  .brand-text-center{
+    position:absolute; left:calc(50% - 23px); top:50%;
+    transform:translate(-50%, -50%);
+    text-align:center; white-space:nowrap; pointer-events:none;
+  }
   .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
   .brand-text-center .sub{ font-size:12px; color:rgba(255,255,255,0.65); font-weight:500; margin-top:1px; }
   .header-back-btn{
@@ -153,8 +158,11 @@
     cursor:pointer; flex-shrink:0;
   }
   .header-back-btn:active{ background:rgba(255,255,255,0.24); }
+  .header-actions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
 
   .content{ padding:18px 16px 0; flex:1; }
+  .phone.dark-bg{ background:#131315; }
+  .phone.dark-bg footer{ color:#9A9AA0; }
 
   .card{
     background:var(--white);
@@ -265,14 +273,6 @@
     font-size:11.5px; font-weight:800; color:var(--gold);
     background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
   }
-REPLACE:
-  .origin-dot{
-    display:inline-block !important;
-    width:16px !important; height:16px !important;
-    max-width:16px !important; max-height:16px !important;
-    margin-left:6px; flex-shrink:0; vertical-align:middle;
-    object-fit:contain;
-  }
 
   /* dettaglio */
   .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
@@ -297,16 +297,16 @@ REPLACE:
   }
   .mini-tile .label{ font-size:11px; font-weight:700; }
 
-  .key-tile{ background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b)); }
-  .key-tile .label{ color:#3F7A50; }
-  .key-value{ font-size:20px; font-weight:800; color:var(--green); line-height:1; margin-top:6px; }
+  .key-tile{ background:var(--neutral); }
+  .key-tile .label{ color:var(--ink-soft); }
+  .key-value{ font-size:20px; font-weight:800; color:var(--purple); line-height:1; margin-top:6px; }
   .key-controls{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; }
   .key-controls button{
-    width:20px; height:20px; border-radius:50%; border:1.5px solid var(--green);
-    background:var(--white); color:var(--green); font-size:12px; font-weight:700;
+    width:20px; height:20px; border-radius:50%; border:1.5px solid var(--purple);
+    background:var(--white); color:var(--purple); font-size:12px; font-weight:700;
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
-  .key-controls button:active{ background:var(--green-tint-a); }
+  .key-controls button:active{ background:var(--neutral); }
 
   .fontsize-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
   .fontsize-tile .label{ color:var(--ink-soft); }
@@ -318,10 +318,10 @@ REPLACE:
   .chordtoggle-tile .label{ color:var(--ink-soft); }
   .chordtoggle-tile .chordtoggle-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
   .chordtoggle-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
-  .scroll-tile{ background:var(--purple); cursor:pointer; user-select:none; color:var(--white); }
-  .scroll-tile .label{ color:rgba(255,255,255,0.75); }
-  .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; }
-  .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--white); margin-top:4px; min-height:13px; }
+  .scroll-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
+  .scroll-tile .label{ color:var(--ink-soft); }
+  .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
+  .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; min-height:13px; }
 
   .verse{ margin-bottom:22px; }
   .verse:last-child{ margin-bottom:0; }
@@ -341,6 +341,71 @@ REPLACE:
   .verse.instrumental .chord{ color:var(--green); }
   .verse.instrumental .lyric{ display:none; }
   .lyric{ display:block; white-space:pre-wrap; overflow-wrap:break-word; font-size:calc(16.5px * var(--text-scale)); line-height:1.55; color:var(--ink); }
+
+  .header-dark-btn{
+    width:44px; height:44px; border-radius:14px; flex-shrink:0;
+    background:rgba(255,255,255,0.14); border:none; color:var(--white);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .header-dark-btn:active{ background:rgba(255,255,255,0.24); }
+  .header-dark-btn.active{ background:rgba(255,255,255,0.32); }
+
+  .phone.dark-bg .card{ background:#1C1C1E; }
+  .phone.dark-bg .song-title{ color:#F2F2F7; }
+  .phone.dark-bg .song-meta{ color:#9A9AA0; }
+  .phone.dark-bg .lyric{ color:#F2F2F7; }
+  .phone.dark-bg .verse.chorus{ background:#3A2E12; }
+  .phone.dark-bg .verse.instrumental{ background:#123318; }
+  .phone.dark-bg .empty{ color:#9A9AA0; }
+
+  .phone.dark-bg .key-tile,
+  .phone.dark-bg .fontsize-tile,
+  .phone.dark-bg .scroll-tile,
+  .phone.dark-bg .chordtoggle-tile{ background:var(--purple); }
+  .phone.dark-bg .key-tile .label,
+  .phone.dark-bg .fontsize-tile .label,
+  .phone.dark-bg .scroll-tile .label,
+  .phone.dark-bg .chordtoggle-tile .label{ color:rgba(255,255,255,0.75); }
+  .phone.dark-bg .key-value{ color:var(--white); }
+  .phone.dark-bg .key-controls button{ border-color:var(--white); color:var(--white); background:transparent; }
+  .phone.dark-bg .key-controls button:active{ background:rgba(255,255,255,0.15); }
+  .phone.dark-bg .fontsize-tile .a-sample,
+  .phone.dark-bg .scroll-tile .scroll-icon,
+  .phone.dark-bg .chordtoggle-tile .chordtoggle-icon{ color:var(--white); }
+  .phone.dark-bg .fontsize-tile .state-name,
+  .phone.dark-bg .scroll-tile .state-name,
+  .phone.dark-bg .chordtoggle-tile .state-name{ color:rgba(255,255,255,0.75); }
+
+  .phone.dark-bg .chord{ color:var(--white); }
+
+  .phone.dark-bg .list-title,
+  .phone.dark-bg .back-link{ color:#F2F2F7; }
+  .phone.dark-bg .search-box{ background:#2C2C2E; }
+  .phone.dark-bg .search-box input{ color:#F2F2F7; }
+  .phone.dark-bg .search-box input::placeholder{ color:#8E8E93; }
+  .phone.dark-bg .search-box svg{ color:#FFFFFF; }
+  .phone.dark-bg .filter-toggle-btn{ background:#2C2C2E; }
+  .phone.dark-bg .filter-toggle-btn svg{ color:#FFFFFF; }
+  .phone.dark-bg .filter-toggle-btn.active{ background:var(--purple); color:var(--white); }
+  .phone.dark-bg .filter-chip{ background:#2C2C2E; color:#FFFFFF; }
+  .phone.dark-bg .filter-chip.active{ background:var(--purple); color:var(--white); }
+  .phone.dark-bg .filter-label{ color:#9A9AA0; }
+  .phone.dark-bg .segmented{ background:#2C2C2E; }
+  .phone.dark-bg .segmented button{ color:#9A9AA0; }
+  .phone.dark-bg .segmented button.active{ background:var(--purple); color:var(--white); }
+  .phone.dark-bg .dir-btn{ background:#2C2C2E; }
+  .phone.dark-bg .dir-btn svg{ color:#FFFFFF; }
+  .phone.dark-bg .group-divider{ background:#241C33; color:#C9B8E8; }
+  .phone.dark-bg .song-row{ border-bottom-color:#2C2C2E; }
+  .phone.dark-bg .song-row .row-title{ color:#F2F2F7; }
+  .phone.dark-bg .song-row .row-meta{ color:#9A9AA0; }
+  .phone.dark-bg .song-row i{ color:#9A9AA0; }
+  .phone.dark-bg .key-badge{ background:rgba(216,155,0,0.18); }
+  .phone.dark-bg .fav-star{ color:#48484A; }
+  .phone.dark-bg .fav-star.active{ color:var(--gold); }
+  .phone.dark-bg .placeholder-icon{ background:#2C2C2E; color:var(--purple); }
+  .phone.dark-bg .placeholder-card h2{ color:#F2F2F7; }
+  .phone.dark-bg .placeholder-card p{ color:#9A9AA0; }
 
   .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
   footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
@@ -387,7 +452,8 @@ const ICONS = {
   arrowUp: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 19V6M6 11l6-6 6 6"/></svg>`,
   chordsOn: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
   chordsOff: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M4 4l16 16" stroke-width="2.2"/></svg>`,
-  chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`
+  chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`,
+  moon: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -498,11 +564,10 @@ let savedCategoriesHomeScrollY = 0;
 let savedCategoriesSezioneScrollY = 0;
 
 const CATEGORY_SECTIONS = [
-  { label: "Canti Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
-  { label: "Canti Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
-  { label: "Canti Famosi", gruppi: ["Canti famosi"] }
-];
-let returnToViewLabel = "Torna all'elenco";
+  { label: "Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
+  { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
+  { label: "Brani famosi", gruppi: ["Canti famosi"] }
+];let returnToViewLabel = "Torna all'elenco";
 const APP_VERSION = "0.115";
 let updateAvailable = false;
 
@@ -534,6 +599,7 @@ function tempiOf(song){
 let favoriti = loadFavorites();
 let showOnlyFavorites = false;
 let fontScaleIndex = 0;
+let detailDarkMode = false;
 let currentTab = "canzoni";
 let inDetailView = false;
 const content = document.getElementById("content");
@@ -564,7 +630,7 @@ const CATEGORIES = [
   { gruppo: "Sacramenti e cerimonie", label: "Cresima", tipo: "messa", tempo: "Cresima" },
   { gruppo: "Momenti della liturgia", label: "Ingresso", tipo: "messa", momento: "Ingresso" },
   { gruppo: "Momenti della liturgia", label: "Gloria", tipo: "messa", momento: "Gloria" },
-  { gruppo: "Momenti della liturgia", label: "Salmo/Alleluia", tipo: "messa", momento: "Salmo/Alleluia" },
+  { gruppo: "Momenti della liturgia", label: "Alleluia", tipo: "messa", momento: "Alleluia" },
   { gruppo: "Momenti della liturgia", label: "Offertorio", tipo: "messa", momento: "Offertorio" },
   { gruppo: "Momenti della liturgia", label: "Santo", tipo: "messa", momento: "Santo" },
   { gruppo: "Momenti della liturgia", label: "Comunione", tipo: "messa", momento: "Comunione" },
@@ -756,7 +822,7 @@ function showCategoryDetail(cat, sez){
         row.className = "song-row";
         row.innerHTML = `
           <div>
-            <div class="row-title">${song.titolo}${originDot(song)}</div>
+            <div class="row-title">${song.titolo}</div>
             <div class="row-meta">${metaLine(song)}</div>
           </div>
           <div class="row-end">
@@ -1058,6 +1124,17 @@ function wireUpdateBtn(){
     setTimeout(() => window.location.reload(), 400);
   });
 }
+
+function wireDarkBtn(){
+  const btn = document.getElementById("headerDark");
+  if(!btn) return;
+  btn.classList.toggle("active", detailDarkMode);
+  btn.addEventListener("click", () => {
+    detailDarkMode = !detailDarkMode;
+    document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
+    btn.classList.toggle("active", detailDarkMode);
+  });
+}
 window.addEventListener("online", () => {
   const btn = document.getElementById("headerUpdate");
   if(btn) btn.classList.remove("offline");
@@ -1088,9 +1165,13 @@ function renderHeaderBrand(){
       <div class="name">Canzoniere di gruppo</div>
       <div class="sub">Roma 150</div>
     </div>
-    <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+    <div class="header-actions">
+      <button class="header-dark-btn" id="headerDark" aria-label="Tema scuro">${ICONS.moon(18)}</button>
+      <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+    </div>
   `;
   wireUpdateBtn();
+  wireDarkBtn();
 }
 
 function renderHeaderBack(onBack){
@@ -1102,18 +1183,16 @@ function renderHeaderBack(onBack){
       <div class="name">Canzoniere di gruppo</div>
       <div class="sub">Roma 150</div>
     </div>
-    <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+    <div class="header-actions">
+      <button class="header-dark-btn" id="headerDark" aria-label="Tema scuro">${ICONS.moon(18)}</button>
+      <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
+    </div>
   `; 
   wireUpdateBtn();
+  wireDarkBtn();
   document.getElementById("headerHome").addEventListener("click", onBack);
 }
 
-function originDot(song){
-  if(song.tipo === "scout" && song.origine === "Roma 150"){
-    return '<img class="origin-dot" src="icons/fazzolettone-logo.png" alt="" width="16" height="16">';
-  }
-  return "";
-}
 function annoLabel(song){
   if(song.anno == null) return "";
   if(song.anno_incerto){
@@ -1171,7 +1250,7 @@ function renderResults(card){
       row.className = "song-row";
       row.innerHTML = `
         <div>
-          <div class="row-title">${song.titolo}${originDot(song)}</div>
+          <div class="row-title">${song.titolo}</div>
           <div class="row-meta">${metaLine(song)}</div>
         </div>
         <div class="row-end">
@@ -1295,8 +1374,7 @@ function showList(){
   if(filtriDisponibili){
     const filterPanel = document.createElement("div");
     filterPanel.className = "filter-panel" + (filterPanelOpen ? " open" : "");
-    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Canti famosi" };
-    const tipiDisponibili = ["scout", "messa", "musica"].filter(t => SONGS.some(s => s.tipo === t));
+    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Brani famosi" };    const tipiDisponibili = ["scout", "messa", "musica"].filter(t => SONGS.some(s => s.tipo === t));
     const quickRow = document.createElement("div");
     quickRow.className = "filter-row";
     const favChipHtml = `<button class="filter-chip fav-chip ${showOnlyFavorites ? "active" : ""}">${ICONS.star(13, true)} Preferiti</button>`;
@@ -1323,6 +1401,13 @@ function showList(){
             selectedOrigini.clear();
             selectedSedi.clear();
           }
+          if(v === "messa"){
+            selectedMomenti.clear();
+            selectedTempi.clear();
+          }
+          if(v === "musica"){
+            selectedGeneri.clear();
+          }
         } else {
           selectedTipi.clear();
           selectedTipi.add(v);
@@ -1330,6 +1415,13 @@ function showList(){
             selectedBranche.clear();
             selectedOrigini.clear();
             selectedSedi.clear();
+          }
+          if(v !== "messa"){
+            selectedMomenti.clear();
+            selectedTempi.clear();
+          }
+          if(v !== "musica"){
+            selectedGeneri.clear();
           }
         }
         showList();

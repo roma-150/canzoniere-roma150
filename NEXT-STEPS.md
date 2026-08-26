@@ -85,30 +85,30 @@ v0.109 RELEASED
 - inseriti canti In un giorno di Pioggia e Scouting for Boys OK
 ---------------------------------------------------------------------------------------------------------
 v0.110 RELEASED
-- Fix filtro scout e branca
-- Fix scrollo in basso cambio categoria
-- Fix filtri collegati a cascata
-- Cambio nome "Canti famosi"
-- TASTO ACCORDI ON/OFF
+- Fix filtro scout e branca K
+- Fix scrollo in basso cambio categoria K
+- Fix filtri collegati a cascata K
+- Cambio nome "Canti famosi" K
+- TASTO ACCORDI ON/OFF K
 ---------------------------------------------------------------------------------------------------------
 v0.111 RELEASED
-Ragiona su categorie messa.
+Ragiona su categorie messa. K
 - fix scorrimento verticale OK
 - tempo liturgico OK
 - momento della messa OK
-- Aggiunti canti canzoniere messa di gruppo FINO A PAGINA 28 INCLUSA
+- Aggiunti canti canzoniere messa di gruppo FINO A PAGINA 28 INCLUSA K
 ---------------------------------------------------------------------------------------------------------
 v0.112 RELEASED
-- Filtri principali ora sono alternativi
-- Aggiunti vari canti dei Modena city Ramblers
-- Aggiunti vari canti famosi
-- Iniziato step canzoniere di clan
+- Filtri principali ora sono alternativi K
+- Aggiunti vari canti dei Modena city Ramblers K
+- Aggiunti vari canti famosi K
+- Iniziato step canzoniere di clan K
 ---------------------------------------------------------------------------------------------------------
 v0.113 RELEASED
-- Ragionamenti su genere e autore, filtro per canti famosi
-- Fix categorie
-- Categorie in Ordine
-- Logica delle categorie completata
+- Ragionamenti su genere e autore, filtro per canti famosi OK
+- Fix categorie OK
+- Categorie in Ordine OK
+- Logica delle categorie completata OK
 ---------------------------------------------------------------------------------------------------------
 v0.114 RELEASED
 - Aggiunti canti E/G e di gruppo OK
@@ -116,9 +116,25 @@ v0.114 RELEASED
 - Fix testo tonalità OK
 - Aggiunti canti vari OK
 ---------------------------------------------------------------------------------------------------------
-v0.115
+v0.115 RELEASED
+- ICONA ROMA 150 FAZZOLETTONE
+---------------------------------------------------------------------------------------------------------
+v0.116
+- AGGIORNAMENTO NOMI CATEGORIE K
+- Alleluia K
+- fix filtri sottostanti K
+- Dark modeK
+- tolta icona fazzolettone K
+---------------------------------------------------------------------------------------------------------
+v0.117
+- FIX BARRA LIQUID GLASS
+
+
+
+
+
+
 - AGGIORNA CATEGORIE PER INCLUDERE
 - TUTTI I CANTI AGESCI
 - PIù CANTI FAMOSI (MAGARI VAI PER GENERE)
 - I CANTI DI GRUPPO NE "I CANTI DEL ROMA 150", QUELLI CHE HANNO TUTTE E TRE LE BRANCHE E SONO DI ORIGINE ROMA 150
-- ICONA ROMA 150 FAZZOLETTONE

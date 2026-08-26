@@ -1775,7 +1775,7 @@
     "tonalita": "RE",
     "tipo": "messa",
     "autore": "Stefano Varnavà",
-    "momento_liturgico": ["Salmo/Alleluia"],
+    "momento_liturgico": ["Alleluia"],
     "tempo_liturgico": ["Tempo Ordinario", "Avvento", "Natale", "Pasqua", "Matrimonio", "Battesimo", "Comunione", "Cresima", "Funerale"],
     "testo_accordi": "{rit}\n[RE]Alle – [LA]alleluia\n[SIm]Alleluia [FA#m]alleluia\n[SOL]Alle[RE]luia [MIm]alleluia\n[RE]Alle[LA]luia alle[RE]luia\n---\n[RE]Passeranno i [LA]cieli\n[SIm]E passerà la [FA#m]terra\n[SOL]La sua Parola [RE]non passe[MIm]rà\n[RE]Alle[LA]luia alle[RE]luia\n---\n{rit}\n[RE]Alle – [LA]alleluia\n[SIm]Alleluia [FA#m]alleluia\n[SOL]Alle[RE]luia [MIm]alleluia\n[RE]Alle[LA]luia alle[RE]luia"
   },
@@ -1841,7 +1841,7 @@
     "tonalita": "DO",
     "tipo": "messa",
     "autore": "Stefano Varnavà",
-    "momento_liturgico": ["Salmo/Alleluia"],
+    "momento_liturgico": ["Alleluia"],
     "tempo_liturgico": ["Tempo Ordinario", "Pasqua", "Comunione", "Cresima"],
     "testo_accordi": "{rit}\n[DO]Alle[FA]luia alle[DO]luia, [SOL]alleluia alleluia\n[DO]alle[FA]luia alle[DO]luia, [SOL]alle[DO]luia.\n[DO]Alle[FA]luia alle[DO]luia, [SOL]alleluia alleluia\n[DO]alle[FA]luia alle[DO]luia, [SOL]alle[DO]luia.\n---\nLa nostra [FA]festa non [SOL]deve fi[DO]nire\nnon [LAm]deve fi[REm]nire e [SOL]non fini[DO]rà.\nLa nostra [FA]festa non [SOL]deve fi[DO]nire\nnon [LAm]deve fi[REm]nire e [SOL]non fini[DO]rà.\nPer[FA]ché la [SOL]festa [LAm]siamo [MIm]noi\nche [FA]cammi[REm]niamo verso [SOL]Te.\nPer[FA]ché la [SOL]festa [LAm]siamo [MIm]noi\ncan[FA6]tando in[RE7]sieme co[SOL]sì...\n---\n{rit}\n[DO]Alle[FA]luia alle[DO]luia, [SOL]alleluia alleluia\n[DO]alle[FA]luia alle[DO]luia, [SOL]alle[DO]luia.\n[DO]Alle[FA]luia alle[DO]luia, [SOL]alleluia alleluia\n[DO]alle[FA]luia alle[DO]luia, [SOL]alle[DO]luia."
   },
