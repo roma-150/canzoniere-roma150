@@ -296,14 +296,14 @@
 
   .key-tile{ background:linear-gradient(135deg, var(--green-tint-a), var(--green-tint-b)); }
   .key-tile .label{ color:#3F7A50; }
-  .key-row{ display:flex; align-items:center; gap:6px; margin-top:5px; }
-  .key-row .value{ font-size:19px; font-weight:800; color:var(--green); min-width:34px; }
-  .key-row button{
-    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--green);
-    background:var(--white); color:var(--green); font-size:13px; font-weight:700;
+  .key-value{ font-size:20px; font-weight:800; color:var(--green); line-height:1; margin-top:6px; }
+  .key-controls{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; }
+  .key-controls button{
+    width:20px; height:20px; border-radius:50%; border:1.5px solid var(--green);
+    background:var(--white); color:var(--green); font-size:12px; font-weight:700;
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
-  .key-row button:active{ background:var(--green-tint-a); }
+  .key-controls button:active{ background:var(--green-tint-a); }
 
   .fontsize-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
   .fontsize-tile .label{ color:var(--ink-soft); }
@@ -500,7 +500,7 @@ const CATEGORY_SECTIONS = [
   { label: "Canti Famosi", gruppi: ["Canti famosi"] }
 ];
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.113";
+const APP_VERSION = "0.114";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1018,7 +1018,8 @@ function groupSongs(list){
   sorted.forEach(song => {
     let key;
     if(sortMode === "alpha"){
-      key = (song.titolo.trim()[0] || "#").toUpperCase();
+      const primaLettera = (song.titolo.trim()[0] || "#").toUpperCase();
+      key = /[0-9]/.test(primaLettera) ? "1-9" : primaLettera;
     } else if(song.anno < 1900){
       const century = Math.floor(song.anno / 100) * 100;
       key = String(century);
@@ -1472,9 +1473,9 @@ function showDetail(index){
     <div class="tile-row">
       <div class="mini-tile key-tile">
         <div class="label">Tonalità</div>
-        <div class="key-row">
+        <div class="key-value" id="currentKey">${song.tonalita || "—"}</div>
+        <div class="key-controls">
           <button id="down" aria-label="Trasponi giù">–</button>
-          <span class="value" id="currentKey">${song.tonalita || "—"}</span>
           <button id="up" aria-label="Trasponi su">+</button>
         </div>
       </div>
@@ -1483,15 +1484,15 @@ function showDetail(index){
         <div class="a-sample" id="aSample">A</div>
         <div class="state-name" id="fontStateName">Normale</div>
       </div>
-      <div class="mini-tile chordtoggle-tile" id="chordToggleTile">
-        <div class="label">Accordi</div>
-        <div class="chordtoggle-icon" id="chordToggleIcon">${ICONS.chordsOn(20)}</div>
-        <div class="state-name" id="chordToggleStateName">Mostra</div>
-      </div>
       <div class="mini-tile scroll-tile" id="scrollToggle">
         <div class="label">Scorri</div>
         <div class="scroll-icon" id="scrollIcon">${ICONS.play(20)}</div>
         <div class="state-name" id="scrollStateName"></div>
+      </div>
+      <div class="mini-tile chordtoggle-tile" id="chordToggleTile">
+        <div class="label">Accordi</div>
+        <div class="chordtoggle-icon" id="chordToggleIcon">${ICONS.chordsOn(20)}</div>
+        <div class="state-name" id="chordToggleStateName">Mostra</div>
       </div>
     </div>
   `;
@@ -1528,6 +1529,9 @@ function showDetail(index){
     card2.classList.toggle("chords-hidden", !chordsVisible);
     chordToggleIcon.innerHTML = chordsVisible ? ICONS.chordsOn(20) : ICONS.chordsOff(20);
     chordToggleStateName.textContent = chordsVisible ? "Mostra" : "Nascondi";
+    footer.textContent = chordsVisible
+      ? (song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi")
+      : "";
   });
 
   const card2 = document.createElement("div");

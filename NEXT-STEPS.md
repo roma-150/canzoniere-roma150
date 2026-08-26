@@ -20,58 +20,32 @@ CANTI DA AGGIUNGERE.
 - ALLELUIA GEN VERDE (QUELLO NUOVO)
 - I WILL FOLLOW
 - CANTI CANZONIERE MESSA DA PAGINA 29 INCLUSA IN POI
-- E/G CASALOTTI
-- ANNI 80
-- ANNI 90
-- ANNI 00
-- ANNI 10
-- ANNI 20
-- CANTI GRUPPO
 - CANTI BOSCO
-- CANTI SCOUT E/G
+- CANTO E/G CASALOTTI 2026
+- CANTO GUIDE 2007: SCONOSCIUTO
 - CANTI SCOUT R/S
+- CON UN FILO, CONVEGNO L/C 2026
 - CANTI SCOUT L/C NON DI BRANCA
 
 ---------------------------------------------------------------------------------------------------------
+CANZONI DA CHECKARE
 GLORIA GIOMBINI (CAMBIA ANCHE TITOLO, METTI GIOMBINI)
-
 2003-CIAO JOSE
 2026-INNO REPARTO FEMMINILE SELVA
 L/C CASALOTTI:
-1992 x2
-1993 x2
-1994 x4
-1995
-1996
-1997
-1998
-1999
-2000
-01
-02
-03
-040
-05
-06
-07
-07cambu
-08
-09
-2012
-2013
-2014
-2015
-2016
-2017
-2018
-2019
-
-CANTI L/C AGESCI
+DAL '92 AL 2019
+TUTTI E/G CASALOTTI
+SOPRATTUTTO IL 2013... ANZI, SICURAMENTE IL 2013
+CANTI AGESCI TUTTI
 
 ---------------------------------------------------------------------------------------------------------
 CORREZIONI NEI FILE PDF:
 L/C CASALOTTI - CAPPADOCIA 1993 IN SOL (MANCA LA L NELLA PAROLA SOL, PRIMA STROFA)
 L/C CASALOTTI - CAPPADOCIA 93 cocci, titolo (confronta con app)
+E/G 1992 - John brown "SO" invece che "SOL"...
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 v0.102-Released
 - Pallino Rosso UPDATE OK
@@ -136,6 +110,7 @@ v0.113 RELEASED
 - Logica delle categorie completata
 ---------------------------------------------------------------------------------------------------------
 v0.114
-- 
-- 
-- 
+- Aggiunti canti E/G e di gruppo OK
+- Sistemato ordinamento per canti che iniziano con un numero OK
+- Fix testo tonalità OK
+- Aggiunti canti vari
