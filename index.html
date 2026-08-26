@@ -213,6 +213,11 @@
   }
   .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
   .list-title-count{ font-size:13px; font-weight:600; color:var(--ink-soft); }
+  .cat-group-title{ cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .cat-group-chevron{ display:flex; align-items:center; flex-shrink:0; color:var(--ink-soft); transition:transform 0.2s ease; }
+  .cat-group-title.open .cat-group-chevron{ transform:rotate(90deg); }
+  .cat-group-rows{ max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
+  .cat-group-rows.open{ max-height:3000px; }
 
   .search-filter-row{
     display:flex; align-items:center; margin-bottom:12px;
@@ -679,11 +684,12 @@ let returnToView = () => showList();
 let savedScrollY = 0;
 let savedCategoriesHomeScrollY = 0;
 let savedCategoriesSezioneScrollY = 0;
+let savedLuoghiListScrollY = 0;
 
 const CATEGORY_SECTIONS = [
   { label: "Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
-  { label: "Brani famosi", gruppi: ["Canti famosi"] }
+  { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
 const APP_VERSION = "0.121";
 let updateAvailable = false;
@@ -696,6 +702,16 @@ function loadFavorites(){
 function saveFavorites(){
   try { localStorage.setItem(FAV_KEY, JSON.stringify([...favoriti])); }
   catch(e){ /* localStorage non disponibile, i preferiti non persisteranno */ }
+}
+
+const DARK_KEY = "canzoniere_dark_mode_v1";
+function loadDarkMode(){
+  try { return localStorage.getItem(DARK_KEY) === "1"; }
+  catch(e){ return false; }
+}
+function saveDarkMode(){
+  try { localStorage.setItem(DARK_KEY, detailDarkMode ? "1" : "0"); }
+  catch(e){ /* localStorage non disponibile, il tema non persisterà */ }
 }
 function favKey(song){ return song.titolo + "__" + song.anno; }
 function brancheOf(song){
@@ -716,7 +732,7 @@ function tempiOf(song){
 let favoriti = loadFavorites();
 let showOnlyFavorites = false;
 let fontScaleIndex = 0;
-let detailDarkMode = false;
+let detailDarkMode = loadDarkMode();
 let currentTab = "canzoni";
 let inDetailView = false;
 const content = document.getElementById("content");
@@ -726,6 +742,7 @@ const bottomNav = document.getElementById("bottomNav");
 
 const CATEGORIES = [
   { gruppo: "Canti del Roma 150", label: "Canti di gruppo", brancaTutte: true, tipo: "scout", origine: "Roma 150" },
+  { gruppo: "Canti del Roma 150", label: "Canti per luogo", isLuogoMeta: true },
   { gruppo: "Canti del Roma 150", label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
@@ -758,12 +775,6 @@ const CATEGORIES = [
   { gruppo: "Momenti della liturgia", label: "Comunione", tipo: "messa", momento: "Comunione" },
   { gruppo: "Momenti della liturgia", label: "Pace", tipo: "messa", momento: "Pace" },
   { gruppo: "Momenti della liturgia", label: "Finale", tipo: "messa", momento: "Finale" },
-  { gruppo: "Canti famosi", label: "Modena City Ramblers", tipo: "musica", autore: "Modena City Ramblers" },
-  { gruppo: "Canti famosi", label: "Cantautori", tipo: "musica", genere: "Cantautori" },
-  { gruppo: "Canti famosi", label: "Fabrizio De André", tipo: "musica", autore: "Fabrizio De André" },
-  { gruppo: "Canti famosi", label: "Lucio Battisti", tipo: "musica", autore: "Lucio Battisti" },
-  { gruppo: "Canti famosi", label: "Irish", tipo: "musica", genere: "Irish" },
-  { gruppo: "Canti famosi", label: "Canti Partigiani", tipo: "musica", genere: "Canti partigiani" }
 ];
 
 function categoryCount(cat){
@@ -779,21 +790,69 @@ function categoryCount(cat){
   }).length;
 }
 
+const SECTION_TIPO = { "Scout": "scout", "Messa": "messa", "Brani famosi": "musica" };
 function sectionCount(sez){
-  const cats = CATEGORIES.filter(cat => sez.gruppi.includes(cat.gruppo));
-  const matched = new Set();
-  SONGS.forEach((song, idx) => {
-    if(cats.some(cat => matchesCategory(song, cat))) matched.add(idx);
-  });
-  return matched.size;
+  const tipo = SECTION_TIPO[sez.label];
+  return SONGS.filter(s => s.tipo === tipo).length;
 }
 
-function groupCount(categorie){
-  const matched = new Set();
-  SONGS.forEach((song, idx) => {
-    if(categorie.some(cat => matchesCategory(song, cat))) matched.add(idx);
+function groupCount(nome){
+  if(nome === "Canti del Roma 150") return SONGS.filter(s => s.tipo === "scout" && s.origine === "Roma 150").length;
+  if(nome === "Canti AGESCI") return SONGS.filter(s => s.tipo === "scout" && s.origine === "AGESCI").length;
+  return 0;
+}
+
+let LUOGO_CATEGORIES = [];
+function buildLuogoCategories(){
+  const conteggi = {};
+  SONGS.filter(s => s.tipo === "scout" && s.origine === "Roma 150" && s.luogo).forEach(s => {
+    conteggi[s.luogo] = (conteggi[s.luogo] || 0) + 1;
   });
-  return matched.size;
+  const luoghi = Object.keys(conteggi)
+    .filter(luogo => conteggi[luogo] >= 2)
+    .sort((a, b) => a.localeCompare(b, "it", { sensitivity: "base" }));
+  LUOGO_CATEGORIES = luoghi.map(luogo => ({ label: luogo, tipo: "scout", origine: "Roma 150", luogo: luogo }));
+}
+function luoghiMetaCount(){
+  return LUOGO_CATEGORIES.reduce((sum, cat) => sum + categoryCount(cat), 0);
+}
+
+function buildGenereCategories(){
+  const conteggi = {};
+  SONGS.filter(s => s.tipo === "musica" && s.genere).forEach(s => {
+    conteggi[s.genere] = (conteggi[s.genere] || 0) + 1;
+  });
+  const generi = Object.keys(conteggi)
+    .filter(genere => conteggi[genere] >= 2)
+    .sort((a, b) => a.localeCompare(b, "it", { sensitivity: "base" }));
+  generi.forEach(genere => CATEGORIES.push({ gruppo: "Per genere", label: genere, tipo: "musica", genere: genere }));
+}
+
+function buildAutoreCategories(){
+  const conteggi = {};
+  SONGS.filter(s => s.tipo === "musica" && s.autore).forEach(s => {
+    conteggi[s.autore] = (conteggi[s.autore] || 0) + 1;
+  });
+  const autori = Object.keys(conteggi)
+    .filter(autore => conteggi[autore] >= 3)
+    .sort((a, b) => a.localeCompare(b, "it", { sensitivity: "base" }));
+  autori.forEach(autore => CATEGORIES.push({ gruppo: "Per autore", label: autore, tipo: "musica", autore: autore }));
+}
+
+function buildAnnataCategories(){
+  const musicali = SONGS.filter(s => s.tipo === "musica" && s.anno != null);
+  const fasce = [
+    { label: "Canti antichi", annoMax: 1899 },
+    { label: "Primi del '900", annoMin: 1900, annoMax: 1949 }
+  ];
+  const maxAnno = musicali.reduce((max, s) => Math.max(max, s.anno), 1949);
+  for(let decade = 1950; decade <= Math.floor(maxAnno / 10) * 10; decade += 10){
+    fasce.push({ label: "Anni '" + String(decade).slice(-2), annoMin: decade, annoMax: decade + 9 });
+  }
+  fasce.forEach(fascia => {
+    const cat = { gruppo: "Per annata", label: fascia.label, tipo: "musica", annoMin: fascia.annoMin, annoMax: fascia.annoMax };
+    if(categoryCount(cat) > 0) CATEGORIES.push(cat);
+  });
 }
 
 function renderCategorie(){
@@ -843,37 +902,104 @@ function showCategorieSezione(sez){
   gruppi.forEach(g => {
     const card = document.createElement("div");
     card.className = "card";
+    const isCollapsible = g.nome !== "Canti del Roma 150" && g.nome !== "Canti AGESCI";
     const groupLabel = (g.nome === "Canti del Roma 150" || g.nome === "Canti AGESCI")
-      ? `${g.nome} <span class="list-title-count">(${groupCount(g.categorie)} canti)</span>`
+      ? `${g.nome} <span class="list-title-count">(${groupCount(g.nome)} canti)</span>`
       : g.nome;
-    card.innerHTML = `<div class="list-title">${groupLabel}</div>`;
-    const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie" || g.nome === "Canti AGESCI")
+    const titleEl = document.createElement("div");
+    titleEl.className = "list-title" + (isCollapsible ? " cat-group-title" : "");
+    titleEl.innerHTML = isCollapsible
+      ? `${groupLabel}<span class="cat-group-chevron">${ICONS.chevronRight(16)}</span>`
+      : groupLabel;
+    card.appendChild(titleEl);
+
+    const rowsContainer = document.createElement("div");
+    if(isCollapsible) rowsContainer.className = "cat-group-rows";
+
+    const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie" || g.nome === "Canti AGESCI" || g.nome === "Per annata")
       ? g.categorie
       : [...g.categorie].sort((a, b) => a.label.localeCompare(b.label, "it", { sensitivity: "base" }));
     categorieOrdinate.forEach(cat => {
       const row = document.createElement("div");
       row.className = "song-row";
+      const badgeCount = cat.isLuogoMeta ? luoghiMetaCount() : categoryCount(cat);
       row.innerHTML = `
         <div class="row-title">${cat.label}</div>
         <div class="row-end">
-          <span class="key-badge">${categoryCount(cat)}</span>
+          <span class="key-badge">${badgeCount}</span>
           ${ICONS.chevronRight(18)}
         </div>
       `;
-      row.addEventListener("click", () => showCategoryDetail(cat, sez));
-      card.appendChild(row);
+      row.addEventListener("click", () => {
+        if(cat.isLuogoMeta){ showLuoghiList(sez); }
+        else { showCategoryDetail(cat, sez); }
+      });
+      rowsContainer.appendChild(row);
     });
+    card.appendChild(rowsContainer);
+
+    if(isCollapsible){
+      titleEl.addEventListener("click", () => {
+        const open = rowsContainer.classList.toggle("open");
+        titleEl.classList.toggle("open", open);
+      });
+    }
+
     content.appendChild(card);
   });
 }
-function showCategoryDetail(cat, sez){
+function showLuoghiList(sez){
   savedCategoriesSezioneScrollY = window.scrollY;
-  returnToView = () => showCategoryDetail(cat, sez);
-  returnToViewLabel = "Torna a " + cat.label;
   renderHeaderBack(() => {
     showCategorieSezione(sez);
     requestAnimationFrame(() => window.scrollTo(0, savedCategoriesSezioneScrollY));
   });
+  appHeader.classList.add("sticky");
+  bottomNav.classList.add("hidden");
+  inDetailView = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  content.innerHTML = "";
+  window.scrollTo(0, 0);
+
+  const title = document.createElement("div");
+  title.className = "list-title";
+  title.style.marginTop = "4px";
+  title.textContent = "Canti per luogo";
+  content.appendChild(title);
+
+  const card = document.createElement("div");
+  card.className = "card";
+  LUOGO_CATEGORIES.forEach(cat => {
+    const row = document.createElement("div");
+    row.className = "song-row";
+    row.innerHTML = `
+      <div class="row-title">${cat.label}</div>
+      <div class="row-end">
+        <span class="key-badge">${categoryCount(cat)}</span>
+        ${ICONS.chevronRight(18)}
+      </div>
+    `;
+    row.addEventListener("click", () => {
+      savedLuoghiListScrollY = window.scrollY;
+      showCategoryDetail(cat, sez, () => {
+        showLuoghiList(sez);
+        requestAnimationFrame(() => window.scrollTo(0, savedLuoghiListScrollY));
+      });
+    });
+    card.appendChild(row);
+  });
+  content.appendChild(card);
+}
+
+function showCategoryDetail(cat, sez, backFn){
+  if(!backFn) savedCategoriesSezioneScrollY = window.scrollY;
+  returnToView = () => showCategoryDetail(cat, sez, backFn);
+  returnToViewLabel = "Torna a " + cat.label;
+  renderHeaderBack(backFn || (() => {
+    showCategorieSezione(sez);
+    requestAnimationFrame(() => window.scrollTo(0, savedCategoriesSezioneScrollY));
+  }));
   appHeader.classList.add("sticky");  bottomNav.classList.add("hidden");
   inDetailView = false;
   listFilterCollapsed = false;
@@ -1023,11 +1149,15 @@ function categoryCount(cat){
 }
 
 function matchesCategory(song, cat){
+  if(cat.isLuogoMeta) return false;
   if(cat.branca && !brancheOf(song).includes(cat.branca)) return false;
   if(cat.brancaTutte && !["L/C", "E/G", "R/S"].every(b => brancheOf(song).includes(b))) return false;
   if(cat.noAmbientazione && song.ambientazione) return false;
+  if(cat.luogo && song.luogo !== cat.luogo) return false;
   if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
   if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
+  if(cat.annoMin != null && (song.anno == null || song.anno < cat.annoMin)) return false;
+  if(cat.annoMax != null && (song.anno == null || song.anno > cat.annoMax)) return false;
   if(cat.genere && song.genere !== cat.genere) return false;
   if(cat.autore && song.autore !== cat.autore) return false;
   if(cat.tipo && song.tipo !== cat.tipo) return false;
@@ -1198,7 +1328,21 @@ function updateBackToTopVisibility(){
 window.addEventListener("scroll", updateBackToTopVisibility);
 
 const SEARCH_ALIASES = {
-  "coca": "comunita capi"
+  "coca": "comunita capi",
+  "lupetto": "l/c",
+  "lupetti": "l/c",
+  "coccinella": "l/c",
+  "coccinelle": "l/c",
+  "esploratore": "e/g",
+  "esploratori": "e/g",
+  "reparto": "e/g",
+  "guida": "e/g",
+  "guide": "e/g",
+  "noviziato": "r/s",
+  "clan": "r/s",
+  "rover": "r/s",
+  "scolta": "r/s",
+  "scolte": "r/s"
 };
 
 function normalizeText(str){
@@ -1291,6 +1435,7 @@ function wireDarkBtn(){
     detailDarkMode = !detailDarkMode;
     document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
     btn.classList.toggle("active", detailDarkMode);
+    saveDarkMode();
   });
 }
 window.addEventListener("online", () => {
@@ -1355,7 +1500,14 @@ function annoLabel(song){
   if(song.anno == null) return "";
   if(song.anno_incerto){
     const decade = Math.floor(song.anno / 10) * 10;
-    return "Anni '" + String(decade).slice(-2);
+    if(decade >= 1930){
+      return "Anni '" + String(decade).slice(-2);
+    }
+    if(decade >= 1900){
+      return "Anni '" + String(decade).slice(-3);
+    }
+    const century = Math.floor(song.anno / 100) * 100;
+    return "Anni '" + String(century).slice(-3);
   }
   return String(song.anno);
 }
@@ -1916,13 +2068,14 @@ if(isIPhoneDevice){
   }
 }
 
+document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
 renderHeaderBrand();
 setActiveTab("canzoni");
 checkForUpdate();
 
 fetch("songs.json")
   .then(r => r.json())
-  .then(data => { SONGS = data; showList(); })
+  .then(data => { SONGS = data; buildLuogoCategories(); buildGenereCategories(); buildAutoreCategories(); buildAnnataCategories(); showList(); })
   .catch(() => {
     content.innerHTML = '<div class="card"><div class="empty">Impossibile caricare le canzoni. Controlla la connessione e riprova.</div></div>';
   });
