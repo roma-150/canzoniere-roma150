@@ -154,8 +154,9 @@ v0.122
 - CATEGORIA LUOGHI K
 - CATEGORIE DINAMICHE IN BRANI FAMOSI K
 - ANIMAZIONE IN E OUT PER LA BARRA DI LIQUID GLASS K
+- SIMBOLO PER LIGHT MODE K
+- LE CARD RIMANGONO APERTE FINO AL RIAVVIO DELL'APP... K
 ---------------------------------------------------------------------------------------------------------
-
 
 
 

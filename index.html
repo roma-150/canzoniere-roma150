@@ -53,7 +53,7 @@
     padding:6px 10px;
     box-shadow:0 8px 32px rgba(56,30,96,0.20), inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(0,0,0,0.05);
     z-index:20;
-    transition:opacity 0.15s ease, transform 0.15s ease;
+    transition:opacity 0.28s cubic-bezier(0.34, 1.4, 0.64, 1), transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
   .bottom-nav::before{
     content:"";
@@ -66,7 +66,8 @@
   .bottom-nav.hidden{
     opacity:0;
     pointer-events:none;
-    transform:translateX(-50%) translateY(12px);
+    transform:translateX(-50%) translateY(24px) scale(0.92);
+    transition:opacity 0.32s ease-out, transform 0.32s ease-out;
   }
   body.is-android .bottom-nav{
     bottom:calc(env(safe-area-inset-bottom) * 0.6 + 10px);
@@ -387,7 +388,6 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
   .header-dark-btn:active{ background:rgba(255,255,255,0.24); }
-  .header-dark-btn.active{ background:rgba(255,255,255,0.32); }
 
   .phone.dark-bg .card{ background:#1C1C1E; }
   .phone.dark-bg .song-title{ color:#F2F2F7; }
@@ -575,7 +575,8 @@ const ICONS = {
   chordsOn: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
   chordsOff: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M4 4l16 16" stroke-width="2.2"/></svg>`,
   chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`,
-  moon: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
+  moon: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+  sun: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -685,6 +686,7 @@ let savedScrollY = 0;
 let savedCategoriesHomeScrollY = 0;
 let savedCategoriesSezioneScrollY = 0;
 let savedLuoghiListScrollY = 0;
+let openCategoryGroups = new Set();
 
 const CATEGORY_SECTIONS = [
   { label: "Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
@@ -913,8 +915,10 @@ function showCategorieSezione(sez){
       : groupLabel;
     card.appendChild(titleEl);
 
+    const isOpen = isCollapsible && openCategoryGroups.has(g.nome);
+    if(isOpen) titleEl.classList.add("open");
     const rowsContainer = document.createElement("div");
-    if(isCollapsible) rowsContainer.className = "cat-group-rows";
+    if(isCollapsible) rowsContainer.className = "cat-group-rows" + (isOpen ? " open" : "");
 
     const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie" || g.nome === "Canti AGESCI" || g.nome === "Per annata")
       ? g.categorie
@@ -942,6 +946,7 @@ function showCategorieSezione(sez){
       titleEl.addEventListener("click", () => {
         const open = rowsContainer.classList.toggle("open");
         titleEl.classList.toggle("open", open);
+        if(open) openCategoryGroups.add(g.nome); else openCategoryGroups.delete(g.nome);
       });
     }
 
@@ -1431,10 +1436,12 @@ function wireDarkBtn(){
   const btn = document.getElementById("headerDark");
   if(!btn) return;
   btn.classList.toggle("active", detailDarkMode);
+  btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
   btn.addEventListener("click", () => {
     detailDarkMode = !detailDarkMode;
     document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
     btn.classList.toggle("active", detailDarkMode);
+    btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
     saveDarkMode();
   });
 }
