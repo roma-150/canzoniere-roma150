@@ -126,13 +126,18 @@ v0.116 RELEASED
 - Dark modeK
 - tolta icona fazzolettone K
 ---------------------------------------------------------------------------------------------------------
-v0.117
+v0.117 RELEASED
 - fix elementi nascosti in dark mode K
 - FIX BARRA LIQUID GLASS K
 ---------------------------------------------------------------------------------------------------------
-v0.117
-- MODALITA ORIZZONTALE/DESKTOP
+v0.118
+- MODALITA ORIZZONTALE
+- MODALITà DESKTOP
 
+
+
+v0.119
+- FIX PROBLEMA MAGNIFIER LIQUID GLASS
 
 
 

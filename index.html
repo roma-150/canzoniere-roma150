@@ -25,6 +25,7 @@
     --green-tint-b:#F5FCF5;
     --amber:#A9720B;
     --amber-tint:#FBF2DC;
+    --phone-max-width:clamp(430px, 100vw, 900px);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
@@ -36,12 +37,12 @@
     background:var(--purple);
     min-height:100vh;
   }
-  .phone{ width:100%; max-width:430px; min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; background:var(--bg); }
+  .phone{ width:100%; max-width:var(--phone-max-width); min-height:100vh; display:flex; flex-direction:column; padding-bottom:100px; background:var(--bg); }
 
   .bottom-nav{
     position:fixed; left:50%; transform:translateX(-50%);
     bottom:calc(env(safe-area-inset-bottom) * 0.6);
-    width:calc(100% - 24px); max-width:406px;
+    width:calc(100% - 24px); max-width:calc(var(--phone-max-width) - 24px);
     display:flex;
     overflow:hidden;
     background:rgba(255,255,255,0.55);
@@ -122,7 +123,7 @@
   .placeholder-card{ text-align:center; padding:36px 20px; }
 
   .back-to-top{
-    position:fixed; right:18px; bottom:calc(78px + env(safe-area-inset-bottom));
+    position:fixed; right:max(18px, calc((100vw - var(--phone-max-width)) / 2 + 18px)); bottom:calc(78px + env(safe-area-inset-bottom));
     width:46px; height:46px; border-radius:50%; border:none;
     background:var(--purple); color:var(--white);
     display:flex; align-items:center; justify-content:center;
@@ -441,6 +442,42 @@
 
   .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
   footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
+
+  @media (hover: hover) and (pointer: fine){
+    .song-row:hover{ background:var(--neutral); border-radius:12px; }
+    .filter-chip:not(.active):hover{ background:var(--border); }
+    .filter-toggle-btn:not(.active):hover{ background:var(--border); }
+    .dir-btn:hover{ background:var(--border); }
+    .segmented button:not(.active):hover{ color:var(--purple); }
+    .pill-btn:hover{ opacity:0.88; }
+    .fav-star:hover{ color:#B8B6BE; }
+    .fav-star.active:hover{ color:var(--gold); }
+    .header-update-btn:hover{ background:rgba(255,255,255,0.24); }
+    .header-dark-btn:hover{ background:rgba(255,255,255,0.24); }
+    .header-back-btn:hover{ background:rgba(255,255,255,0.24); }
+    .key-controls button:hover{ background:var(--neutral); }
+    .fontsize-tile:hover,
+    .scroll-tile:hover,
+    .chordtoggle-tile:hover{ background:var(--border); }
+    .search-clear-btn:hover{ background:#D5D5DA; }
+    .back-to-top:hover{ background:#2E1A4D; }
+    .nav-item:hover .nav-pill{ background:rgba(56,30,96,0.08); }
+    .nav-item.active:hover .nav-pill{ background:rgba(56,30,96,0.14); }
+
+    .phone.dark-bg .song-row:hover{ background:#2C2C2E; }
+    .phone.dark-bg .filter-chip:not(.active):hover{ background:#3A3A3C; }
+    .phone.dark-bg .filter-toggle-btn:not(.active):hover{ background:#3A3A3C; }
+    .phone.dark-bg .dir-btn:hover{ background:#3A3A3C; }
+    .phone.dark-bg .segmented button:not(.active):hover{ color:#F2F2F7; }
+    .phone.dark-bg .fav-star:hover{ color:#5C5C60; }
+    .phone.dark-bg .fav-star.active:hover{ color:var(--gold); }
+    .phone.dark-bg .key-controls button:hover{ background:rgba(255,255,255,0.15); }
+    .phone.dark-bg .fontsize-tile:hover,
+    .phone.dark-bg .scroll-tile:hover,
+    .phone.dark-bg .chordtoggle-tile:hover{ background:#4A3670; }
+    .phone.dark-bg .nav-item:hover .nav-pill{ background:rgba(255,255,255,0.08); }
+    .phone.dark-bg .nav-item.active:hover .nav-pill{ background:rgba(255,255,255,0.16); }
+  }
 </style>
 </head>
 <body>
@@ -600,7 +637,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Canti famosi"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.117";
+const APP_VERSION = "0.118";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
