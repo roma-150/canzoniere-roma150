@@ -127,7 +127,9 @@ v0.116
 - tolta icona fazzolettone K
 ---------------------------------------------------------------------------------------------------------
 v0.117
+- fix elementi nascosti in dark mode
 - FIX BARRA LIQUID GLASS
+- blocco modalità orizzontale
 
 
 
