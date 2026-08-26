@@ -130,14 +130,15 @@ v0.117 RELEASED
 - fix elementi nascosti in dark mode K
 - FIX BARRA LIQUID GLASS K
 ---------------------------------------------------------------------------------------------------------
-v0.118
-- MODALITA ORIZZONTALE
-- MODALITà DESKTOP
-
-
-
-v0.119
-- FIX PROBLEMA MAGNIFIER LIQUID GLASS
+v0.119 RELEASED
+- MODALITA ORIZZONTALE OK
+- MODALITà DESKTOP OK
+---------------------------------------------------------------------------------------------------------
+v0.120 RELEASED
+- FIX PROBLEMA MAGNIFIER LIQUID GLASS K
+- FIX problema modalità orizzontale iphone K
+---------------------------------------------------------------------------------------------------------
+v0.121
 
 
 

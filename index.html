@@ -44,7 +44,6 @@
     bottom:calc(env(safe-area-inset-bottom) * 0.6);
     width:calc(100% - 24px); max-width:calc(var(--phone-max-width) - 24px);
     display:flex;
-    overflow:hidden;
     background:rgba(255,255,255,0.55);
     -webkit-backdrop-filter:blur(24px) saturate(180%) contrast(115%);
     backdrop-filter:blur(24px) saturate(180%) contrast(115%);
@@ -60,6 +59,7 @@
     content:"";
     position:absolute; inset:0;
     z-index:-1;
+    border-radius:28px;
     background:linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 55%);
     pointer-events:none;
   }
@@ -459,6 +459,24 @@
   }
   .orientation-overlay-text{ font-size:16px; font-weight:700; max-width:280px; line-height:1.4; }
 
+  .lock-suggest-toast{
+    display:none;
+    position:fixed; left:16px; right:16px;
+    top:calc(env(safe-area-inset-top) + 12px);
+    z-index:101;
+    background:var(--purple); color:var(--white);
+    border-radius:16px; padding:12px 14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    align-items:center; gap:10px;
+  }
+  .lock-suggest-toast.visible{ display:flex; }
+  .lock-suggest-toast-text{ flex:1; font-size:13px; font-weight:600; line-height:1.4; }
+  .lock-suggest-toast-close{
+    width:28px; height:28px; border-radius:50%; border:none; flex-shrink:0;
+    background:rgba(255,255,255,0.18); color:var(--white); font-size:16px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;
+  }
+
   @media (hover: hover) and (pointer: fine){
     .song-row:hover{ background:var(--neutral); border-radius:12px; }
     .filter-chip:not(.active):hover{ background:var(--border); }
@@ -520,6 +538,11 @@
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
   </div>
   <div class="orientation-overlay-text">Ruota il telefono in verticale per usare l'app</div>
+</div>
+
+<div class="lock-suggest-toast" id="lockSuggestToast">
+  <div class="lock-suggest-toast-text">Suggerimento: attiva il blocco rotazione (Centro di Controllo) per evitare che l'app ruoti da sola.</div>
+  <button class="lock-suggest-toast-close" id="lockSuggestClose" aria-label="Chiudi">✕</button>
 </div>
 
 <script>
@@ -660,7 +683,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Canti famosi"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.119";
+const APP_VERSION = "0.120";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1802,17 +1825,39 @@ if(/Android/i.test(navigator.userAgent)){
 }
 
 const isIPhoneDevice = /iPhone|iPod/i.test(navigator.userAgent);
+let wasOverlayVisible = false;
+let lockSuggestTimeout = null;
+
+function showLockSuggestToast(){
+  const toast = document.getElementById("lockSuggestToast");
+  if(!toast) return;
+  toast.classList.add("visible");
+  clearTimeout(lockSuggestTimeout);
+  lockSuggestTimeout = setTimeout(() => toast.classList.remove("visible"), 6000);
+}
 
 function updateOrientationOverlay(){
   const overlay = document.getElementById("orientationOverlay");
   if(!overlay) return;
   const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-  overlay.classList.toggle("visible", isIPhoneDevice && isLandscape);
+  const isOverlayVisible = isIPhoneDevice && isLandscape;
+  overlay.classList.toggle("visible", isOverlayVisible);
+  if(wasOverlayVisible && !isOverlayVisible){
+    showLockSuggestToast();
+  }
+  wasOverlayVisible = isOverlayVisible;
 }
 if(isIPhoneDevice){
   window.addEventListener("resize", updateOrientationOverlay);
   window.addEventListener("orientationchange", updateOrientationOverlay);
   updateOrientationOverlay();
+  const lockSuggestClose = document.getElementById("lockSuggestClose");
+  if(lockSuggestClose){
+    lockSuggestClose.addEventListener("click", () => {
+      document.getElementById("lockSuggestToast").classList.remove("visible");
+      clearTimeout(lockSuggestTimeout);
+    });
+  }
 }
 
 renderHeaderBrand();
