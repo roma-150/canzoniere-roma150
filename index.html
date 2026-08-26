@@ -212,6 +212,7 @@
     background:none; border:none; padding:0 0 14px; cursor:pointer;
   }
   .list-title{ font-size:19px; font-weight:800; margin:0 0 14px; }
+  .list-title-count{ font-size:13px; font-weight:600; color:var(--ink-soft); }
 
   .search-filter-row{
     display:flex; align-items:center; margin-bottom:12px;
@@ -413,6 +414,7 @@
 
   .phone.dark-bg .list-title,
   .phone.dark-bg .back-link{ color:#F2F2F7; }
+  .phone.dark-bg .list-title-count{ color:#9A9AA0; }
   .phone.dark-bg .search-box{ background:#2C2C2E; }
   .phone.dark-bg .search-box input{ color:#F2F2F7; }
   .phone.dark-bg .search-box input::placeholder{ color:#8E8E93; }
@@ -436,7 +438,7 @@
   .phone.dark-bg .key-badge{ background:rgba(216,155,0,0.18); }
   .phone.dark-bg .fav-star{ color:#48484A; }
   .phone.dark-bg .fav-star.active{ color:var(--gold); }
-  .phone.dark-bg .placeholder-icon{ background:#2C2C2E; color:var(--purple); }
+  .phone.dark-bg .placeholder-icon{ background:var(--purple); color:var(--white); }
   .phone.dark-bg .placeholder-card h2{ color:#F2F2F7; }
   .phone.dark-bg .placeholder-card p{ color:#9A9AA0; }
 
@@ -462,10 +464,10 @@
   .lock-suggest-toast{
     display:none;
     position:fixed; left:16px; right:16px;
-    top:calc(env(safe-area-inset-top) + 12px);
+    top:50%; transform:translateY(-50%);
     z-index:101;
     background:var(--purple); color:var(--white);
-    border-radius:16px; padding:12px 14px;
+    border-radius:16px; padding:16px 16px;
     box-shadow:0 8px 24px rgba(0,0,0,0.3);
     align-items:center; gap:10px;
   }
@@ -683,7 +685,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Canti famosi"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.120";
+const APP_VERSION = "0.121";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -723,15 +725,20 @@ const appHeader = document.getElementById("appHeader");
 const bottomNav = document.getElementById("bottomNav");
 
 const CATEGORIES = [
+  { gruppo: "Canti del Roma 150", label: "Canti di gruppo", brancaTutte: true, tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "L/C Casalotti", branca: "L/C", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "L/C Selva Candida", branca: "L/C", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "E/G Casalotti", branca: "E/G", sede: "Casalotti", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "E/G Selva Candida", branca: "E/G", sede: "Selva Candida", tipo: "scout", origine: "Roma 150" },
   { gruppo: "Canti del Roma 150", label: "R/S", branca: "R/S", tipo: "scout", origine: "Roma 150" },
-  { gruppo: "Canti del Roma 150", label: "Selva Candida", sede: "Selva Candida" },
   { gruppo: "Canti del Roma 150", label: "Casalotti", sede: "Casalotti" },
-  { gruppo: "Canti AGESCI", label: "Canti Giungla", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Giungla" },
-  { gruppo: "Canti AGESCI", label: "Canti Bosco", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Bosco" },
+  { gruppo: "Canti del Roma 150", label: "Selva Candida", sede: "Selva Candida" },
+  { gruppo: "Canti AGESCI", label: "Bosco", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Bosco" },
+  { gruppo: "Canti AGESCI", label: "Giungla", branca: "L/C", tipo: "scout", origine: "AGESCI", ambientazione: "Giungla" },
+  { gruppo: "Canti AGESCI", label: "L/C", branca: "L/C", tipo: "scout", origine: "AGESCI" },
+  { gruppo: "Canti AGESCI", label: "E/G", branca: "E/G", tipo: "scout", origine: "AGESCI" },
+  { gruppo: "Canti AGESCI", label: "R/S", branca: "R/S", tipo: "scout", origine: "AGESCI" },
+  { gruppo: "Canti AGESCI", label: "Canti comuni", brancaTutte: true, tipo: "scout", origine: "AGESCI" },
   { gruppo: "Momenti dell'anno liturgico", label: "Avvento", tipo: "messa", tempo: "Avvento" },
   { gruppo: "Momenti dell'anno liturgico", label: "Natale", tipo: "messa", tempo: "Natale" },
   { gruppo: "Momenti dell'anno liturgico", label: "Quaresima", tipo: "messa", tempo: "Quaresima" },
@@ -772,6 +779,23 @@ function categoryCount(cat){
   }).length;
 }
 
+function sectionCount(sez){
+  const cats = CATEGORIES.filter(cat => sez.gruppi.includes(cat.gruppo));
+  const matched = new Set();
+  SONGS.forEach((song, idx) => {
+    if(cats.some(cat => matchesCategory(song, cat))) matched.add(idx);
+  });
+  return matched.size;
+}
+
+function groupCount(categorie){
+  const matched = new Set();
+  SONGS.forEach((song, idx) => {
+    if(categorie.some(cat => matchesCategory(song, cat))) matched.add(idx);
+  });
+  return matched.size;
+}
+
 function renderCategorie(){
   content.innerHTML = "";
   const card = document.createElement("div");
@@ -783,6 +807,7 @@ function renderCategorie(){
     row.innerHTML = `
       <div class="row-title">${sez.label}</div>
       <div class="row-end">
+        <span class="key-badge">${sectionCount(sez)}</span>
         ${ICONS.chevronRight(18)}
       </div>
     `;
@@ -803,11 +828,12 @@ function showCategorieSezione(sez){
   inDetailView = false;  backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   content.innerHTML = "";
+  window.scrollTo(0, 0);
 
   const sezTitle = document.createElement("div");
   sezTitle.className = "list-title";
   sezTitle.style.marginTop = "4px";
-  sezTitle.textContent = sez.label;
+  sezTitle.innerHTML = sez.label + ` <span class="list-title-count">(${sectionCount(sez)} ${sez.label === "Brani famosi" ? "brani" : "canti"})</span>`;
   content.appendChild(sezTitle);
 
   const gruppi = sez.gruppi.map(nome => ({
@@ -817,8 +843,11 @@ function showCategorieSezione(sez){
   gruppi.forEach(g => {
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<div class="list-title">${g.nome}</div>`;
-    const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie")
+    const groupLabel = (g.nome === "Canti del Roma 150" || g.nome === "Canti AGESCI")
+      ? `${g.nome} <span class="list-title-count">(${groupCount(g.categorie)} canti)</span>`
+      : g.nome;
+    card.innerHTML = `<div class="list-title">${groupLabel}</div>`;
+    const categorieOrdinate = (g.nome === "Canti del Roma 150" || g.nome === "Momenti della liturgia" || g.nome === "Momenti dell'anno liturgico" || g.nome === "Sacramenti e cerimonie" || g.nome === "Canti AGESCI")
       ? g.categorie
       : [...g.categorie].sort((a, b) => a.label.localeCompare(b.label, "it", { sensitivity: "base" }));
     categorieOrdinate.forEach(cat => {
@@ -851,6 +880,7 @@ function showCategoryDetail(cat, sez){
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   categorySearchQuery = "";
+  window.scrollTo(0, 0);
 
   const card = document.createElement("div");
   card.className = "card";
@@ -994,6 +1024,8 @@ function categoryCount(cat){
 
 function matchesCategory(song, cat){
   if(cat.branca && !brancheOf(song).includes(cat.branca)) return false;
+  if(cat.brancaTutte && !["L/C", "E/G", "R/S"].every(b => brancheOf(song).includes(b))) return false;
+  if(cat.noAmbientazione && song.ambientazione) return false;
   if(cat.sede && !(song.sede || []).includes(cat.sede)) return false;
   if(cat.decade && ("" + Math.floor(song.anno / 10) * 10) !== cat.decade) return false;
   if(cat.genere && song.genere !== cat.genere) return false;
@@ -1165,11 +1197,22 @@ function updateBackToTopVisibility(){
 }
 window.addEventListener("scroll", updateBackToTopVisibility);
 
+const SEARCH_ALIASES = {
+  "coca": "comunita capi"
+};
+
+function normalizeText(str){
+  return String(str || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
 function matchesSearch(song, query){
   if(!query.trim()) return true;
-  const plainLyrics = (song.testo_accordi || "").replace(/\[[^\]]+\]/g, " ").toLowerCase();
-  const sede = (song.sede || []).join(" ").toLowerCase();
-  const haystack = [
+  const plainLyrics = (song.testo_accordi || "").replace(/\[[^\]]+\]/g, " ");
+  const sede = (song.sede || []).join(" ");
+  const haystack = normalizeText([
     song.titolo || "",
     String(song.anno || ""),
     song.luogo || "",
@@ -1182,10 +1225,10 @@ function matchesSearch(song, query){
     tempiOf(song).join(" "),
     song.ambientazione || "",
     plainLyrics
-  ].join(" ").toLowerCase();
+  ].join(" "));
 
-  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
-  return tokens.every(token => haystack.includes(token));
+  const tokens = normalizeText(query).split(/\s+/).filter(Boolean);
+  return tokens.every(token => haystack.includes(token) || (SEARCH_ALIASES[token] && haystack.includes(SEARCH_ALIASES[token])));
 }
 
 function groupSongs(list){
@@ -1578,12 +1621,24 @@ function showList(){
       if(genereRow) filterPanel.appendChild(genereRow);
     }
     if(showMessa){
-      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => momentiOf(s)))];
+      const ORDINE_MOMENTI = ["Ingresso", "Gloria", "Alleluia", "Offertorio", "Santo", "Comunione", "Pace", "Finale"];
+      const ORDINE_TEMPI = ["Avvento", "Natale", "Quaresima", "Pasqua", "Tempo Ordinario", "Pentecoste"];
+      const ORDINE_SACRAMENTI = ["Funerale", "Matrimonio", "Battesimo", "Comunione", "Cresima"];
+      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => momentiOf(s)))]
+        .sort((a, b) => ORDINE_MOMENTI.indexOf(a) - ORDINE_MOMENTI.indexOf(b));
       const momentoRow = buildFilterRow("Momento liturgico", momentoDisponibili, selectedMomenti);
       if(momentoRow) filterPanel.appendChild(momentoRow);
-      const tempoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => tempiOf(s)))];
+      const tuttiTempi = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => tempiOf(s)))];
+      const tempoDisponibili = tuttiTempi
+        .filter(v => ORDINE_TEMPI.includes(v))
+        .sort((a, b) => ORDINE_TEMPI.indexOf(a) - ORDINE_TEMPI.indexOf(b));
       const tempoRow = buildFilterRow("Tempo liturgico", tempoDisponibili, selectedTempi);
       if(tempoRow) filterPanel.appendChild(tempoRow);
+      const sacramentiDisponibili = tuttiTempi
+        .filter(v => ORDINE_SACRAMENTI.includes(v))
+        .sort((a, b) => ORDINE_SACRAMENTI.indexOf(a) - ORDINE_SACRAMENTI.indexOf(b));
+      const sacramentiRow = buildFilterRow("Sacramenti e cerimonie", sacramentiDisponibili, selectedTempi);
+      if(sacramentiRow) filterPanel.appendChild(sacramentiRow);
     }
     card.appendChild(filterPanel);
 
@@ -1671,6 +1726,7 @@ function showDetail(index){
   listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
   content.innerHTML = "";
+  window.scrollTo(0, 0);
 
   const card1 = document.createElement("div");
   card1.className = "card";

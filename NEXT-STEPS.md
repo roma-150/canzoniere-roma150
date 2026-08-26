@@ -138,12 +138,13 @@ v0.120 RELEASED
 - FIX PROBLEMA MAGNIFIER LIQUID GLASS K
 - FIX problema modalità orizzontale iphone K
 ---------------------------------------------------------------------------------------------------------
-v0.121
-
-
-
-
-- AGGIORNA CATEGORIE PER INCLUDERE
-- TUTTI I CANTI AGESCI
+v0.121 RELEASED
+- FIX SCORRIMENTO VERTICALE RESIDUO K
+- FIX CHIP CATEGORIE K
+- FIX CATEGORIE SCOUT E MESSA K
+- FIX FILTRI MESSA K
+- ricerca sinonimizzata K
+---------------------------------------------------------------------------------------------------------
+v0.122
+- Altre ricerche sinonimizzate
 - PIù CANTI FAMOSI (MAGARI VAI PER GENERE)
-- I CANTI DI GRUPPO NE "I CANTI DEL ROMA 150", QUELLI CHE HANNO TUTTE E TRE LE BRANCHE E SONO DI ORIGINE ROMA 150
