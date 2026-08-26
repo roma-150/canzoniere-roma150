@@ -1984,15 +1984,6 @@
     "testo_accordi": "[SOL]Gonna lay down my sword and shield\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nGonna lay down my sword and shield\nDown by the riverside\nAin't gonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]Gonna stick my sword in the golden sand\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nGonna stick my sword in the golden sand\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]Gonna put on my long white robe\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nGonna put on my long white robe\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]Gonna put on my starry crown\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nGonna put on my starry crown\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more."
   },
   {
-    "titolo": "Hobo's Lullaby",
-    "anno": 1934,
-    "tonalita": "DO",
-    "tipo": "musica",
-    "autore": "Goebel Reeves",
-    "genere": "Folk",
-    "testo_accordi": "[DO]Go to sleep, you weary [FA]hobo\n[SOL7]Let the towns drift slowly [DO]by\n[DO]Listen to [DO7]the steel rails [FA]humming\n[SOL7]That's a hobo's lulla[DO]by\n---\n{rit}\n[DO]Ho Ho-Ho-Ho, Ho Ho-[FA]Ho-Ho\n[SOL7]Ho Ho-Ho-Ho, Ho-[DO]Ho\n[DO]Ho Ho-Ho [DO7]Ho-Ho-Ho, Ho [FA]Ho-Ho Ho-Ho-Ho\n[SOL7]Ho Ho-Ho Ho-Ho-[DO]Ho\n---\n[DO]Do not think about to[FA]morrow\n[SOL7]Let tomorrow come and [DO]go\nTo[DO]night you've got [DO7]a nice warm [FA]boxcar\n[SOL7]Safe from all this wind and [DO]snow\n---\n[DO]I know the police cause you [FA]trouble\n[SOL7]They cause trouble every[DO]where\n[DO]But when you [DO7]die and go to [FA]heaven\n[SOL7]You'll find no policeman [DO]there\n---\n[DO]So go to sleep, you weary [FA]hobo\n[SOL7]Let the towns drift slowly [DO]by\n[DO]Listen to [DO7]the steel rails [FA]humming\n[SOL7]That's a hobo's lulla[DO]by\n---\n{rit}\n[DO]Ho Ho-Ho-Ho, Ho Ho-[FA]Ho-Ho\n[SOL7]Ho Ho-Ho-Ho, Ho-[DO]Ho\n[DO]Ho Ho-Ho [DO7]Ho-Ho-Ho, Ho [FA]Ho-Ho Ho-Ho-Ho\n[SOL7]Ho Ho-Ho Ho-Ho-[DO]Ho"
-  },
-  {
     "titolo": "Fischia il vento",
     "anno": 1943,
     "tonalita": "LAm",
@@ -2036,6 +2027,15 @@
     "autore": "Ben E. King",
     "genere": "Pop Rock",
     "testo_accordi": "{strumentale}\n[DO] [LAm] [FA] [SOL] [DO]\n---\nWhen the [DO]night has come\n[LAm]And the land is dark\nAnd the [FA]moon is the [SOL]only light we'll [DO]see\nNo, I [DO]won't be afraid\nNo, I [LAm]won't be afraid\nJust as [FA]long as you [SOL]stand, stand by [DO]me\n---\n{rit}\nSo, darling, darling, [DO]stand by me\nOh, [LAm]stand by me\nOh, [FA]stand, [SOL]stand by me\nStand by [DO]me\n---\nIf the [DO]sky that we look upon\n[LAm]Should tumble and fall\nOr the [FA]mountain should [SOL]crumble to the [DO]sea\nI won't [DO]cry, I won't cry\nNo, I [LAm]won't shed a tear\nJust as [FA]long as you [SOL]stand, stand by [DO]me\n---\n{rit}\nAnd darling, darling, [DO]stand by me\nOh, [LAm]stand by me\nOh, [FA]stand now, [SOL]stand by me\nStand by [DO]me\n---\n{strumentale}\n[DO] [LAm] [FA] [SOL] [DO]\n[DO] [LAm] [FA] [SOL] [DO]\n---\n{rit}\nSo, darling, darling, [DO]stand by me\nOh, [LAm]stand by me\nOh, [FA]stand now, [SOL]stand by me\nStand by [DO]me\nWhenever you're in [DO]trouble won't you stand by me, oh, [LAm]stand by me\nOh, [FA]stand now, oh, [SOL]stand, stand by [DO]me"
+  },
+  {
+    "titolo": "Hobo's Lullaby",
+    "anno": 1961,
+    "tonalita": "DO",
+    "tipo": "musica",
+    "autore": "Goebel Reeves",
+    "genere": "Folk",
+    "testo_accordi": "[DO]Go to sleep, you weary [FA]hobo\n[SOL7]Let the towns drift slowly [DO]by\n[DO]Listen to [DO7]the steel rails [FA]humming\n[SOL7]That's a hobo's lulla[DO]by\n---\n{rit}\n[DO]Ho Ho-Ho-Ho, Ho Ho-[FA]Ho-Ho\n[SOL7]Ho Ho-Ho-Ho, Ho-[DO]Ho\n[DO]Ho Ho-Ho [DO7]Ho-Ho-Ho, Ho [FA]Ho-Ho Ho-Ho-Ho\n[SOL7]Ho Ho-Ho Ho-Ho-[DO]Ho\n---\n[DO]Do not think about to[FA]morrow\n[SOL7]Let tomorrow come and [DO]go\nTo[DO]night you've got [DO7]a nice warm [FA]boxcar\n[SOL7]Safe from all this wind and [DO]snow\n---\n[DO]I know the police cause you [FA]trouble\n[SOL7]They cause trouble every[DO]where\n[DO]But when you [DO7]die and go to [FA]heaven\n[SOL7]You'll find no policeman [DO]there\n---\n[DO]So go to sleep, you weary [FA]hobo\n[SOL7]Let the towns drift slowly [DO]by\n[DO]Listen to [DO7]the steel rails [FA]humming\n[SOL7]That's a hobo's lulla[DO]by\n---\n{rit}\n[DO]Ho Ho-Ho-Ho, Ho Ho-[FA]Ho-Ho\n[SOL7]Ho Ho-Ho-Ho, Ho-[DO]Ho\n[DO]Ho Ho-Ho [DO7]Ho-Ho-Ho, Ho [FA]Ho-Ho Ho-Ho-Ho\n[SOL7]Ho Ho-Ho Ho-Ho-[DO]Ho"
   },
   {
     "titolo": "La ballata del Miché",

@@ -265,10 +265,13 @@
     font-size:11.5px; font-weight:800; color:var(--gold);
     background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
   }
+REPLACE:
   .origin-dot{
-    display:inline-block; width:8px; height:8px; border-radius:50%;
-    background:var(--green); border:1.5px solid var(--white);
+    display:inline-block !important;
+    width:16px !important; height:16px !important;
+    max-width:16px !important; max-height:16px !important;
     margin-left:6px; flex-shrink:0; vertical-align:middle;
+    object-fit:contain;
   }
 
   /* dettaglio */
@@ -500,7 +503,7 @@ const CATEGORY_SECTIONS = [
   { label: "Canti Famosi", gruppi: ["Canti famosi"] }
 ];
 let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.114";
+const APP_VERSION = "0.115";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -757,8 +760,7 @@ function showCategoryDetail(cat, sez){
             <div class="row-meta">${metaLine(song)}</div>
           </div>
           <div class="row-end">
-            <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
-            <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
+            <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>            <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
             ${ICONS.chevronRight(18)}
           </div>
         `;
@@ -1101,15 +1103,17 @@ function renderHeaderBack(onBack){
       <div class="sub">Roma 150</div>
     </div>
     <button class="header-update-btn" id="headerUpdate" aria-label="Cerca aggiornamenti">${ICONS.refresh(19)}</button>
-  `;
+  `; 
   wireUpdateBtn();
   document.getElementById("headerHome").addEventListener("click", onBack);
 }
 
 function originDot(song){
-  return (song.tipo === "scout" && song.origine === "Roma 150") ? '<span class="origin-dot"></span>' : "";
+  if(song.tipo === "scout" && song.origine === "Roma 150"){
+    return '<img class="origin-dot" src="icons/fazzolettone-logo.png" alt="" width="16" height="16">';
+  }
+  return "";
 }
-
 function annoLabel(song){
   if(song.anno == null) return "";
   if(song.anno_incerto){

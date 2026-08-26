@@ -37,6 +37,7 @@ DAL '92 AL 2019
 TUTTI E/G CASALOTTI
 SOPRATTUTTO IL 2013... ANZI, SICURAMENTE IL 2013
 CANTI AGESCI TUTTI
+L'UOMO TORNA ALL'UOMO SOPRATTUTTO...
 
 ---------------------------------------------------------------------------------------------------------
 CORREZIONI NEI FILE PDF:
@@ -109,8 +110,15 @@ v0.113 RELEASED
 - Categorie in Ordine
 - Logica delle categorie completata
 ---------------------------------------------------------------------------------------------------------
-v0.114
+v0.114 RELEASED
 - Aggiunti canti E/G e di gruppo OK
 - Sistemato ordinamento per canti che iniziano con un numero OK
 - Fix testo tonalità OK
-- Aggiunti canti vari
+- Aggiunti canti vari OK
+---------------------------------------------------------------------------------------------------------
+v0.115
+- AGGIORNA CATEGORIE PER INCLUDERE
+- TUTTI I CANTI AGESCI
+- PIù CANTI FAMOSI (MAGARI VAI PER GENERE)
+- I CANTI DI GRUPPO NE "I CANTI DEL ROMA 150", QUELLI CHE HANNO TUTTE E TRE LE BRANCHE E SONO DI ORIGINE ROMA 150
+- ICONA ROMA 150 FAZZOLETTONE
