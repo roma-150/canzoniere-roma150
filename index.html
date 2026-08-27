@@ -318,7 +318,7 @@
     cursor:grab; touch-action:none; user-select:none; -webkit-user-drag:none;
   }
   .cz-drag-handle svg{ -webkit-user-drag:none; pointer-events:none; }
-  .cz-dragging{ cursor:grabbing; }
+  .cz-dragging{ cursor:grabbing; opacity:0.6; }
   .phone.dark-bg .cz-drag-handle{ color:#48484A; }
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
@@ -1341,11 +1341,11 @@ function initCzDragReorder(container, cz){
       const rect = row.getBoundingClientRect();
       const rowCenter = rect.top + rect.height / 2;
       if(draggingCenter > rowCenter && draggingRow.nextElementSibling === row){
-        container.insertBefore(draggingRow, row);
+        container.insertBefore(draggingRow, row.nextSibling);
         draggingRow.style.transform = "none";
         startY = clientY;
       } else if(draggingCenter < rowCenter && draggingRow.previousElementSibling === row){
-        container.insertBefore(draggingRow, row.nextSibling);
+        container.insertBefore(draggingRow, row);
         draggingRow.style.transform = "none";
         startY = clientY;
       }
