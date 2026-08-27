@@ -424,6 +424,7 @@
   .phone.dark-bg .search-box input{ color:#F2F2F7; }
   .phone.dark-bg .search-box input::placeholder{ color:#8E8E93; }
   .phone.dark-bg .search-box svg{ color:#FFFFFF; }
+  .phone.dark-bg .search-clear-btn{ background:#48484A; }
   .phone.dark-bg .filter-toggle-btn{ background:#2C2C2E; }
   .phone.dark-bg .filter-toggle-btn svg{ color:#FFFFFF; }
   .phone.dark-bg .filter-toggle-btn.active{ background:var(--purple); color:var(--white); }
@@ -693,7 +694,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.122";
+const APP_VERSION = "0.123";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -886,7 +887,8 @@ function showCategorieSezione(sez){
   });
   appHeader.classList.add("sticky");
   bottomNav.classList.remove("hidden");
-  inDetailView = false;  backToTopBtn.classList.remove("visible");
+  inDetailView = false;  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   content.innerHTML = "";
   window.scrollTo(0, 0);
@@ -962,6 +964,7 @@ function showLuoghiList(sez){
   appHeader.classList.add("sticky");
   bottomNav.classList.add("hidden");
   inDetailView = false;
+  listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   content.innerHTML = "";
@@ -1224,6 +1227,7 @@ function showTab(tab){
   }
   renderHeaderBrand();
   inDetailView = false;
+  listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
   footer.textContent = "";
   if(tab === "categorie"){
@@ -1749,9 +1753,9 @@ function showList(){
     const tipiVuoto = selectedTipi.size === 0;
     const scoutSelezionato = selectedTipi.has("scout");
     const origineVuoto = selectedOrigini.size === 0;
-    const showBrancaSede = tipiVuoto || scoutSelezionato;
+    const showBrancaSede = scoutSelezionato;
     const showOrigine = scoutSelezionato;
-    const showSede = tipiVuoto || (scoutSelezionato && (origineVuoto || selectedOrigini.has("Roma 150")));
+    const showSede = scoutSelezionato && (origineVuoto || selectedOrigini.has("Roma 150"));
     const showGenere = selectedTipi.has("musica");
     const showMessa = selectedTipi.has("messa");
 
