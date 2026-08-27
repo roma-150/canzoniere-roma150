@@ -6,7 +6,6 @@ const APP_SHELL = [
   './manifest.json',
   './icons/icon-ios.jpg',
   './icons/icon-android.jpg',
-  './icons/fazzolettone.png',
   './icons/agesci.png',
 ];// Installazione: mette in cache i file base dell'app (guscio)
 self.addEventListener('install', (event) => {

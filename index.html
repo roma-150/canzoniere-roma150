@@ -725,7 +725,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.124";
+const APP_VERSION = "0.124B";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1321,17 +1321,11 @@ function showCanzoniereForm(existingId){
 
 function initCzDragReorder(container, cz){
   let draggingRow = null;
+  let activePointerId = null;
   let startY = 0;
 
   function getRows(){
     return Array.from(container.querySelectorAll(".song-row"));
-  }
-
-  function beginDrag(row, clientY){
-    draggingRow = row;
-    startY = clientY;
-    draggingRow.classList.add("cz-dragging");
-    draggingRow.style.transition = "none";
   }
 
   function moveDrag(clientY){
@@ -1374,45 +1368,39 @@ function initCzDragReorder(container, cz){
     cz.dataModifica = new Date().toISOString();
     saveCanzonieri();
     draggingRow = null;
+    activePointerId = null;
   }
 
-  function onTouchStart(e){
+  function onPointerDown(e){
+    if(e.pointerType === "mouse" && e.button !== 0) return;
     e.preventDefault();
-    beginDrag(e.currentTarget.closest(".song-row"), e.touches[0].clientY);
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd);
+    const handle = e.currentTarget;
+    draggingRow = handle.closest(".song-row");
+    startY = e.clientY;
+    activePointerId = e.pointerId;
+    draggingRow.classList.add("cz-dragging");
+    draggingRow.style.transition = "none";
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("pointercancel", onPointerUp);
   }
-  function onTouchMove(e){
-    e.preventDefault();
-    moveDrag(e.touches[0].clientY);
-  }
-  function onTouchEnd(){
-    endDrag();
-    document.removeEventListener("touchmove", onTouchMove);
-    document.removeEventListener("touchend", onTouchEnd);
-  }
-
-  function onMouseDown(e){
-    e.preventDefault();
-    beginDrag(e.currentTarget.closest(".song-row"), e.clientY);
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  }
-  function onMouseMove(e){
+  function onPointerMove(e){
+    if(e.pointerId !== activePointerId) return;
     moveDrag(e.clientY);
   }
-  function onMouseUp(){
+  function onPointerUp(e){
+    if(e.pointerId !== activePointerId) return;
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+    document.removeEventListener("pointercancel", onPointerUp);
     endDrag();
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
   }
 
   getRows().forEach(row => {
     const handle = row.querySelector(".cz-drag-handle");
     if(!handle) return;
     handle.addEventListener("click", e => e.stopPropagation());
-    handle.addEventListener("touchstart", onTouchStart, { passive: false });
-    handle.addEventListener("mousedown", onMouseDown);
+    handle.addEventListener("pointerdown", onPointerDown);
   });
 }
 

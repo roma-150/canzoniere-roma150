@@ -1,40 +1,5 @@
 VERSIONI E MODIFICHE DA FARE
 ---------------------------------------------------------------------------------------------------------
-CANZONI DA VERIFICARE:
-
-ROMA 150:
-non le conosco, mi serve aiuto...
-- ADORO TE 2021
-- ARTU A CAMELOT 94
-- CON IL GIGLIO SUL CUORE
-- E VAI ESPLORATOR
-- FEDELI PERCHé RIBELLI
-- FELICITà 2023
-- FORZA VENITE COCCINELLE 93
-- I CAMPANELLINI DI MESCHIA 97
-- I COLORI 89
-- IL CANTO DEL VENTENNALE 2000
-- INTORNO AL FUOCO
-- IO E LA MIA SQUADRIGLIA SIAMO QUA
-- L'ACQUA DEL RUSCELLO 2025
-Ancora da vedere
-- IN ORDINE ALFABETICO: DA LA BALLATA DI CALLAHORN IN POI...
-SIAMO A 60/120
-1992 L/C fuori dal sacco tutte quelle teste: CHECK PARTICOLARE...
-
-fix richiesto:
-- I RAGAZZI DELL'ICARE FIX VARI SOLO STROFE
-- IL CANTO DEL CANTO QUARANTENNALE FIX STROFE
-- IL GRANDE SOGNO VA SISTEMATO
-- IL MONDO INSIEME A TE DISASTROSO
-- IL PAESE DELLE MERAVIGLIE STROFA 2 E 3
-- JOHN BROWN CHECK DEL TESTO
-- L'ISOLA DELLA GIOIA STROFE 2 E 3
-- INNO DI GRUPPO - ACCORDI MESSI MALE
-
-TUTTI CANTI AGESCI
-TUTTI CANTI MESSA
-TUTTI BRANI FAMOSI
 
 ---------------------------------------------------------------------------------------------------------
 CORREZIONI NEI FILE PDF:
@@ -162,7 +127,16 @@ v0.123 RELEASED
 ---------------------------------------------------------------------------------------------------------
 v0.124
 - sezione canzoniere
--
+---------------------------------------------------------------------------------------------------------
+v0.125 RELEASED
+- TENTATIVO fix drag and drop canzoniere
+- fix tutti i canti AGESCI
+- FIX VARIE CANZONI E AGGIUNTE VARIE CANZONI....
+---------------------------------------------------------------------------------------------------------
+v0.126 
+- FIX DRAG AND DROP CANZONIERE...
+
+
 
 
 
@@ -171,7 +145,7 @@ v0.124
 
 
 
-- PIù BRANI FAMOSI (MAGARI VAI PER GENERE)
+- PIù BRANI FAMOSI (MAGARI VAI PER GENERE), DOPO AVER CORRETTO QUELLI CHE CI SONO GIà...
 - PROCEDI CON:
 - CANTI SCOUT VARI (L/C, E/G, AGESCI)
 ---------------------------------------------------------------------------------------------------------
