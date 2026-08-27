@@ -310,16 +310,28 @@
   .fav-star.active{ color:var(--gold); }
   .cz-remove-btn{
     border:none; background:none; padding:6px; margin:-6px;
-    color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
+    color:var(--purple); display:flex; align-items:center; cursor:pointer; flex-shrink:0;
   }
-  .phone.dark-bg .cz-remove-btn{ color:#48484A; }
+  .phone.dark-bg .cz-remove-btn{ color:var(--white); }
+  .cz-order-num{
+    min-width:20px; text-align:center; flex-shrink:0;
+    font-size:13px; font-weight:800; color:var(--purple);
+  }
+  .phone.dark-bg .cz-order-num{ color:var(--white); }
   .cz-drag-handle{
-    display:flex; align-items:center; color:#D8D6DE; flex-shrink:0; padding:6px; margin:-6px;
+    display:flex; align-items:center; color:var(--purple); flex-shrink:0; padding:6px; margin:-6px;
     cursor:grab; touch-action:none; user-select:none; -webkit-user-drag:none;
   }
   .cz-drag-handle svg{ -webkit-user-drag:none; pointer-events:none; }
-  .cz-dragging{ cursor:grabbing; opacity:0.6; }
-  .phone.dark-bg .cz-drag-handle{ color:#48484A; }
+  .cz-dragging{
+  cursor:grabbing;
+  opacity:1;
+  position:relative;
+  z-index:5;
+  background:var(--card-bg, #fff);
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+  .phone.dark-bg .cz-drag-handle{ color:var(--white); }
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
@@ -725,7 +737,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.124D";
+const APP_VERSION = "0.126";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1364,9 +1376,14 @@ function initCzDragReorder(container, cz){
     draggingRow.style.transition = "";
     draggingRow.style.transform = "";
     draggingRow.classList.remove("cz-dragging");
-    cz.canzoni = getRows().map(row => row.dataset.key);
+    const rows = getRows();
+    cz.canzoni = rows.map(row => row.dataset.key);
     cz.dataModifica = new Date().toISOString();
     saveCanzonieri();
+    rows.forEach((row, idx) => {
+      const numEl = row.querySelector(".cz-order-num");
+      if(numEl) numEl.textContent = idx + 1;
+    });
     draggingRow = null;
     activePointerId = null;
   }
@@ -1764,7 +1781,7 @@ function showCanzoniereDetail(id){
   if(cz.canzoni.length === 0){
     listCard.innerHTML = '<div class="empty">Nessuna canzone ancora in questo canzoniere.</div>';
   } else {
-    cz.canzoni.forEach(key => {
+    cz.canzoni.forEach((key, idx) => {
       const song = findSongByFavKey(key);
       if(!song) return;
       const row = document.createElement("div");
@@ -1772,6 +1789,7 @@ function showCanzoniereDetail(id){
       row.dataset.key = key;
       row.innerHTML = `
         <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+        <div class="cz-order-num">${idx + 1}</div>
         <div style="flex:1; min-width:0;">
           <div class="row-title">${song.titolo}</div>
           <div class="row-meta">${metaLine(song)}</div>
