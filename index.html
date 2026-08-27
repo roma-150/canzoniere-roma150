@@ -308,6 +308,11 @@
     color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
   }
   .fav-star.active{ color:var(--gold); }
+  .cz-remove-btn{
+    border:none; background:none; padding:6px; margin:-6px;
+    color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
+  }
+  .phone.dark-bg .cz-remove-btn{ color:#48484A; }
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
@@ -451,6 +456,20 @@
   .empty{ text-align:center; color:var(--ink-soft); font-size:14px; padding:30px 10px; }
   footer{ padding:10px 20px 10px; font-size:12px; color:var(--ink-soft); text-align:center; }
 
+  .form-input{
+    width:100%; box-sizing:border-box;
+    background:var(--neutral); border:none; border-radius:12px;
+    padding:12px 14px; font-size:14.5px; color:var(--ink); font-family:inherit; outline:none;
+  }
+  .form-textarea{
+    width:100%; box-sizing:border-box; min-height:80px; resize:vertical;
+    background:var(--neutral); border:none; border-radius:12px;
+    padding:12px 14px; font-size:14.5px; color:var(--ink); font-family:inherit; outline:none;
+  }
+  .form-input::placeholder, .form-textarea::placeholder{ color:var(--ink-soft); }
+  .phone.dark-bg .form-input, .phone.dark-bg .form-textarea{ background:#2C2C2E; color:#F2F2F7; }
+  .phone.dark-bg .form-input::placeholder, .phone.dark-bg .form-textarea::placeholder{ color:#8E8E93; }
+
   .orientation-overlay{
     display:none;
     position:fixed; inset:0; z-index:100;
@@ -577,7 +596,10 @@ const ICONS = {
   chordsOff: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M4 4l16 16" stroke-width="2.2"/></svg>`,
   chevronLeft: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M15 6l-6 6 6 6"/></svg>`,
   moon: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
-  sun: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`
+  sun: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
+  plusCircle: (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>`,
+  checkCircle: (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  trash: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -682,6 +704,7 @@ let selectedTipi = new Set();
 let selectedOrigini = new Set();
 let filterPanelOpen = false;
 let categorySearchQuery = "";
+let czAddSearchQuery = "";
 let returnToView = () => showList();
 let savedScrollY = 0;
 let savedCategoriesHomeScrollY = 0;
@@ -716,7 +739,21 @@ function saveDarkMode(){
   try { localStorage.setItem(DARK_KEY, detailDarkMode ? "1" : "0"); }
   catch(e){ /* localStorage non disponibile, il tema non persisterà */ }
 }
+
+const CANZONIERI_KEY = "canzoniere_canzonieri_v1";
+function loadCanzonieri(){
+  try { return JSON.parse(localStorage.getItem(CANZONIERI_KEY) || "[]"); }
+  catch(e){ return []; }
+}
+function saveCanzonieri(){
+  try { localStorage.setItem(CANZONIERI_KEY, JSON.stringify(CANZONIERI)); }
+  catch(e){ /* localStorage non disponibile, i canzonieri non persisteranno */ }
+}
+function generateCanzoniereId(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
 function favKey(song){ return song.titolo + "__" + song.anno; }
+function findSongByFavKey(key){ return SONGS.find(s => favKey(s) === key); }
 function brancheOf(song){
   if(Array.isArray(song.branca)) return song.branca.filter(Boolean);
   return song.branca ? [song.branca] : [];
@@ -736,6 +773,7 @@ let favoriti = loadFavorites();
 let showOnlyFavorites = false;
 let fontScaleIndex = 0;
 let detailDarkMode = loadDarkMode();
+let CANZONIERI = loadCanzonieri();
 let currentTab = "canzoni";
 let inDetailView = false;
 const content = document.getElementById("content");
@@ -1180,16 +1218,299 @@ function categoryCount(cat){
   return SONGS.filter(song => matchesCategory(song, cat)).length;
 }
 
+function renderCanzonieri(){
+  content.innerHTML = "";
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = '<div class="list-title">Canzonieri</div>';
+
+  const addRow = document.createElement("div");
+  addRow.className = "song-row";
+  addRow.innerHTML = `
+    <div class="row-title">+ Nuovo canzoniere</div>
+    <div class="row-end">${ICONS.chevronRight(18)}</div>
+  `;
+  addRow.addEventListener("click", () => showCanzoniereForm());
+  card.appendChild(addRow);
+
+  if(CANZONIERI.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Nessun canzoniere creato ancora.";
+    card.appendChild(empty);
+  } else {
+    [...CANZONIERI].sort((a, b) => new Date(b.dataModifica) - new Date(a.dataModifica)).forEach(cz => {
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div>
+          <div class="row-title">${cz.titolo}</div>
+          <div class="row-meta">${cz.canzoni.length} canzoni</div>
+        </div>
+        <div class="row-end">${ICONS.chevronRight(18)}</div>
+      `;
+      row.addEventListener("click", () => showCanzoniereDetail(cz.id));
+      card.appendChild(row);
+    });
+  }
+  content.appendChild(card);
+}
+
+function showCanzoniereForm(existingId){
+  const existing = existingId ? CANZONIERI.find(c => c.id === existingId) : null;
+  renderHeaderBack(() => {
+    if(existing) showCanzoniereDetail(existing.id); else showTab("canzonieri");
+  });
+  appHeader.classList.add("sticky");
+  bottomNav.classList.add("hidden");
+  inDetailView = false;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  content.innerHTML = "";
+  window.scrollTo(0, 0);
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="list-title">${existing ? "Modifica canzoniere" : "Nuovo canzoniere"}</div>
+    <div class="filter-row">
+      <div class="filter-label">Titolo</div>
+      <input type="text" class="form-input" id="czTitolo" placeholder="Es. Fuoco di sabato" value="${existing ? existing.titolo.replace(/"/g, "&quot;") : ""}">
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">Descrizione</div>
+      <textarea class="form-textarea" id="czDescrizione" placeholder="Facoltativa">${existing ? existing.descrizione : ""}</textarea>
+    </div>
+  `;
+  content.appendChild(card);
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "pill-btn active";
+  saveBtn.style.width = "100%";
+  saveBtn.style.justifyContent = "center";
+  saveBtn.textContent = "Salva";
+  saveBtn.addEventListener("click", () => {
+    const titolo = document.getElementById("czTitolo").value.trim();
+    const descrizione = document.getElementById("czDescrizione").value.trim();
+    if(!titolo) return;
+    const now = new Date().toISOString();
+    let targetId;
+    if(existing){
+      existing.titolo = titolo;
+      existing.descrizione = descrizione;
+      existing.dataModifica = now;
+      targetId = existing.id;
+    } else {
+      targetId = generateCanzoniereId();
+      CANZONIERI.push({ id: targetId, titolo, descrizione, dataCreazione: now, dataModifica: now, canzoni: [] });
+    }
+    saveCanzonieri();
+    showCanzoniereDetail(targetId);
+  });
+  content.appendChild(saveBtn);
+}
+
+function initCzDragReorder(container, cz){
+  let draggingRow = null;
+  let startY = 0;
+
+  function getRows(){
+    return Array.from(container.querySelectorAll(".song-row"));
+  }
+
+  function beginDrag(row, clientY){
+    draggingRow = row;
+    startY = clientY;
+    draggingRow.classList.add("cz-dragging");
+    draggingRow.style.transition = "none";
+  }
+
+  function moveDrag(clientY){
+    if(!draggingRow) return;
+    const delta = clientY - startY;
+    draggingRow.style.transform = `translateY(${delta}px)`;
+
+    const draggingRect = draggingRow.getBoundingClientRect();
+    const draggingCenter = draggingRect.top + draggingRect.height / 2;
+
+    getRows().forEach(row => {
+      if(row === draggingRow) return;
+      const rect = row.getBoundingClientRect();
+      const rowCenter = rect.top + rect.height / 2;
+      if(draggingCenter < rowCenter && draggingRow.nextElementSibling === row){
+        container.insertBefore(draggingRow, row);
+        draggingRow.style.transform = "none";
+        startY = clientY;
+      } else if(draggingCenter > rowCenter && draggingRow.previousElementSibling === row){
+        container.insertBefore(draggingRow, row.nextSibling);
+        draggingRow.style.transform = "none";
+        startY = clientY;
+      }
+    });
+
+    const margin = 60;
+    if(clientY < margin){
+      window.scrollBy(0, -8);
+    } else if(clientY > window.innerHeight - margin){
+      window.scrollBy(0, 8);
+    }
+  }
+
+  function endDrag(){
+    if(!draggingRow) return;
+    draggingRow.style.transition = "";
+    draggingRow.style.transform = "";
+    draggingRow.classList.remove("cz-dragging");
+    cz.canzoni = getRows().map(row => row.dataset.key);
+    cz.dataModifica = new Date().toISOString();
+    saveCanzonieri();
+    draggingRow = null;
+  }
+
+  function onTouchStart(e){
+    e.preventDefault();
+    beginDrag(e.currentTarget.closest(".song-row"), e.touches[0].clientY);
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("touchend", onTouchEnd);
+  }
+  function onTouchMove(e){
+    e.preventDefault();
+    moveDrag(e.touches[0].clientY);
+  }
+  function onTouchEnd(){
+    endDrag();
+    document.removeEventListener("touchmove", onTouchMove);
+    document.removeEventListener("touchend", onTouchEnd);
+  }
+
+  function onMouseDown(e){
+    e.preventDefault();
+    beginDrag(e.currentTarget.closest(".song-row"), e.clientY);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  }
+  function onMouseMove(e){
+    moveDrag(e.clientY);
+  }
+  function onMouseUp(){
+    endDrag();
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  }
+
+  getRows().forEach(row => {
+    const handle = row.querySelector(".cz-drag-handle");
+    if(!handle) return;
+    handle.addEventListener("click", e => e.stopPropagation());
+    handle.addEventListener("touchstart", onTouchStart, { passive: false });
+    handle.addEventListener("mousedown", onMouseDown);
+  });
+}
+
+function showCanzoniereDetail(id){
+  const cz = CANZONIERI.find(c => c.id === id);
+  if(!cz){ showTab("canzonieri"); return; }
+  renderHeaderBack(() => showTab("canzonieri"));
+  appHeader.classList.add("sticky");
+  bottomNav.classList.add("hidden");
+  inDetailView = false;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  content.innerHTML = "";
+  window.scrollTo(0, 0);
+
+  const dataCreazioneFmt = new Date(cz.dataCreazione).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+  const dataModificaFmt = new Date(cz.dataModifica).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+
+  const infoCard = document.createElement("div");
+  infoCard.className = "card";
+  infoCard.innerHTML = `
+    <div class="list-title">${cz.titolo}</div>
+    ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
+    <p class="row-meta">Creato il ${dataCreazioneFmt} · Ultima modifica il ${dataModificaFmt}</p>
+  `;
+  content.appendChild(infoCard);
+
+  const addBtn = document.createElement("button");
+  addBtn.className = "pill-btn active";
+  addBtn.style.width = "100%";
+  addBtn.style.justifyContent = "center";
+  addBtn.style.marginBottom = "10px";
+  addBtn.textContent = "+ Aggiungi canzoni";
+  addBtn.addEventListener("click", () => showCanzoniereAddSongs(cz.id));
+  content.appendChild(addBtn);
+
+  const listCard = document.createElement("div");
+  listCard.className = "card";
+  if(cz.canzoni.length === 0){
+    listCard.innerHTML = '<div class="empty">Nessuna canzone ancora in questo canzoniere.</div>';
+  } else {
+    cz.canzoni.forEach(key => {
+      const song = findSongByFavKey(key);
+      if(!song) return;
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.dataset.key = key;
+      row.innerHTML = `
+        <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+        <div style="flex:1; min-width:0;">
+          <div class="row-title">${song.titolo}</div>
+          <div class="row-meta">${metaLine(song)}</div>
+        </div>
+        <div class="row-end">
+          <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
+        </div>
+      `;
+      row.addEventListener("click", () => {
+        returnToView = () => showCanzoniereDetail(cz.id);
+        returnToViewLabel = "Torna a " + cz.titolo;
+        showDetail(SONGS.indexOf(song));
+      });
+      row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+        e.stopPropagation();
+        cz.canzoni = cz.canzoni.filter(k => k !== key);
+        cz.dataModifica = new Date().toISOString();
+        saveCanzonieri();
+        showCanzoniereDetail(cz.id);
+      });
+      listCard.appendChild(row);
+    });
+    if(cz.canzoni.length > 1) initCzDragReorder(listCard, cz);
+  }
+  content.appendChild(listCard);
+
+  const editBtn = document.createElement("button");
+  editBtn.className = "pill-btn active";
+  editBtn.style.width = "100%";
+  editBtn.style.justifyContent = "center";
+  editBtn.style.marginBottom = "10px";
+  editBtn.textContent = "Modifica";
+  editBtn.addEventListener("click", () => showCanzoniereForm(cz.id));
+  content.appendChild(editBtn);
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "pill-btn active";
+  deleteBtn.style.width = "100%";
+  deleteBtn.style.justifyContent = "center";
+  deleteBtn.style.background = "#B3261E";
+  deleteBtn.textContent = "Elimina canzoniere";
+  deleteBtn.addEventListener("click", () => {
+    if(confirm(`Eliminare "${cz.titolo}"? L'azione non è reversibile.`)){
+      CANZONIERI = CANZONIERI.filter(c => c.id !== cz.id);
+      saveCanzonieri();
+      showTab("canzonieri");
+    }
+  });
+  content.appendChild(deleteBtn);
+}
+
 const TAB_PLACEHOLDERS = {
   categorie: {
     icon: ICONS.tags,
     title: "Categorie",
     text: "Presto potrai sfogliare le canzoni per Branca, Sede e Luogo direttamente da qui."
-  },
-  canzonieri: {
-    icon: ICONS.books,
-    title: "Canzonieri",
-    text: "Qui potrai raccogliere le canzoni in canzonieri personalizzati, ad esempio per campi o eventi."
   },
   scalette: {
     icon: ICONS.listCheck,
@@ -1232,6 +1553,10 @@ function showTab(tab){
   footer.textContent = "";
   if(tab === "categorie"){
     renderCategorie();
+    return;
+  }
+  if(tab === "canzonieri"){
+    renderCanzonieri();
     return;
   }
   const p = TAB_PLACEHOLDERS[tab];

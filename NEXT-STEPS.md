@@ -154,8 +154,15 @@ v0.122
 - SIMBOLO PER LIGHT MODE K
 - LE CARD RIMANGONO APERTE FINO AL RIAVVIO DELL'APP... K
 ---------------------------------------------------------------------------------------------------------
-
-
+v0.123 RELEASED
+- FIX ALTRE CANZONI 150
+- FIX TUTTE CANZONI MESSA
+- FIX X CERCA DARK
+- FIX FILTRI INIZIALI E SCOUT
+---------------------------------------------------------------------------------------------------------
+v0.124
+- sezione canzoniere
+-
 
 
 
