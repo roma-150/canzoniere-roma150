@@ -725,7 +725,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.124B";
+const APP_VERSION = "0.124C";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1340,11 +1340,11 @@ function initCzDragReorder(container, cz){
       if(row === draggingRow) return;
       const rect = row.getBoundingClientRect();
       const rowCenter = rect.top + rect.height / 2;
-      if(draggingCenter < rowCenter && draggingRow.nextElementSibling === row){
+      if(draggingCenter > rowCenter && draggingRow.nextElementSibling === row){
         container.insertBefore(draggingRow, row);
         draggingRow.style.transform = "none";
         startY = clientY;
-      } else if(draggingCenter > rowCenter && draggingRow.previousElementSibling === row){
+      } else if(draggingCenter < rowCenter && draggingRow.previousElementSibling === row){
         container.insertBefore(draggingRow, row.nextSibling);
         draggingRow.style.transform = "none";
         startY = clientY;
