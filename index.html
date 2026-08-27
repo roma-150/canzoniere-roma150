@@ -313,6 +313,13 @@
     color:#D8D6DE; display:flex; align-items:center; cursor:pointer; flex-shrink:0;
   }
   .phone.dark-bg .cz-remove-btn{ color:#48484A; }
+  .cz-drag-handle{
+    display:flex; align-items:center; color:#D8D6DE; flex-shrink:0; padding:6px; margin:-6px;
+    cursor:grab; touch-action:none; user-select:none; -webkit-user-drag:none;
+  }
+  .cz-drag-handle svg{ -webkit-user-drag:none; pointer-events:none; }
+  .cz-dragging{ cursor:grabbing; }
+  .phone.dark-bg .cz-drag-handle{ color:#48484A; }
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
@@ -599,7 +606,8 @@ const ICONS = {
   sun: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`,
   plusCircle: (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>`,
   checkCircle: (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
-  trash: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>`
+  trash: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>`,
+  dragHandle: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -717,7 +725,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.123";
+const APP_VERSION = "0.124";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1408,12 +1416,333 @@ function initCzDragReorder(container, cz){
   });
 }
 
+function showCanzoniereAddSongs(id){
+  const cz = CANZONIERI.find(c => c.id === id);
+  if(!cz){ showTab("canzonieri"); return; }
+  renderHeaderBack(() => showCanzoniereDetail(id));
+  appHeader.classList.add("sticky");
+  bottomNav.classList.add("hidden");
+  inDetailView = false;
+  listFilterCollapsed = false;
+  backToTopBtn.classList.remove("visible");
+  footer.textContent = "";
+  content.innerHTML = "";
+  window.scrollTo(0, 0);
+
+  let query = "";
+  let czSelectedTipi = new Set();
+  let czSelectedBranche = new Set();
+  let czSelectedSedi = new Set();
+  let czSelectedOrigini = new Set();
+  let czSelectedGeneri = new Set();
+  let czSelectedMomenti = new Set();
+  let czSelectedTempi = new Set();
+  let czShowOnlyFavorites = false;
+  let czFilterPanelOpen = false;
+  let czSortMode = "alpha";
+  let czSortDir = 1;
+
+  const card = document.createElement("div");
+  card.className = "card";
+  content.appendChild(card);
+
+  const searchFilterRow = document.createElement("div");
+  searchFilterRow.className = "search-filter-row";
+  searchFilterRow.style.top = (appHeader.offsetHeight + 12) + "px";
+
+  const searchBox = document.createElement("div");
+  searchBox.className = "search-box";
+  searchBox.innerHTML = `
+    ${ICONS.search(17)}
+    <input type="text" id="czAddSearchInput" placeholder="Cerca titolo, luogo, branca, testo...">
+    <button class="search-clear-btn" id="czAddSearchClear" aria-label="Cancella ricerca">${ICONS.clear(14)}</button>
+  `;
+  searchFilterRow.appendChild(searchBox);
+
+  const brancheDisponibili = [...new Set(SONGS.flatMap(s => brancheOf(s)))].sort((a, b) => {
+    const ORDINE_BRANCHE = ["L/C", "E/G", "R/S"];
+    const ia = ORDINE_BRANCHE.indexOf(a), ib = ORDINE_BRANCHE.indexOf(b);
+    if(ia === -1 && ib === -1) return a.localeCompare(b, "it");
+    if(ia === -1) return 1;
+    if(ib === -1) return -1;
+    return ia - ib;
+  });
+  const sediDisponibili = [...new Set(SONGS.flatMap(s => s.sede || []))].sort();
+
+  const filterBtn = document.createElement("button");
+  filterBtn.className = "filter-toggle-btn";
+  filterBtn.setAttribute("aria-label", "Filtra");
+  filterBtn.innerHTML = ICONS.filter(17);
+  searchFilterRow.appendChild(filterBtn);
+
+  card.appendChild(searchFilterRow);
+
+  const filterPanel = document.createElement("div");
+  filterPanel.className = "filter-panel";
+
+  function czMatchesFilters(song){
+    const brancaOk = czSelectedBranche.size === 0 || song.tipo !== "scout" || brancheOf(song).some(b => czSelectedBranche.has(b));
+    const sedeOk = czSelectedSedi.size === 0 || song.tipo !== "scout" || (song.sede || []).some(s => czSelectedSedi.has(s));
+    const genereOk = czSelectedGeneri.size === 0 || czSelectedGeneri.has(song.genere);
+    const momentoOk = czSelectedMomenti.size === 0 || momentiOf(song).some(m => czSelectedMomenti.has(m));
+    const tempoOk = czSelectedTempi.size === 0 || tempiOf(song).some(t => czSelectedTempi.has(t));
+    const tipoOk = czSelectedTipi.size === 0 || czSelectedTipi.has(song.tipo);
+    const origineOk = czSelectedOrigini.size === 0 || song.tipo !== "scout" || czSelectedOrigini.has(song.origine);
+    const favOk = !czShowOnlyFavorites || favoriti.has(favKey(song));
+    return brancaOk && sedeOk && genereOk && momentoOk && tempoOk && tipoOk && origineOk && favOk;
+  }
+
+  function czGroupSongs(list){
+    const sorted = [...list].sort((a, b) => {
+      if(czSortMode === "alpha"){
+        return a.titolo.localeCompare(b.titolo, "it", { sensitivity: "base" }) * czSortDir;
+      }
+      return (a.anno - b.anno) * czSortDir;
+    });
+    const groups = [];
+    let lastKey = null;
+    sorted.forEach(song => {
+      let key;
+      if(czSortMode === "alpha"){
+        const primaLettera = (song.titolo.trim()[0] || "#").toUpperCase();
+        key = /[0-9]/.test(primaLettera) ? "1-9" : primaLettera;
+      } else if(song.anno < 1900){
+        key = String(Math.floor(song.anno / 100) * 100);
+      } else {
+        key = "Anni " + Math.floor(song.anno / 10) * 10;
+      }
+      if(key !== lastKey){
+        groups.push({ key, songs: [] });
+        lastKey = key;
+      }
+      groups[groups.length - 1].songs.push(song);
+    });
+    return groups;
+  }
+
+  function renderList(){
+    const filtered = SONGS.filter(s => czMatchesFilters(s) && matchesSearch(s, query));
+    results.innerHTML = "";
+    if(filtered.length === 0){
+      results.innerHTML = `<div class="empty">Nessuna canzone trovata${query ? ` per "${query}"` : ""}.</div>`;
+      return;
+    }
+    czGroupSongs(filtered).forEach(group => {
+      const divider = document.createElement("div");
+      divider.className = "group-divider";
+      divider.textContent = group.key;
+      results.appendChild(divider);
+
+      group.songs.forEach(song => {
+        const key = favKey(song);
+        const selected = cz.canzoni.includes(key);
+        const row = document.createElement("div");
+        row.className = "song-row";
+        row.innerHTML = `
+          <div style="flex:1; min-width:0;">
+            <div class="row-title">${song.titolo}</div>
+            <div class="row-meta">${metaLine(song)}</div>
+          </div>
+          <div class="row-end">
+            <button class="cz-toggle-btn" style="border:none;background:none;padding:6px;margin:-6px;display:flex;align-items:center;cursor:pointer;flex-shrink:0;color:${selected ? "var(--purple)" : "#D8D6DE"};" aria-label="${selected ? "Rimuovi" : "Aggiungi"}">${selected ? ICONS.checkCircle(22) : ICONS.plusCircle(22)}</button>
+          </div>
+        `;
+        row.addEventListener("click", () => {
+          if(selected){
+            cz.canzoni = cz.canzoni.filter(k => k !== key);
+          } else {
+            cz.canzoni.push(key);
+          }
+          cz.dataModifica = new Date().toISOString();
+          saveCanzonieri();
+          renderList();
+        });
+        results.appendChild(row);
+      });
+    });
+  }
+
+  function buildFilterRow(label, values, selectedSet, onToggle){
+    if(values.length < 2) return null;
+    const row = document.createElement("div");
+    row.className = "filter-row";
+    const chipsHtml = values.map(v =>
+      `<button class="filter-chip ${selectedSet.has(v) ? "active" : ""}" data-value="${v}">${v}</button>`
+    ).join("");
+    row.innerHTML = `<div class="filter-label">${label}</div><div class="filter-chips">${chipsHtml}</div>`;
+    row.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const v = chip.dataset.value;
+        const wasSelected = selectedSet.has(v);
+        if(wasSelected) selectedSet.delete(v); else selectedSet.add(v);
+        if(onToggle) onToggle(v, !wasSelected);
+        rebuildFilterPanel();
+        updateFilterBtnState();
+        renderList();
+      });
+    });
+    return row;
+  }
+
+  function rebuildFilterPanel(){
+    filterPanel.innerHTML = "";
+
+    const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Brani famosi" };
+    const tipiDisponibili = ["scout", "messa", "musica"].filter(t => SONGS.some(s => s.tipo === t));
+    const quickRow = document.createElement("div");
+    quickRow.className = "filter-row";
+    const favChipHtml = `<button class="filter-chip fav-chip ${czShowOnlyFavorites ? "active" : ""}">${ICONS.star(13, true)} Preferiti</button>`;
+    const tipoChipsHtml = tipiDisponibili.map(v =>
+      `<button class="filter-chip ${czSelectedTipi.has(v) ? "active" : ""}" data-value="${v}">${tipiLabel[v] || v}</button>`
+    ).join("");
+    quickRow.innerHTML = `<div class="filter-chips">${tipoChipsHtml}${favChipHtml}</div>`;
+    quickRow.querySelector(".fav-chip").addEventListener("click", () => {
+      czShowOnlyFavorites = !czShowOnlyFavorites;
+      rebuildFilterPanel();
+      updateFilterBtnState();
+      renderList();
+    });
+    quickRow.querySelectorAll(".filter-chip[data-value]").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const v = chip.dataset.value;
+        const wasSelected = czSelectedTipi.has(v);
+        if(wasSelected){
+          czSelectedTipi.delete(v);
+          if(v === "scout"){ czSelectedBranche.clear(); czSelectedOrigini.clear(); czSelectedSedi.clear(); }
+          if(v === "messa"){ czSelectedMomenti.clear(); czSelectedTempi.clear(); }
+          if(v === "musica"){ czSelectedGeneri.clear(); }
+        } else {
+          czSelectedTipi.clear();
+          czSelectedTipi.add(v);
+          if(v !== "scout"){ czSelectedBranche.clear(); czSelectedOrigini.clear(); czSelectedSedi.clear(); }
+          if(v !== "messa"){ czSelectedMomenti.clear(); czSelectedTempi.clear(); }
+          if(v !== "musica"){ czSelectedGeneri.clear(); }
+        }
+        rebuildFilterPanel();
+        updateFilterBtnState();
+        renderList();
+      });
+    });
+    filterPanel.appendChild(quickRow);
+
+    const scoutSelezionato = czSelectedTipi.has("scout");
+    const origineVuoto = czSelectedOrigini.size === 0;
+
+    if(scoutSelezionato){
+      const brancaRow = buildFilterRow("Branca", brancheDisponibili, czSelectedBranche, (v, isActive) => {
+        if(isActive) czSelectedTipi.add("scout");
+      });
+      if(brancaRow) filterPanel.appendChild(brancaRow);
+
+      const origineDisponibili = [...new Set(SONGS.filter(s => s.tipo === "scout").map(s => s.origine).filter(Boolean))];
+      const origineRow = buildFilterRow("Origine", origineDisponibili, czSelectedOrigini);
+      if(origineRow) filterPanel.appendChild(origineRow);
+
+      if(origineVuoto || czSelectedOrigini.has("Roma 150")){
+        const sedeRow = buildFilterRow("Sede", sediDisponibili, czSelectedSedi, (v, isActive) => {
+          if(isActive){ czSelectedTipi.add("scout"); czSelectedOrigini.add("Roma 150"); }
+        });
+        if(sedeRow) filterPanel.appendChild(sedeRow);
+      }
+    }
+    if(czSelectedTipi.has("musica")){
+      const genereDisponibili = [...new Set(SONGS.filter(s => s.tipo === "musica").map(s => s.genere).filter(Boolean))].sort();
+      const genereRow = buildFilterRow("Genere", genereDisponibili, czSelectedGeneri);
+      if(genereRow) filterPanel.appendChild(genereRow);
+    }
+    if(czSelectedTipi.has("messa")){
+      const ORDINE_MOMENTI = ["Ingresso", "Gloria", "Alleluia", "Offertorio", "Santo", "Comunione", "Pace", "Finale"];
+      const ORDINE_TEMPI = ["Avvento", "Natale", "Quaresima", "Pasqua", "Tempo Ordinario", "Pentecoste"];
+      const ORDINE_SACRAMENTI = ["Funerale", "Matrimonio", "Battesimo", "Comunione", "Cresima"];
+      const momentoDisponibili = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => momentiOf(s)))]
+        .sort((a, b) => ORDINE_MOMENTI.indexOf(a) - ORDINE_MOMENTI.indexOf(b));
+      const momentoRow = buildFilterRow("Momento liturgico", momentoDisponibili, czSelectedMomenti);
+      if(momentoRow) filterPanel.appendChild(momentoRow);
+
+      const tuttiTempi = [...new Set(SONGS.filter(s => s.tipo === "messa").flatMap(s => tempiOf(s)))];
+      const tempoDisponibili = tuttiTempi.filter(v => ORDINE_TEMPI.includes(v)).sort((a, b) => ORDINE_TEMPI.indexOf(a) - ORDINE_TEMPI.indexOf(b));
+      const tempoRow = buildFilterRow("Tempo liturgico", tempoDisponibili, czSelectedTempi);
+      if(tempoRow) filterPanel.appendChild(tempoRow);
+
+      const sacramentiDisponibili = tuttiTempi.filter(v => ORDINE_SACRAMENTI.includes(v)).sort((a, b) => ORDINE_SACRAMENTI.indexOf(a) - ORDINE_SACRAMENTI.indexOf(b));
+      const sacramentiRow = buildFilterRow("Sacramenti e cerimonie", sacramentiDisponibili, czSelectedTempi);
+      if(sacramentiRow) filterPanel.appendChild(sacramentiRow);
+    }
+  }
+
+  rebuildFilterPanel();
+  filterPanel.classList.toggle("open", czFilterPanelOpen);
+  card.appendChild(filterPanel);
+
+  filterBtn.addEventListener("click", () => {
+    czFilterPanelOpen = filterPanel.classList.toggle("open");
+  });
+
+  function updateFilterBtnState(){
+    const anyActive = czSelectedBranche.size > 0 || czSelectedSedi.size > 0 || czSelectedTipi.size > 0 || czSelectedOrigini.size > 0 || czSelectedGeneri.size > 0 || czSelectedMomenti.size > 0 || czSelectedTempi.size > 0 || czShowOnlyFavorites;
+    filterBtn.classList.toggle("active", anyActive);
+  }
+  updateFilterBtnState();
+
+  const sortRow = document.createElement("div");
+  sortRow.className = "sort-row";
+  sortRow.innerHTML = `
+    <div class="segmented">
+      <button id="czSortAlpha" class="active">A-Z</button>
+      <button id="czSortAnno">Anno</button>
+    </div>
+    <button class="dir-btn" id="czDirToggle" aria-label="Inverti ordine">
+      ${ICONS.sortAsc(17)}
+    </button>
+  `;
+  card.appendChild(sortRow);
+
+  sortRow.querySelector("#czSortAlpha").addEventListener("click", () => {
+    czSortMode = "alpha";
+    sortRow.querySelector("#czSortAlpha").classList.add("active");
+    sortRow.querySelector("#czSortAnno").classList.remove("active");
+    renderList();
+  });
+  sortRow.querySelector("#czSortAnno").addEventListener("click", () => {
+    czSortMode = "anno";
+    sortRow.querySelector("#czSortAnno").classList.add("active");
+    sortRow.querySelector("#czSortAlpha").classList.remove("active");
+    renderList();
+  });
+  sortRow.querySelector("#czDirToggle").addEventListener("click", () => {
+    czSortDir *= -1;
+    sortRow.querySelector("#czDirToggle").innerHTML = czSortDir === 1 ? ICONS.sortAsc(17) : ICONS.sortDesc(17);
+    renderList();
+  });
+
+  const results = document.createElement("div");
+  results.id = "czAddResultsArea";
+  card.appendChild(results);
+
+  renderList();
+
+  const searchInput = searchBox.querySelector("#czAddSearchInput");
+  const searchClear = searchBox.querySelector("#czAddSearchClear");
+  searchInput.addEventListener("input", () => {
+    query = searchInput.value;
+    searchClear.classList.toggle("visible", !!query);
+    renderList();
+  });
+  searchClear.addEventListener("click", () => {
+    query = "";
+    searchInput.value = "";
+    searchClear.classList.remove("visible");
+    renderList();
+    searchInput.focus();
+  });
+}
+
 function showCanzoniereDetail(id){
   const cz = CANZONIERI.find(c => c.id === id);
   if(!cz){ showTab("canzonieri"); return; }
   renderHeaderBack(() => showTab("canzonieri"));
   appHeader.classList.add("sticky");
-  bottomNav.classList.add("hidden");
+  bottomNav.classList.remove("hidden");
   inDetailView = false;
   listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
