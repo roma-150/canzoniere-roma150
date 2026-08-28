@@ -768,7 +768,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.127";
+const APP_VERSION = "0.128";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -1804,8 +1804,9 @@ function showCanzoniereDetail(id){
   infoCard.style.position = "relative";
   infoCard.innerHTML = `
     <button class="cz-delete-btn" aria-label="Elimina canzoniere" style="position:absolute; top:14px; right:14px; border:none; background:none; padding:6px; margin:-6px; cursor:pointer; display:flex; align-items:center;">${ICONS.trash(18)}</button>
-    <div style="display:flex; align-items:center; gap:8px; padding-right:30px;">
+    <div style="display:flex; align-items:center; gap:8px; padding-right:60px;">
       <div class="list-title">${cz.titolo}</div>
+      <button class="cz-print-btn" aria-label="Stampa canzoniere / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.print(18)}</button>
       <button class="cz-edit-btn" aria-label="Modifica canzoniere" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.edit(18)}</button>
     </div>
     ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
@@ -1814,6 +1815,7 @@ function showCanzoniereDetail(id){
   content.appendChild(infoCard);
 
   infoCard.querySelector(".cz-edit-btn").addEventListener("click", () => showCanzoniereForm(cz.id));
+  infoCard.querySelector(".cz-print-btn").addEventListener("click", () => exportCanzoniereePdf(cz));
   infoCard.querySelector(".cz-delete-btn").addEventListener("click", () => {
     if(confirm(`Eliminare "${cz.titolo}"? L'azione non è reversibile.`)){
       CANZONIERI = CANZONIERI.filter(c => c.id !== cz.id);
@@ -2635,6 +2637,558 @@ function showList(){
   renderResults(card);
 }
 
+// --- Funzioni condivise di impaginazione PDF (canzone singola + canzoniere intero) ---
+
+function buildChordLyricPairs(rawLine, semitones, chordsVisible){
+  const regex = /\[([^\]]+)\]/g;
+  let lastIndex = 0, match;
+  const pairs = [];
+  let hadChord = false;
+  while((match = regex.exec(rawLine)) !== null){
+    hadChord = true;
+    const before = rawLine.slice(lastIndex, match.index);
+    if(before) pairs.push({ chord: "", lyric: before });
+    lastIndex = regex.lastIndex;
+    const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
+    const lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
+    const chordName = chordsVisible ? transposeChord(match[1], semitones) : "";
+    pairs.push({ chord: chordName, lyric: lyricAfter || " " });
+    lastIndex += lyricAfter.length;
+    regex.lastIndex = lastIndex;
+  }
+  if(!hadChord){
+    pairs.push({ chord: "", lyric: rawLine || " " });
+  } else if(lastIndex < rawLine.length){
+    pairs.push({ chord: "", lyric: rawLine.slice(lastIndex) });
+  }
+  return pairs;
+}
+
+function computeSlotWidths(doc, pairs, lyricStyle, chordFontSize, lyricFontSize){
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(chordFontSize);
+  const chordWidths = pairs.map(p => p.chord ? doc.getTextWidth(p.chord) : 0);
+  doc.setFont("helvetica", lyricStyle);
+  doc.setFontSize(lyricFontSize);
+  const lyricWidths = pairs.map(p => doc.getTextWidth(p.lyric));
+  return pairs.map((p, i) => Math.max(lyricWidths[i], p.chord ? chordWidths[i] + 1.5 : 0));
+}
+
+function wrapPairsToRows(doc, pairs, wrapWidth, lyricStyle, chordFontSize, lyricFontSize){
+  const slotWidths = computeSlotWidths(doc, pairs, lyricStyle, chordFontSize, lyricFontSize);
+  const rows = [];
+  let current = [], currentWidths = [], cx = 0;
+  pairs.forEach((p, i) => {
+    const w = slotWidths[i];
+    if(cx + w > wrapWidth && current.length){
+      rows.push({ pairs: current, widths: currentWidths });
+      current = []; currentWidths = []; cx = 0;
+    }
+    current.push(p);
+    currentWidths.push(w);
+    cx += w;
+  });
+  if(current.length) rows.push({ pairs: current, widths: currentWidths });
+  return rows;
+}
+
+function getRepeatedChoruses(verses){
+  const chorusTexts = [];
+  verses.forEach(verseText => {
+    if(verseText.trim() === "" || verseText.trim() === "RIT.") return;
+    let vLines = verseText.split("\n");
+    const vRitMatch = vLines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+    if(!vRitMatch) return;
+    chorusTexts.push(vLines.slice(1).join("\n"));
+  });
+  const chorusCounts = {};
+  chorusTexts.forEach(t => { chorusCounts[t] = (chorusCounts[t] || 0) + 1; });
+  const repeatedChoruses = [];
+  chorusTexts.forEach(t => {
+    if(chorusCounts[t] > 1 && !repeatedChoruses.includes(t)) repeatedChoruses.push(t);
+  });
+  return repeatedChoruses;
+}
+
+function buildSongRenderItems(doc, verses, wrapWidth, opts){
+  const { semitones, chordsVisible, lineStep, chordFontSize, lyricFontSize } = opts;
+  const repeatedChoruses = getRepeatedChoruses(verses);
+  const seenChoruses = [];
+  const items = [];
+  verses.forEach(verseText => {
+    if(verseText.trim() === "") return;
+    if(verseText.trim() === "RIT."){
+      items.push({ type: "ritornelloWord", height: lineStep });
+      return;
+    }
+    let lines = verseText.split("\n");
+    const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+    const instrMatch = lines[0].trim().match(/^\{strumentale\}$/i);
+    const chorus = !!ritMatch;
+    const instrumental = !!instrMatch;
+    if(chorus || instrumental) lines = lines.slice(1);
+
+    let ritLabel = "RIT.";
+    if(chorus){
+      const bodyText = lines.join("\n");
+      const repeatIdx = repeatedChoruses.indexOf(bodyText);
+      if(repeatIdx !== -1 && repeatedChoruses.length > 1) ritLabel = `RIT. ${repeatIdx + 1}`;
+      if(seenChoruses.includes(bodyText)){
+        items.push({ type: "ritShort", label: ritLabel, height: lineStep + 3 });
+        return;
+      }
+      seenChoruses.push(bodyText);
+    }
+
+    const linePairsList = lines.map(line => buildChordLyricPairs(line, semitones, chordsVisible));
+    if(chorus && linePairsList.length && linePairsList[0].length){
+      linePairsList[0][0].lyric = ritLabel + " " + linePairsList[0][0].lyric;
+    }
+    const lyricStyle = chorus ? "bold" : "normal";
+    const rows = [];
+    linePairsList.forEach(pairs => {
+      wrapPairsToRows(doc, pairs, wrapWidth, lyricStyle, chordFontSize, lyricFontSize).forEach(row => rows.push(row));
+    });
+    items.push({ type: "lines", rows, bold: chorus, height: rows.length * lineStep + 3 });
+  });
+  return items;
+}
+
+function drawRenderItem(doc, item, xOffset, y, opts){
+  const { lineStep, rowOffset, chordFontSize, lyricFontSize } = opts;
+  if(item.type === "ritornelloWord"){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("Ritornello", xOffset, y);
+    return y + lineStep;
+  }
+  if(item.type === "ritShort"){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(lyricFontSize);
+    doc.text(item.label || "RIT.", xOffset, y + rowOffset);
+    return y + lineStep + 3;
+  }
+  const lyricStyle = item.bold ? "bold" : "normal";
+  item.rows.forEach(row => {
+    let cx = xOffset;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(chordFontSize);
+    row.pairs.forEach((p, i) => {
+      if(p.chord) doc.text(p.chord, cx, y);
+      cx += row.widths[i];
+    });
+    let lx = xOffset;
+    doc.setFont("helvetica", lyricStyle);
+    doc.setFontSize(lyricFontSize);
+    row.pairs.forEach((p, i) => {
+      doc.text(p.lyric, lx, y + rowOffset);
+      lx += row.widths[i];
+    });
+    y += lineStep;
+  });
+  y += 3;
+  return y;
+}
+
+function layoutRenderItems(doc, buildItemsFn, opts){
+  const { startY, marginX, maxWidth, pageHeight, marginBottom, columnGap, drawOpts, measureOnly, drawFn } = opts;
+  const draw = drawFn || drawRenderItem;
+  let y = startY;
+  let pagesUsed = 1;
+  const firstPageAvailable = pageHeight - marginBottom - y;
+  const colWidth = (maxWidth - columnGap) / 2;
+  const col2X = marginX + colWidth + columnGap;
+
+  const singleColItems = buildItemsFn(maxWidth);
+  const singleColHeight = singleColItems.reduce((s, it) => s + it.height, 0);
+
+  let renderItems, useColumns;
+  if(singleColHeight <= firstPageAvailable){
+    renderItems = singleColItems;
+    useColumns = false;
+  } else {
+    renderItems = buildItemsFn(colWidth);
+    useColumns = true;
+  }
+
+  let colX = marginX;
+  let colStartY = y;
+  let availForPage = pageHeight - marginBottom - colStartY;
+
+  function newPdfPage(){
+    if(!measureOnly) doc.addPage();
+    pagesUsed++;
+    y = 20;
+    colStartY = 20;
+    colX = marginX;
+    availForPage = pageHeight - marginBottom - colStartY;
+  }
+
+  renderItems.forEach(item => {
+    if(useColumns){
+      if((y - colStartY) + item.height > availForPage){
+        if(colX === marginX){
+          colX = col2X;
+          y = colStartY;
+        } else {
+          newPdfPage();
+        }
+      }
+    } else if(y + item.height > pageHeight - marginBottom){
+      newPdfPage();
+    }
+    if(measureOnly){
+      y += item.height;
+    } else {
+      y = draw(doc, item, colX, y, drawOpts);
+    }
+  });
+
+  return { y, pagesUsed };
+}
+
+// --- Misura pagine (per indice canzoniere intero, nessun disegno reale) ---
+
+function measureSongPages(doc, song){
+  const verses = (song.testo_accordi || "").split(/\n===\n/).flatMap(b => b.split(/\n---\n/));
+  const lineStep = 8;
+  const chordFontSize = 9;
+  const lyricFontSize = 11;
+  const marginX = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = doc.internal.pageSize.getWidth() - marginX * 2;
+
+  const songOpts = { semitones: 0, chordsVisible: true, lineStep, chordFontSize, lyricFontSize };
+
+  const { pagesUsed } = layoutRenderItems(doc, (wrapWidth) => buildSongRenderItems(doc, verses, wrapWidth, songOpts), {
+    startY: 20,
+    marginX,
+    maxWidth,
+    pageHeight,
+    marginBottom: 15,
+    columnGap: 8,
+    drawOpts: null,
+    measureOnly: true
+  });
+
+  return pagesUsed;
+}
+
+function measureAllSongPages(doc, orderedEntries){
+  const results = [];
+  let currentPage = 1;
+  orderedEntries.forEach(entry => {
+    if(entry.isSection){
+      results.push({ isSection: true, titolo: entry.titolo });
+      return;
+    }
+    const pageCount = measureSongPages(doc, entry.song);
+    results.push({
+      isSection: false,
+      favKey: entry.favKey,
+      titolo: entry.song.titolo,
+      startPage: currentPage,
+      pageCount
+    });
+    currentPage += pageCount;
+  });
+  return results;
+}
+
+// Costruisce l'elenco ordinato canzoni/sezioni di un canzoniere per l'export PDF intero.
+// Sezioni senza canzoni sotto (vuote o in coda) vengono saltate.
+function buildCzOrderedEntries(cz){
+  const entries = [];
+  let pendingSection = null;
+  cz.canzoni.forEach(key => {
+    if(key.startsWith(CZ_SECTION_PREFIX)){
+      pendingSection = key.slice(CZ_SECTION_PREFIX.length);
+      return;
+    }
+    const song = findSongByFavKey(key);
+    if(!song) return;
+    if(pendingSection !== null){
+      entries.push({ isSection: true, titolo: pendingSection });
+      pendingSection = null;
+    }
+    entries.push({ isSection: false, favKey: key, song });
+  });
+  return entries;
+}
+
+// --- Costruzione item indice ---
+
+const INDEX_FONT_SIZE = 11;
+const INDEX_LINE_STEP = 7;
+const INDEX_SECTION_FONT_SIZE = 12;
+const INDEX_SECTION_LINE_STEP = 8;
+const INDEX_SECTION_TOP_GAP = 3;
+const INDEX_PAGENUM_RESERVE = 15;
+
+function buildIndexRenderItems(doc, measuredEntries, wrapWidth){
+  const items = [];
+  measuredEntries.forEach(entry => {
+    if(entry.isSection){
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(INDEX_SECTION_FONT_SIZE);
+      const lines = doc.splitTextToSize(entry.titolo.toUpperCase(), wrapWidth);
+      items.push({
+        type: "indexSection",
+        titolo: entry.titolo,
+        lines,
+        wrapWidth,
+        height: lines.length * INDEX_SECTION_LINE_STEP + INDEX_SECTION_TOP_GAP
+      });
+      return;
+    }
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(INDEX_FONT_SIZE);
+    const availWidth = wrapWidth - INDEX_PAGENUM_RESERVE;
+    const lines = doc.splitTextToSize(entry.titolo, availWidth);
+    items.push({
+      type: "indexSong",
+      titolo: entry.titolo,
+      lines,
+      startPage: entry.startPage,
+      wrapWidth,
+      height: lines.length * INDEX_LINE_STEP
+    });
+  });
+  return items;
+}
+
+function measureIndexPages(doc, measuredEntries){
+  const marginX = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = doc.internal.pageSize.getWidth() - marginX * 2;
+
+  const { pagesUsed } = layoutRenderItems(doc, (wrapWidth) => buildIndexRenderItems(doc, measuredEntries, wrapWidth), {
+    startY: 20,
+    marginX,
+    maxWidth,
+    pageHeight,
+    marginBottom: 15,
+    columnGap: 8,
+    drawOpts: null,
+    measureOnly: true
+  });
+
+  return pagesUsed;
+}
+
+// --- Disegno copertina ---
+
+function drawCzCoverPage(doc, cz, opts){
+  const { maxWidth, pageHeight } = opts;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = pageHeight / 2 - 20;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(26);
+  doc.setTextColor(0, 0, 0);
+  const titleLines = doc.splitTextToSize(cz.titolo, maxWidth);
+  titleLines.forEach(line => {
+    const w = doc.getTextWidth(line);
+    doc.text(line, (pageWidth - w) / 2, y);
+    y += 11;
+  });
+
+  if(cz.descrizione){
+    y += 6;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(13);
+    doc.setTextColor(90, 90, 90);
+    const descLines = doc.splitTextToSize(cz.descrizione, maxWidth - 20);
+    descLines.forEach(line => {
+      const w = doc.getTextWidth(line);
+      doc.text(line, (pageWidth - w) / 2, y);
+      y += 7;
+    });
+    doc.setTextColor(0, 0, 0);
+  }
+}
+
+// --- Disegno riga indice (titolo + puntinato + numero pagina cliccabile) ---
+
+function drawIndexItem(doc, item, xOffset, y){
+  if(item.type === "indexSection"){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(INDEX_SECTION_FONT_SIZE);
+    doc.setTextColor(0, 0, 0);
+    let ty = y + INDEX_SECTION_TOP_GAP;
+    item.lines.forEach(line => {
+      doc.text(line, xOffset, ty);
+      ty += INDEX_SECTION_LINE_STEP;
+    });
+    return y + item.height;
+  }
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(INDEX_FONT_SIZE);
+  doc.setTextColor(0, 0, 0);
+  const rightEdge = xOffset + item.wrapWidth;
+  let ty = y;
+  item.lines.forEach((line, i) => {
+    doc.text(line, xOffset, ty);
+    if(i === item.lines.length - 1){
+      const lineWidth = doc.getTextWidth(line);
+      const pageNumStr = String(item.startPage);
+      const pageNumWidth = doc.getTextWidth(pageNumStr);
+      const leaderStartX = xOffset + lineWidth + 2;
+      const leaderEndX = rightEdge - pageNumWidth - 2;
+      if(leaderEndX > leaderStartX){
+        doc.setLineDashPattern([0.5, 1.2], 0);
+        doc.setDrawColor(150, 150, 150);
+        doc.line(leaderStartX, ty - 1.2, leaderEndX, ty - 1.2);
+        doc.setLineDashPattern([], 0);
+        doc.setDrawColor(0, 0, 0);
+      }
+      doc.text(pageNumStr, rightEdge - pageNumWidth, ty);
+      doc.link(xOffset, ty - INDEX_LINE_STEP + 2, item.wrapWidth, INDEX_LINE_STEP, { pageNumber: item.startPage });
+    }
+    ty += INDEX_LINE_STEP;
+  });
+  return y + item.height;
+}
+
+// --- Disegno pagina di una canzone dentro il canzoniere intero ---
+
+function drawCzSongPage(doc, song, sectionTitle, opts){
+  const { marginX, maxWidth, pageHeight, marginBottom } = opts;
+  let y = 20;
+
+  if(sectionTitle){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(0, 0, 0);
+    doc.text(sectionTitle.toUpperCase(), marginX, y);
+    y += 8;
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(0, 0, 0);
+  doc.text(song.titolo, marginX, y);
+  y += 8;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  doc.text(metaLine(song).replace(/\s*·\s*/g, "  ·  "), marginX, y);
+  y += 10;
+
+  const verses = (song.testo_accordi || "").split(/\n===\n/).flatMap(b => b.split(/\n---\n/));
+  const lineStep = 8;
+  const rowOffset = 4.2;
+  const chordFontSize = 9;
+  const lyricFontSize = 11;
+  const songOpts = { semitones: 0, chordsVisible: true, lineStep, chordFontSize, lyricFontSize };
+  const drawOpts = { lineStep, rowOffset, chordFontSize, lyricFontSize };
+
+  layoutRenderItems(doc, (wrapWidth) => buildSongRenderItems(doc, verses, wrapWidth, songOpts), {
+    startY: y,
+    marginX,
+    maxWidth,
+    pageHeight,
+    marginBottom,
+    columnGap: 8,
+    drawOpts
+  });
+}
+
+// --- Export PDF canzoniere intero ---
+
+async function exportCanzoniereePdf(cz){
+  if(!window.jspdf){
+    alert("La libreria per generare il PDF non è disponibile. Controlla la connessione e riprova.");
+    return;
+  }
+  const orderedEntries = buildCzOrderedEntries(cz);
+  if(orderedEntries.length === 0){
+    alert("Questo canzoniere non contiene ancora canzoni da stampare.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const measureDoc = new jsPDF();
+  const measuredSongs = measureAllSongPages(measureDoc, orderedEntries);
+  const indexPageCount = measureIndexPages(measureDoc, measuredSongs);
+  const pageOffset = 1 + indexPageCount;
+  const finalIndexEntries = measuredSongs.map(e => e.isSection ? e : Object.assign({}, e, { startPage: e.startPage + pageOffset }));
+
+  const doc = new jsPDF();
+  const marginX = 15;
+  const marginBottom = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = doc.internal.pageSize.getWidth() - marginX * 2;
+
+  drawCzCoverPage(doc, cz, { maxWidth, pageHeight });
+  doc.addPage();
+
+  layoutRenderItems(doc, (wrapWidth) => buildIndexRenderItems(doc, finalIndexEntries, wrapWidth), {
+    startY: 20,
+    marginX,
+    maxWidth,
+    pageHeight,
+    marginBottom,
+    columnGap: 8,
+    drawOpts: null,
+    drawFn: drawIndexItem
+  });
+
+  doc.addPage();
+  let pendingSection = null;
+  let firstSongDrawn = false;
+  orderedEntries.forEach(entry => {
+    if(entry.isSection){
+      pendingSection = entry.titolo;
+      return;
+    }
+    if(firstSongDrawn) doc.addPage();
+    drawCzSongPage(doc, entry.song, pendingSection, { marginX, maxWidth, pageHeight, marginBottom });
+    pendingSection = null;
+    firstSongDrawn = true;
+  });
+
+  const totalPages = doc.internal.getNumberOfPages();
+  for(let p = 1; p <= totalPages; p++){
+    doc.setPage(p);
+    const part1 = "Generato automaticamente con l'app ";
+    const part2 = "Canzoniere di Gruppo - Roma 150";
+    doc.setFontSize(8);
+    doc.setTextColor(140, 140, 140);
+    doc.setFont("helvetica", "normal");
+    const w1 = doc.getTextWidth(part1);
+    doc.setFont("helvetica", "italic");
+    const w2 = doc.getTextWidth(part2);
+    const totalW = w1 + w2;
+    const startX = (doc.internal.pageSize.getWidth() - totalW) / 2;
+    const footY = pageHeight - 8;
+    doc.setFont("helvetica", "normal");
+    doc.text(part1, startX, footY);
+    doc.setFont("helvetica", "italic");
+    doc.text(part2, startX + w1, footY);
+    doc.setTextColor(0, 0, 0);
+  }
+
+  const filename = (cz.titolo || "canzoniere").replace(/[\\/:*?"<>|]/g, "") + ".pdf";
+  const isMobile = isIPhoneDevice || /Android/i.test(navigator.userAgent);
+  if(isMobile && navigator.canShare && navigator.share){
+    try {
+      const blob = doc.output("blob");
+      const file = new File([blob], filename, { type: "application/pdf" });
+      if(navigator.canShare({ files: [file] })){
+        await navigator.share({ files: [file], title: cz.titolo });
+        return;
+      }
+    } catch(err){
+      // se la condivisione fallisce/viene annullata, scarica normalmente
+    }
+  }
+  doc.save(filename);
+}
+
 function showDetail(index){
   savedScrollY = window.scrollY;
   const song = SONGS[index];
@@ -2836,6 +3390,8 @@ function showDetail(index){
       : "";
   });
 
+  // --- Export PDF singola canzone ---
+
   async function exportSongPdf(){
     if(!window.jspdf){
       alert("La libreria per generare il PDF non è disponibile. Controlla la connessione e riprova.");
@@ -2864,199 +3420,19 @@ function showDetail(index){
     const rowOffset = 4.2;
     const chordFontSize = 9;
     const lyricFontSize = 11;
-    const boxPad = 3;
 
-    function buildPairs(rawLine){
-      const regex = /\[([^\]]+)\]/g;
-      let lastIndex = 0, match;
-      const pairs = [];
-      let hadChord = false;
-      while((match = regex.exec(rawLine)) !== null){
-        hadChord = true;
-        const before = rawLine.slice(lastIndex, match.index);
-        if(before) pairs.push({ chord: "", lyric: before });
-        lastIndex = regex.lastIndex;
-        const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
-        const lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
-        const chordName = chordsVisible ? transposeChord(match[1], semitones) : "";
-        pairs.push({ chord: chordName, lyric: lyricAfter || " " });
-        lastIndex += lyricAfter.length;
-        regex.lastIndex = lastIndex;
-      }
-      if(!hadChord){
-        pairs.push({ chord: "", lyric: rawLine || " " });
-      } else if(lastIndex < rawLine.length){
-        pairs.push({ chord: "", lyric: rawLine.slice(lastIndex) });
-      }
-      return pairs;
-    }
+    const songOpts = { semitones, chordsVisible, lineStep, chordFontSize, lyricFontSize };
+    const drawOpts = { lineStep, rowOffset, chordFontSize, lyricFontSize };
 
-    function computeSlotWidths(pairs, lyricStyle){
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(chordFontSize);
-      const chordWidths = pairs.map(p => p.chord ? doc.getTextWidth(p.chord) : 0);
-      doc.setFont("helvetica", lyricStyle);
-      doc.setFontSize(lyricFontSize);
-      const lyricWidths = pairs.map(p => doc.getTextWidth(p.lyric));
-      return pairs.map((p, i) => Math.max(lyricWidths[i], p.chord ? chordWidths[i] + 1.5 : 0));
-    }
-
-    function wrapPairsToRows(pairs, wrapWidth, lyricStyle){
-      const slotWidths = computeSlotWidths(pairs, lyricStyle);
-      const rows = [];
-      let current = [], currentWidths = [], cx = 0;
-      pairs.forEach((p, i) => {
-        const w = slotWidths[i];
-        if(cx + w > wrapWidth && current.length){
-          rows.push({ pairs: current, widths: currentWidths });
-          current = []; currentWidths = []; cx = 0;
-        }
-        current.push(p);
-        currentWidths.push(w);
-        cx += w;
-      });
-      if(current.length) rows.push({ pairs: current, widths: currentWidths });
-      return rows;
-    }
-
-    const chorusTexts = [];
-    verses.forEach(verseText => {
-      if(verseText.trim() === "" || verseText.trim() === "RIT.") return;
-      let vLines = verseText.split("\n");
-      const vRitMatch = vLines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
-      if(!vRitMatch) return;
-      chorusTexts.push(vLines.slice(1).join("\n"));
-    });
-    const chorusCounts = {};
-    chorusTexts.forEach(t => { chorusCounts[t] = (chorusCounts[t] || 0) + 1; });
-    const repeatedChoruses = [];
-    chorusTexts.forEach(t => {
-      if(chorusCounts[t] > 1 && !repeatedChoruses.includes(t)) repeatedChoruses.push(t);
-    });
-
-    function buildRenderItems(wrapWidth){
-      const seenChoruses = [];
-      const items = [];
-      verses.forEach(verseText => {
-        if(verseText.trim() === "") return;
-        if(verseText.trim() === "RIT."){
-          items.push({ type: "ritornelloWord", height: lineStep });
-          return;
-        }
-        let lines = verseText.split("\n");
-        const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
-        const instrMatch = lines[0].trim().match(/^\{strumentale\}$/i);
-        const chorus = !!ritMatch;
-        const instrumental = !!instrMatch;
-        if(chorus || instrumental) lines = lines.slice(1);
-
-        let ritLabel = "RIT.";
-        if(chorus){
-          const bodyText = lines.join("\n");
-          const repeatIdx = repeatedChoruses.indexOf(bodyText);
-          if(repeatIdx !== -1 && repeatedChoruses.length > 1) ritLabel = `RIT. ${repeatIdx + 1}`;
-          if(seenChoruses.includes(bodyText)){
-            items.push({ type: "ritShort", label: ritLabel, height: lineStep + 3 });
-            return;
-          }
-          seenChoruses.push(bodyText);
-        }
-
-        const linePairsList = lines.map(buildPairs);
-        if(chorus && linePairsList.length && linePairsList[0].length){
-          linePairsList[0][0].lyric = ritLabel + " " + linePairsList[0][0].lyric;
-        }
-        const lyricStyle = chorus ? "bold" : "normal";
-        const rows = [];
-        linePairsList.forEach(pairs => {
-          wrapPairsToRows(pairs, wrapWidth, lyricStyle).forEach(row => rows.push(row));
-        });
-        items.push({ type: "lines", rows, bold: chorus, height: rows.length * lineStep + 3 });
-      });
-      return items;
-    }
-
-    function drawItem(item, xOffset){
-      if(item.type === "ritornelloWord"){
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.text("Ritornello", xOffset, y);
-        y += lineStep;
-        return;
-      }
-      if(item.type === "ritShort"){
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(lyricFontSize);
-        doc.text(item.label || "RIT.", xOffset, y + rowOffset);
-        y += lineStep + 3;
-        return;
-      }
-      const lyricStyle = item.bold ? "bold" : "normal";
-      item.rows.forEach(row => {
-        let cx = xOffset;
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(chordFontSize);
-        row.pairs.forEach((p, i) => {
-          if(p.chord) doc.text(p.chord, cx, y);
-          cx += row.widths[i];
-        });
-        let lx = xOffset;
-        doc.setFont("helvetica", lyricStyle);
-        doc.setFontSize(lyricFontSize);
-        row.pairs.forEach((p, i) => {
-          doc.text(p.lyric, lx, y + rowOffset);
-          lx += row.widths[i];
-        });
-        y += lineStep;
-      });
-      y += 3;
-    }
-
-    const firstPageAvailable = pageHeight - 15 - y;
-    const columnGap = 8;
-    const colWidth = (maxWidth - columnGap) / 2;
-    const col2X = marginX + colWidth + columnGap;
-
-    const singleColItems = buildRenderItems(maxWidth);
-    const singleColHeight = singleColItems.reduce((s, it) => s + it.height, 0);
-
-    let renderItems, useColumns;
-    if(singleColHeight <= firstPageAvailable){
-      renderItems = singleColItems;
-      useColumns = false;
-    } else {
-      renderItems = buildRenderItems(colWidth);
-      useColumns = true;
-    }
-
-    let colX = marginX;
-    let colStartY = y;
-    let availForPage = pageHeight - 15 - colStartY;
-
-    function newPdfPage(){
-      doc.addPage();
-      y = 20;
-      colStartY = 20;
-      colX = marginX;
-      availForPage = pageHeight - 15 - colStartY;
-    }
-
-    renderItems.forEach(item => {
-      if(useColumns){
-        if((y - colStartY) + item.height > availForPage){
-          if(colX === marginX){
-            colX = col2X;
-            y = colStartY;
-          } else {
-            newPdfPage();
-          }
-        }
-      } else if(y + item.height > pageHeight - 15){
-        doc.addPage();
-        y = 20;
-      }
-      drawItem(item, colX);
-    });
+    ({ y } = layoutRenderItems(doc, (wrapWidth) => buildSongRenderItems(doc, verses, wrapWidth, songOpts), {
+      startY: y,
+      marginX,
+      maxWidth,
+      pageHeight,
+      marginBottom: 15,
+      columnGap: 8,
+      drawOpts
+    }));
 
     const totalPages = doc.internal.getNumberOfPages();
     for(let p = 1; p <= totalPages; p++){
