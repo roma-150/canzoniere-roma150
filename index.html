@@ -2836,6 +2836,435 @@ function showDetail(index){
       : "";
   });
 
+  async function exportSongPdf(){
+    if(!window.jspdf){
+      alert("La libreria per generare il PDF non è disponibile. Controlla la connessione e riprova.");
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const marginX = 15;
+    let y = 20;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const maxWidth = doc.internal.pageSize.getWidth() - marginX * 2;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text(song.titolo, marginX, y);
+    y += 8;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    doc.text(metaLine(song).replace(/\s*·\s*/g, "  ·  "), marginX, y);
+    y += 10;
+
+    const verses = (song.testo_accordi || "").split(/\n===\n/).flatMap(b => b.split(/\n---\n/));
+    const lineStep = 8;
+    const rowOffset = 4.2;
+    const chordFontSize = 9;
+    const lyricFontSize = 11;
+    const boxPad = 3;
+
+    function buildPairs(rawLine){
+      const regex = /\[([^\]]+)\]/g;
+      let lastIndex = 0, match;
+      const pairs = [];
+      let hadChord = false;
+      while((match = regex.exec(rawLine)) !== null){
+        hadChord = true;
+        const before = rawLine.slice(lastIndex, match.index);
+        if(before) pairs.push({ chord: "", lyric: before });
+        lastIndex = regex.lastIndex;
+        const nextTextMatch = rawLine.slice(lastIndex).match(/^([^\[]*)/);
+        const lyricAfter = nextTextMatch ? nextTextMatch[1] : "";
+        const chordName = chordsVisible ? transposeChord(match[1], semitones) : "";
+        pairs.push({ chord: chordName, lyric: lyricAfter || " " });
+        lastIndex += lyricAfter.length;
+        regex.lastIndex = lastIndex;
+      }
+      if(!hadChord){
+        pairs.push({ chord: "", lyric: rawLine || " " });
+      } else if(lastIndex < rawLine.length){
+        pairs.push({ chord: "", lyric: rawLine.slice(lastIndex) });
+      }
+      return pairs;
+    }
+
+    function computeSlotWidths(pairs, lyricStyle){
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(chordFontSize);
+      const chordWidths = pairs.map(p => p.chord ? doc.getTextWidth(p.chord) : 0);
+      doc.setFont("helvetica", lyricStyle);
+      doc.setFontSize(lyricFontSize);
+      const lyricWidths = pairs.map(p => doc.getTextWidth(p.lyric));
+      return pairs.map((p, i) => Math.max(lyricWidths[i], p.chord ? chordWidths[i] + 1.5 : 0));
+    }
+
+    function wrapPairsToRows(pairs, wrapWidth, lyricStyle){
+      const slotWidths = computeSlotWidths(pairs, lyricStyle);
+      const rows = [];
+      let current = [], currentWidths = [], cx = 0;
+      pairs.forEach((p, i) => {
+        const w = slotWidths[i];
+        if(cx + w > wrapWidth && current.length){
+          rows.push({ pairs: current, widths: currentWidths });
+          current = []; currentWidths = []; cx = 0;
+        }
+        current.push(p);
+        currentWidths.push(w);
+        cx += w;
+      });
+      if(current.length) rows.push({ pairs: current, widths: currentWidths });
+      return rows;
+    }
+
+    const chorusTexts = [];
+    verses.forEach(verseText => {
+      if(verseText.trim() === "" || verseText.trim() === "RIT.") return;
+      let vLines = verseText.split("\n");
+      const vRitMatch = vLines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+      if(!vRitMatch) return;
+      chorusTexts.push(vLines.slice(1).join("\n"));
+    });
+    const chorusCounts = {};
+    chorusTexts.forEach(t => { chorusCounts[t] = (chorusCounts[t] || 0) + 1; });
+    const repeatedChoruses = [];
+    chorusTexts.forEach(t => {
+      if(chorusCounts[t] > 1 && !repeatedChoruses.includes(t)) repeatedChoruses.push(t);
+    });
+
+    function buildRenderItems(wrapWidth){
+      const seenChoruses = [];
+      const items = [];
+      verses.forEach(verseText => {
+        if(verseText.trim() === "") return;
+        if(verseText.trim() === "RIT."){
+          items.push({ type: "ritornelloWord", height: lineStep });
+          return;
+        }
+        let lines = verseText.split("\n");
+        const ritMatch = lines[0].trim().match(/^\{rit(?:\s+x(\d+))?\}$/i);
+        const instrMatch = lines[0].trim().match(/^\{strumentale\}$/i);
+        const chorus = !!ritMatch;
+        const instrumental = !!instrMatch;
+        if(chorus || instrumental) lines = lines.slice(1);
+
+        let ritLabel = "RIT.";
+        if(chorus){
+          const bodyText = lines.join("\n");
+          const repeatIdx = repeatedChoruses.indexOf(bodyText);
+          if(repeatIdx !== -1 && repeatedChoruses.length > 1) ritLabel = `RIT. ${repeatIdx + 1}`;
+          if(seenChoruses.includes(bodyText)){
+            items.push({ type: "ritShort", label: ritLabel, height: lineStep + 3 });
+            return;
+          }
+          seenChoruses.push(bodyText);
+        }
+
+        const linePairsList = lines.map(buildPairs);
+        if(chorus && linePairsList.length && linePairsList[0].length){
+          linePairsList[0][0].lyric = ritLabel + " " + linePairsList[0][0].lyric;
+        }
+        const lyricStyle = chorus ? "bold" : "normal";
+        const rows = [];
+        linePairsList.forEach(pairs => {
+          wrapPairsToRows(pairs, wrapWidth, lyricStyle).forEach(row => rows.push(row));
+        });
+        items.push({ type: "lines", rows, bold: chorus, height: rows.length * lineStep + 3 });
+      });
+      return items;
+    }
+
+    function drawItem(item, xOffset){
+      if(item.type === "ritornelloWord"){
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("Ritornello", xOffset, y);
+        y += lineStep;
+        return;
+      }
+      if(item.type === "ritShort"){
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(lyricFontSize);
+        doc.text(item.label || "RIT.", xOffset, y + rowOffset);
+        y += lineStep + 3;
+        return;
+      }
+      const lyricStyle = item.bold ? "bold" : "normal";
+      item.rows.forEach(row => {
+        let cx = xOffset;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(chordFontSize);
+        row.pairs.forEach((p, i) => {
+          if(p.chord) doc.text(p.chord, cx, y);
+          cx += row.widths[i];
+        });
+        let lx = xOffset;
+        doc.setFont("helvetica", lyricStyle);
+        doc.setFontSize(lyricFontSize);
+        row.pairs.forEach((p, i) => {
+          doc.text(p.lyric, lx, y + rowOffset);
+          lx += row.widths[i];
+        });
+        y += lineStep;
+      });
+      y += 3;
+    }
+
+    const firstPageAvailable = pageHeight - 15 - y;
+    const columnGap = 8;
+    const colWidth = (maxWidth - columnGap) / 2;
+    const col2X = marginX + colWidth + columnGap;
+
+    const singleColItems = buildRenderItems(maxWidth);
+    const singleColHeight = singleColItems.reduce((s, it) => s + it.height, 0);
+
+    let renderItems, useColumns;
+    if(singleColHeight <= firstPageAvailable){
+      renderItems = singleColItems;
+      useColumns = false;
+    } else {
+      renderItems = buildRenderItems(colWidth);
+      useColumns = true;
+    }
+
+    let colX = marginX;
+    let colStartY = y;
+    let availForPage = pageHeight - 15 - colStartY;
+
+    function newPdfPage(){
+      doc.addPage();
+      y = 20;
+      colStartY = 20;
+      colX = marginX;
+      availForPage = pageHeight - 15 - colStartY;
+    }
+
+    renderItems.forEach(item => {
+      if(useColumns){
+        if((y - colStartY) + item.height > availForPage){
+          if(colX === marginX){
+            colX = col2X;
+            y = colStartY;
+          } else {
+            newPdfPage();
+          }
+        }
+      } else if(y + item.height > pageHeight - 15){
+        doc.addPage();
+        y = 20;
+      }
+      drawItem(item, colX);
+    });
+
+    const totalPages = doc.internal.getNumberOfPages();
+    for(let p = 1; p <= totalPages; p++){
+      doc.setPage(p);
+      const part1 = "Generato automaticamente con l'app ";
+      const part2 = "Canzoniere di Gruppo - Roma 150";
+      doc.setFontSize(8);
+      doc.setTextColor(140, 140, 140);
+      doc.setFont("helvetica", "normal");
+      const w1 = doc.getTextWidth(part1);
+      doc.setFont("helvetica", "italic");
+      const w2 = doc.getTextWidth(part2);
+      const totalW = w1 + w2;
+      const startX = (doc.internal.pageSize.getWidth() - totalW) / 2;
+      const footY = pageHeight - 8;
+      doc.setFont("helvetica", "normal");
+      doc.text(part1, startX, footY);
+      doc.setFont("helvetica", "italic");
+      doc.text(part2, startX + w1, footY);
+      doc.setTextColor(0, 0, 0);
+    }
+
+    const filename = (song.titolo || "canzone").replace(/[\\/:*?"<>|]/g, "") + ".pdf";
+    const isMobile = isIPhoneDevice || /Android/i.test(navigator.userAgent);
+    if(isMobile && navigator.canShare && navigator.share){
+      try {
+        const blob = doc.output("blob");
+        const file = new File([blob], filename, { type: "application/pdf" });
+        if(navigator.canShare({ files: [file] })){
+          await navigator.share({ files: [file], title: song.titolo });
+          return;
+        }
+      } catch(err){
+        // se la condivisione fallisce/viene annullata, scarica normalmente
+      }
+    }
+    doc.save(filename);
+  }
+
+  const printBtnEl = document.getElementById("printSongBtn");
+  if(printBtnEl) printBtnEl.addEventListener("click", exportSongPdf);
+
+  const card2 = document.createElement("div");
+  card2.className = "card";
+  const body = document.createElement("div");
+  card2.appendChild(body);
+  content.appendChild(card2);
+
+  let pendingNavRow = null;
+
+  if(currentCzQueue){
+    const czIdx = currentCzQueue.indexOf(favKey(song));
+    if(czIdx !== -1){
+      const prevKey = czIdx > 0 ? currentCzQueue[czIdx - 1] : null;
+      const nextKey = czIdx < currentCzQueue.length - 1 ? currentCzQueue[czIdx + 1] : null;
+      const detailNavBtns = document.getElementById("detailNavBtns");
+      if(detailNavBtns){
+        const navIconsRow = document.createElement("div");
+        navIconsRow.className = "detail-nav-icons";
+        if(prevKey){
+          const firstBtn = document.createElement("button");
+          firstBtn.className = "detail-nav-btn";
+          firstBtn.setAttribute("aria-label", "Torna alla prima pagina");
+          firstBtn.innerHTML = ICONS.skipToStart(24);
+          firstBtn.addEventListener("click", () => {
+            const firstSong = findSongByFavKey(currentCzQueue[0]);
+            if(firstSong) showDetail(SONGS.indexOf(firstSong));
+          });
+          navIconsRow.appendChild(firstBtn);
+        }
+        if(prevKey){
+          const topPrevBtn = document.createElement("button");
+          topPrevBtn.className = "detail-nav-btn";
+          topPrevBtn.setAttribute("aria-label", "Canzone precedente");
+          topPrevBtn.innerHTML = ICONS.chevronLeft(28);
+          topPrevBtn.addEventListener("click", () => {
+            const prevSong = findSongByFavKey(prevKey);
+            if(prevSong) showDetail(SONGS.indexOf(prevSong));
+          });
+          navIconsRow.appendChild(topPrevBtn);
+        }
+        if(nextKey){
+          const topNextBtn = document.createElement("button");
+          topNextBtn.className = "detail-nav-btn";
+          topNextBtn.setAttribute("aria-label", "Canzone successiva");
+          topNextBtn.innerHTML = ICONS.chevronRight(28);
+          topNextBtn.addEventListener("click", () => {
+            const nextSong = findSongByFavKey(nextKey);
+            if(nextSong) showDetail(SONGS.indexOf(nextSong));
+          });
+          navIconsRow.appendChild(topNextBtn);
+        }
+        detailNavBtns.appendChild(navIconsRow);
+
+        const navPageLabel = document.createElement("div");
+        navPageLabel.className = "detail-nav-page";
+        navPageLabel.textContent = `Pag. ${czIdx + 1}/${currentCzQueue.length}`;
+        detailNavBtns.appendChild(navPageLabel);
+
+        const navPageLabelBottom = document.createElement("div");
+        navPageLabelBottom.className = "detail-nav-page-bottom";
+        navPageLabelBottom.textContent = `Pag. ${czIdx + 1}/${currentCzQueue.length}`;
+        card2.appendChild(navPageLabelBottom);
+      }
+      if(prevKey || nextKey){
+        const navRow = document.createElement("div");
+        navRow.style.display = "flex";
+        navRow.style.gap = "8px";
+        navRow.style.marginTop = "8px";
+        if(prevKey){
+          const prevBtn = document.createElement("button");
+          prevBtn.className = "pill-btn active";
+          prevBtn.style.flex = "1";
+          prevBtn.style.justifyContent = "center";
+          prevBtn.innerHTML = `${ICONS.chevronLeft(16)} Precedente`;
+          prevBtn.addEventListener("click", () => {
+            const prevSong = findSongByFavKey(prevKey);
+            if(prevSong) showDetail(SONGS.indexOf(prevSong));
+          });
+          navRow.appendChild(prevBtn);
+        }
+        if(nextKey){
+          const nextBtn = document.createElement("button");
+          nextBtn.className = "pill-btn active";
+          nextBtn.style.flex = "1";
+          nextBtn.style.justifyContent = "center";
+          nextBtn.innerHTML = `Successiva ${ICONS.chevronRight(16)}`;
+          nextBtn.addEventListener("click", () => {
+            const nextSong = findSongByFavKey(nextKey);
+            if(nextSong) showDetail(SONGS.indexOf(nextSong));
+          });
+          navRow.appendChild(nextBtn);
+        }
+        pendingNavRow = navRow;
+      }
+    }
+  }
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "pill-btn active";
+  backBtn.style.width = "100%";
+  backBtn.style.justifyContent = "center";
+  backBtn.style.marginTop = "4px";
+  backBtn.innerHTML = `${ICONS.arrowBack(16)}${returnToViewLabel}`;
+  backBtn.addEventListener("click", goBack);
+  if(pendingNavRow) content.appendChild(pendingNavRow);
+  content.appendChild(backBtn);
+
+  function render(){
+    body.innerHTML = "";
+    const blocks = song.testo_accordi.split(/\n===\n/);
+    blocks.forEach(b => {
+      b.split(/\n---\n/).forEach(sub => body.appendChild(renderBlock(sub, semitones)));
+    });
+    document.getElementById("currentKey").textContent = song.tonalita ? transposeChord(song.tonalita, semitones) : "—";
+  }
+
+  document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
+  document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
+
+  const SCROLL_SPEEDS = [
+    { label: "1×", step: 1, interval: 55 },
+    { label: "2×", step: 1, interval: 30 },
+    { label: "3×", step: 2, interval: 22 }
+  ];
+  let speedIndex = -1; // -1 = fermo
+  let scrollInterval = null;
+  const scrollBtn = document.getElementById("scrollToggle");
+  const scrollIcon = document.getElementById("scrollIcon");
+  const scrollStateName = document.getElementById("scrollStateName");
+
+  function stopScroll(){
+    speedIndex = -1;
+    scrollBtn.classList.remove("active");
+    scrollIcon.innerHTML = ICONS.play(20);
+    scrollStateName.textContent = "";
+    clearInterval(scrollInterval);
+  }
+
+  function startScrollAt(index){
+    speedIndex = index;
+    const speed = SCROLL_SPEEDS[speedIndex];
+    scrollBtn.classList.add("active");
+    scrollIcon.innerHTML = ICONS.pause(20);
+    scrollStateName.textContent = speed.label;
+    clearInterval(scrollInterval);
+    scrollInterval = setInterval(() => {
+      window.scrollBy({ top: speed.step, behavior: "auto" });
+      if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
+        stopScroll();
+      }
+    }, speed.interval);
+  }
+
+  scrollBtn.addEventListener("click", () => {
+    if(speedIndex === -1){
+      startScrollAt(0);
+    } else if(speedIndex < SCROLL_SPEEDS.length - 1){
+      startScrollAt(speedIndex + 1);
+    } else {
+      stopScroll();
+    }
+  });
+
+  render();
+  footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
+}
+
 if(/Android/i.test(navigator.userAgent)){
   document.body.classList.add("is-android");
 }
