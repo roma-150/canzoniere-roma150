@@ -151,7 +151,15 @@ v0.129
 - MODIFICHE ALLA SEZIONE STAMPA:
 - LA SEZIONE SIA INSERITA IN AUTOMATICO ALL'INIZIO DEL CANZONIERE QUANDO CLICCO AGGIUNGI SEZIONE
 - CI SIA UN TASTO + AL CENTRO IN BASSO DI CIASCUNA CANZONE E SEZIONE, IN DETTAGLIO CANZONIERE. SOTTO A UNA SEZIONE SE CLICCO SU QUEL + MI SI APRE LA POSSIBILITà DI AGGIUNGERE UNA CANZONE.SOTTO A UNA CANZONE, LA DOPPIA POSSIBILITà DI AGGIUNGERE UNA CANZONE O UNA SEZIONE
-
+----------------------------------------------------------------------------------------
+v0.130
+- possibilità di creare scalette, cerimonie, preghiere DONE
+- FIX bug scorrimento DONE
+- Dettaglio scalette: Inserimento BAN, scenetta, gioco. DONE
+- Dettaglio cerimonie: inserimento letture, simboli, gesto DONE
+----------------------------------------------------------------------------------------
+v0.131
+- Dettaglio preghiere inserimento letture (specifiche dalla bibbia, basta inserire il versetto e lui lo pesca, letture con copia incolla, attività da fare...)
 
 
 

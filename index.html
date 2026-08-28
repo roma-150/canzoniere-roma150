@@ -394,12 +394,22 @@
   }
   .phone.dark-bg .cz-picker-close{ background:#2C2C2E; color:#FFFFFF; }
   .cz-picker-results{ flex:1; overflow-y:auto; margin-top:6px; }
+  .cz-type-icon{
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
 
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
     background:rgba(216,155,0,0.12); border-radius:8px; padding:4px 7px 4px 6px;
   }
+  .cz-tipo-badge{
+    display:inline-flex; align-items:center; flex-shrink:0;
+    font-size:11px; font-weight:800; color:var(--purple);
+    background:rgba(56,30,96,0.10); border-radius:8px; padding:4px 8px;
+  }
+  .phone.dark-bg .cz-tipo-badge{ background:rgba(255,255,255,0.14); color:#F2F2F7; }
 
   /* dettaglio */
   .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
@@ -696,7 +706,15 @@ const ICONS = {
   dragHandle: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>`,
   edit: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
   print: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`,
-  settings: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
+  settings: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+  plus: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 5v14M5 12h14"/></svg>`,
+  bookOpen: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M4 5.5c3-1.3 6-1.3 8 0v14c-2-1.3-5-1.3-8 0z"/><path d="M20 5.5c-3-1.3-6-1.3-8 0v14c2-1.3 5-1.3 8 0z"/></svg>`,
+  cross: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 3v18M6.5 9h11"/></svg>`,
+  candle: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 2c1.6 2 1.6 3.6 0 5.2-1.6-1.6-1.6-3.2 0-5.2z"/><rect x="9.5" y="9" width="5" height="12" rx="1.2"/></svg>`,
+  sparkle: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M12 2l2.2 7.3L21 12l-6.8 2.7L12 22l-2.2-7.3L3 12l6.8-2.7z"/></svg>`,
+  dice: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/></svg>`,
+  disco: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16M6.34 6.34l11.32 11.32M17.66 6.34L6.34 17.66"/></svg>`,
+  clapper: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 9l1.5-4h4L7 9M9 9l1.5-4h4L13 9M15 9l1.5-4h4L19 9"/><rect x="3" y="9" width="18" height="11" rx="1.2"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -806,6 +824,7 @@ let returnToView = () => showList();
 let currentCzQueue = null;
 let currentCzInfo = null;
 let currentDetailSong = null;
+let activeScrollInterval = null;
 let swipeStartX = 0;
 let swipeStartY = 0;
 let swipePointerId = null;
@@ -820,7 +839,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.129";
+const APP_VERSION = "0.130";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -880,6 +899,34 @@ function saveCanzonieri(){
 }
 function generateCanzoniereId(){
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+const CZ_TIPI = ["Canzoniere", "Scaletta fuoco", "Preghiera", "Cerimonia", "Altro"];
+function czTipoOf(cz){
+  return cz.tipo || "Canzoniere";
+}
+
+const CZ_ITEM_TYPES = [
+  { key: "lettura", prefix: "§LETTURA§", label: "Lettura", icon: ICONS.bookOpen, color: "#2F6FED" },
+  { key: "letturaBiblica", prefix: "§LETTURABIBLICA§", label: "Lettura biblica", icon: ICONS.cross, color: "#8B5E3C" },
+  { key: "intenzione", prefix: "§INTENZIONE§", label: "Intenzione", icon: ICONS.candle, color: "#D89B00" },
+  { key: "simbolo", prefix: "§SIMBOLO§", label: "Simbolo", icon: ICONS.sparkle, color: "#7A46B0" },
+  { key: "gioco", prefix: "§GIOCO§", label: "Gioco", icon: ICONS.dice, color: "#00AE04" },
+  { key: "ballo", prefix: "§BALLO§", label: "Ban/Danza", icon: ICONS.disco, color: "#E4573D" },
+  { key: "scenetta", prefix: "§SCENETTA§", label: "Scenetta", icon: ICONS.clapper, color: "#0EA5A5" }
+];
+function czItemTypeForKey(key){
+  return CZ_ITEM_TYPES.find(t => key.startsWith(t.prefix)) || null;
+}
+const CZ_TIPO_ALLOWED_ITEM_KEYS = {
+  "Canzoniere": [],
+  "Scaletta fuoco": ["lettura", "gioco", "ballo", "scenetta"],
+  "Preghiera": ["lettura", "letturaBiblica", "intenzione", "simbolo"],
+  "Cerimonia": ["lettura", "letturaBiblica", "intenzione", "simbolo"],
+  "Altro": ["lettura", "letturaBiblica", "intenzione", "simbolo", "gioco", "ballo", "scenetta"]
+};
+function czAllowedItemTypes(cz){
+  const keys = CZ_TIPO_ALLOWED_ITEM_KEYS[czTipoOf(cz)] || [];
+  return CZ_ITEM_TYPES.filter(t => keys.includes(t.key));
 }
 function favKey(song){ return song.titolo + "__" + song.anno; }
 function findSongByFavKey(key){ return SONGS.find(s => favKey(s) === key); }
@@ -1378,7 +1425,10 @@ function renderCanzonieri(){
           <div class="row-title">${cz.titolo}</div>
           <div class="row-meta">${cz.canzoni.length} canzoni</div>
         </div>
-        <div class="row-end">${ICONS.chevronRight(18)}</div>
+        <div class="row-end">
+          <span class="cz-tipo-badge">${czTipoOf(cz)}</span>
+          ${ICONS.chevronRight(18)}
+        </div>
       `;
       row.addEventListener("click", () => showCanzoniereDetail(cz.id));
       card.appendChild(row);
@@ -1492,6 +1542,8 @@ function showCanzoniereForm(existingId){
   content.innerHTML = "";
   window.scrollTo(0, 0);
 
+  let selectedTipo = existing ? czTipoOf(existing) : "Canzoniere";
+
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = `
@@ -1501,11 +1553,29 @@ function showCanzoniereForm(existingId){
       <input type="text" class="form-input" id="czTitolo" placeholder="Es. Fuoco di sabato" value="${existing ? existing.titolo.replace(/"/g, "&quot;") : ""}">
     </div>
     <div class="filter-row">
+      <div class="filter-label">Tipo</div>
+      <div class="filter-chips" id="czTipoChips"></div>
+    </div>
+    <div class="filter-row">
       <div class="filter-label">Descrizione</div>
       <textarea class="form-textarea" id="czDescrizione" placeholder="Facoltativa">${existing ? existing.descrizione : ""}</textarea>
     </div>
   `;
   content.appendChild(card);
+
+  const tipoChipsWrap = card.querySelector("#czTipoChips");
+  function renderTipoChips(){
+    tipoChipsWrap.innerHTML = CZ_TIPI.map(t =>
+      `<button class="filter-chip ${t === selectedTipo ? "active" : ""}" data-tipo="${t}">${t}</button>`
+    ).join("");
+    tipoChipsWrap.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        selectedTipo = chip.dataset.tipo;
+        renderTipoChips();
+      });
+    });
+  }
+  renderTipoChips();
 
   const saveBtn = document.createElement("button");
   saveBtn.className = "pill-btn active";
@@ -1521,11 +1591,12 @@ function showCanzoniereForm(existingId){
     if(existing){
       existing.titolo = titolo;
       existing.descrizione = descrizione;
+      existing.tipo = selectedTipo;
       existing.dataModifica = now;
       targetId = existing.id;
     } else {
       targetId = generateCanzoniereId();
-      CANZONIERI.push({ id: targetId, titolo, descrizione, dataCreazione: now, dataModifica: now, canzoni: [] });
+      CANZONIERI.push({ id: targetId, titolo, descrizione, tipo: selectedTipo, dataCreazione: now, dataModifica: now, canzoni: [] });
     }
     saveCanzonieri();
     showCanzoniereDetail(targetId);
@@ -2023,6 +2094,56 @@ function promptAddSectionAt(cz, insertIndex){
   }
 }
 
+function promptAddTypedItemAt(cz, insertIndex, itemType){
+  const titolo = prompt(`Titolo (${itemType.label}):`);
+  if(titolo && titolo.trim()){
+    cz.canzoni.splice(insertIndex, 0, itemType.prefix + titolo.trim());
+    cz.dataModifica = new Date().toISOString();
+    saveCanzonieri();
+    showCanzoniereDetail(cz.id);
+  }
+}
+
+function runCzInsertOption(cz, insertIndex, opt){
+  if(opt.action === "song"){ openCzInsertSongPicker(cz, insertIndex); return; }
+  if(opt.action === "sezione"){ promptAddSectionAt(cz, insertIndex); return; }
+  promptAddTypedItemAt(cz, insertIndex, opt.itemType);
+}
+
+function openCzInsertMenu(cz, insertIndex, options){
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel">
+      <div class="cz-picker-header">
+        <div class="list-title" style="margin:0;">Aggiungi</div>
+        <button class="cz-picker-close" aria-label="Chiudi">${ICONS.clear(14)}</button>
+      </div>
+      <div class="cz-picker-results" id="czInsertMenuList"></div>
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+
+  const listEl = overlay.querySelector("#czInsertMenuList");
+  options.forEach(opt => {
+    const row = document.createElement("div");
+    row.className = "song-row";
+    row.innerHTML = `
+      <div class="cz-type-icon" style="color:${opt.color || "var(--purple)"}; background:${opt.color ? opt.color + "22" : "var(--lilac)"}">${opt.icon(18)}</div>
+      <div class="row-title" style="margin-left:10px;">${opt.label}</div>
+    `;
+    row.addEventListener("click", () => {
+      overlay.remove();
+      runCzInsertOption(cz, insertIndex, opt);
+    });
+    listEl.appendChild(row);
+  });
+
+  function closeOverlay(){ overlay.remove(); }
+  overlay.querySelector(".cz-picker-close").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
+}
+
 function showCanzoniereDetail(id){
   const cz = CANZONIERI.find(c => c.id === id);
   if(!cz){ showTab("canzonieri"); return; }
@@ -2045,10 +2166,11 @@ function showCanzoniereDetail(id){
   infoCard.innerHTML = `
     <button class="cz-delete-btn" aria-label="Elimina canzoniere" style="position:absolute; top:14px; right:14px; border:none; background:none; padding:6px; margin:-6px; cursor:pointer; display:flex; align-items:center;">${ICONS.trash(18)}</button>
     <div style="display:flex; align-items:center; gap:8px; padding-right:60px;">
-      <div class="list-title">${cz.titolo}</div>
+      <div class="list-title" style="margin-bottom:0;">${cz.titolo}</div>
       <button class="cz-print-btn" aria-label="Stampa canzoniere / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.print(18)}</button>
       <button class="cz-edit-btn" aria-label="Modifica canzoniere" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.edit(18)}</button>
     </div>
+    <div style="margin:6px 0 14px;"><span class="cz-tipo-badge">${czTipoOf(cz)}</span></div>
     ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
     <p class="row-meta" style="margin-bottom:0;">Creato il ${dataCreazioneFmt} · Ultima modifica il ${dataModificaFmt}</p>
   `;
@@ -2112,7 +2234,42 @@ function showCanzoniereDetail(id){
     });
     cz.canzoni.forEach((key, idx) => {
       const isSection = key.startsWith(CZ_SECTION_PREFIX);
-      if(isSection){
+      const typeItem = !isSection ? czItemTypeForKey(key) : null;
+      if(typeItem){
+        const titoloItem = key.slice(typeItem.prefix.length);
+        const row = document.createElement("div");
+        row.className = "song-row";
+        row.dataset.key = key;
+        row.innerHTML = `
+          <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+          <div class="cz-type-icon" style="color:${typeItem.color}; background:${typeItem.color}22;">${typeItem.icon(16)}</div>
+          <div style="flex:1; min-width:0;">
+            <div class="row-title">${titoloItem}</div>
+            <div class="row-meta">${typeItem.label}</div>
+          </div>
+          <div class="row-end">
+            <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
+          </div>
+        `;
+        row.addEventListener("click", () => {
+          const nuovoTitolo = prompt(`Rinomina (${typeItem.label}):`, titoloItem);
+          if(nuovoTitolo && nuovoTitolo.trim()){
+            const i = cz.canzoni.indexOf(key);
+            if(i !== -1) cz.canzoni[i] = typeItem.prefix + nuovoTitolo.trim();
+            cz.dataModifica = new Date().toISOString();
+            saveCanzonieri();
+            showCanzoniereDetail(cz.id);
+          }
+        });
+        row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          cz.canzoni = cz.canzoni.filter(k => k !== key);
+          cz.dataModifica = new Date().toISOString();
+          saveCanzonieri();
+          showCanzoniereDetail(cz.id);
+        });
+        listCard.appendChild(row);
+      } else if(isSection){
         sectionNum++;
         const sectionLetter = String.fromCharCode(64 + sectionNum);
         const titoloSezione = key.slice(CZ_SECTION_PREFIX.length);
@@ -2188,19 +2345,31 @@ function showCanzoniereDetail(id){
       const plusBtn = document.createElement("button");
       plusBtn.className = "cz-insert-plus";
       plusBtn.setAttribute("aria-label", "Aggiungi qui");
-      plusBtn.innerHTML = ICONS.plusCircle(20);
+      plusBtn.innerHTML = ICONS.plus(16);
       insertInner.appendChild(plusBtn);
+
+      const extraTypes = czAllowedItemTypes(cz);
+      const insertOptions = [
+        { action: "song", icon: ICONS.music, label: "Canzone" },
+        ...(isSection ? [] : [{ action: "sezione", icon: ICONS.tags, label: "Sezione" }]),
+        ...extraTypes.map(t => ({ action: t.key, icon: t.icon, label: t.label, itemType: t, color: t.color }))
+      ];
+
       plusBtn.addEventListener("click", () => {
-        if(isSection){
-          openCzInsertSongPicker(cz, idx + 1);
+        if(insertOptions.length === 1){
+          runCzInsertOption(cz, idx + 1, insertOptions[0]);
           return;
         }
-        insertInner.innerHTML = `
-          <button class="cz-insert-choice" data-action="song" aria-label="Aggiungi canzone">${ICONS.music(16)}</button>
-          <button class="cz-insert-choice" data-action="section" aria-label="Aggiungi sezione">${ICONS.tags(16)}</button>
-        `;
-        insertInner.querySelector('[data-action="song"]').addEventListener("click", () => openCzInsertSongPicker(cz, idx + 1));
-        insertInner.querySelector('[data-action="section"]').addEventListener("click", () => promptAddSectionAt(cz, idx + 1));
+        if(insertOptions.length === 2){
+          insertInner.innerHTML = insertOptions.map(opt =>
+            `<button class="cz-insert-choice" data-action="${opt.action}" aria-label="Aggiungi ${opt.label}">${opt.icon(16)}</button>`
+          ).join("");
+          insertOptions.forEach(opt => {
+            insertInner.querySelector(`[data-action="${opt.action}"]`).addEventListener("click", () => runCzInsertOption(cz, idx + 1, opt));
+          });
+          return;
+        }
+        openCzInsertMenu(cz, idx + 1, insertOptions);
       });
       listCard.appendChild(insertRow);
     });
@@ -3154,9 +3323,22 @@ function measureAllSongPages(doc, orderedEntries){
       results.push({ isSection: true, titolo: entry.titolo });
       return;
     }
+    if(entry.isNote){
+      results.push({
+        isSection: false,
+        isNote: true,
+        itemType: entry.itemType,
+        titolo: entry.titolo,
+        startPage: currentPage,
+        pageCount: 1
+      });
+      currentPage += 1;
+      return;
+    }
     const pageCount = measureSongPages(doc, entry.song);
     results.push({
       isSection: false,
+      isNote: false,
       favKey: entry.favKey,
       titolo: entry.song.titolo,
       startPage: currentPage,
@@ -3177,13 +3359,22 @@ function buildCzOrderedEntries(cz){
       pendingSection = key.slice(CZ_SECTION_PREFIX.length);
       return;
     }
+    const itemType = czItemTypeForKey(key);
+    if(itemType){
+      if(pendingSection !== null){
+        entries.push({ isSection: true, titolo: pendingSection });
+        pendingSection = null;
+      }
+      entries.push({ isSection: false, isNote: true, itemType, titolo: key.slice(itemType.prefix.length) });
+      return;
+    }
     const song = findSongByFavKey(key);
     if(!song) return;
     if(pendingSection !== null){
       entries.push({ isSection: true, titolo: pendingSection });
       pendingSection = null;
     }
-    entries.push({ isSection: false, favKey: key, song });
+    entries.push({ isSection: false, isNote: false, favKey: key, song });
   });
   return entries;
 }
@@ -3368,6 +3559,36 @@ function drawCzSongPage(doc, song, sectionTitle, opts){
   });
 }
 
+function drawCzNotePage(doc, entry, sectionTitle, opts){
+  const { marginX, maxWidth } = opts;
+  let y = 20;
+
+  if(sectionTitle){
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(0, 0, 0);
+    doc.text(sectionTitle.toUpperCase(), marginX, y);
+    y += 12;
+  } else {
+    y += 6;
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(120, 120, 120);
+  doc.text(entry.itemType.label.toUpperCase(), marginX, y);
+  y += 10;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.setTextColor(0, 0, 0);
+  const lines = doc.splitTextToSize(entry.titolo, maxWidth);
+  lines.forEach(line => {
+    doc.text(line, marginX, y);
+    y += 10;
+  });
+}
+
 // --- Export PDF canzoniere intero ---
 
 async function exportCanzoniereePdf(cz){
@@ -3418,7 +3639,11 @@ async function exportCanzoniereePdf(cz){
       return;
     }
     if(firstSongDrawn) doc.addPage();
-    drawCzSongPage(doc, entry.song, pendingSection, { marginX, maxWidth, pageHeight, marginBottom });
+    if(entry.isNote){
+      drawCzNotePage(doc, entry, pendingSection, { marginX, maxWidth, pageHeight, marginBottom });
+    } else {
+      drawCzSongPage(doc, entry.song, pendingSection, { marginX, maxWidth, pageHeight, marginBottom });
+    }
     pendingSection = null;
     firstSongDrawn = true;
   });
@@ -3462,12 +3687,16 @@ async function exportCanzoniereePdf(cz){
 }
 
 function showDetail(index){
+  clearInterval(activeScrollInterval);
+  activeScrollInterval = null;
   savedScrollY = window.scrollY;
   const song = SONGS[index];
   currentDetailSong = song;
   let semitones = 0;
 
   function goBack(){
+    clearInterval(activeScrollInterval);
+    activeScrollInterval = null;
     returnToView();
     requestAnimationFrame(() => window.scrollTo(0, savedScrollY));
   }
@@ -3877,6 +4106,7 @@ function showDetail(index){
     scrollIcon.innerHTML = ICONS.play(20);
     scrollStateName.textContent = "";
     clearInterval(scrollInterval);
+    activeScrollInterval = null;
   }
 
   function startScrollAt(index){
@@ -3892,6 +4122,7 @@ function showDetail(index){
         stopScroll();
       }
     }, speed.interval);
+    activeScrollInterval = scrollInterval;
   }
 
   scrollBtn.addEventListener("click", () => {
