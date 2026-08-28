@@ -132,10 +132,18 @@ v0.125 RELEASED
 - TENTATIVO fix drag and drop canzoniere
 - fix tutti i canti AGESCI
 - FIX VARIE CANZONI E AGGIUNTE VARIE CANZONI....
----------------------------------------------------------------------------------------------------------
-v0.126 
+----------------------------------------------------------------------------------------
+v0.126 RELEASED
 - FIX DRAG AND DROP CANZONIERE...
+----------------------------------------------------------------------------------------
+v0.127 RELEASED
+- SCORRI PAGINA CANZONIERE
+- COMPLETAMENTO FUNZIONI SEZIONE CANZONIERE
 
+----------------------------------------------------------------------------------------
+v0.128
+- STAMPA PDF
+- STAMPA PDF CANZONIERE
 
 
 
