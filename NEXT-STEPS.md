@@ -144,6 +144,7 @@ v0.127 RELEASED
 v0.128
 - STAMPA PDF
 - STAMPA PDF CANZONIERE
+- FIX POSIZIONE ACCORDI SU RIGA CON RIT.!!!
 
 ----------------------------------------------------------------------------------------
 v0.129

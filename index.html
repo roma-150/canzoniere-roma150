@@ -285,6 +285,14 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
   }
   .dir-btn:active{ background:var(--border); }
+  .settings-icon-btn{
+    width:38px; height:38px; border-radius:12px; border:none;
+    background:var(--neutral); color:var(--purple);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .settings-icon-btn.active{ background:var(--purple); color:var(--white); }
+  .phone.dark-bg .settings-icon-btn{ background:#2C2C2E; color:#FFFFFF; }
+  .phone.dark-bg .settings-icon-btn.active{ background:var(--purple); color:var(--white); }
 
   .group-divider{
     font-size:12px; font-weight:800; color:var(--purple);
@@ -319,11 +327,11 @@
     font-size:13px; font-weight:800; color:var(--purple);
   }
   .cz-section-row{ background:rgba(56,30,96,0.06); border-radius:12px; }
-  .cz-edit-btn{ color:var(--purple); }
+  .cz-edit-btn, .cz-print-btn{ color:var(--purple); }
   .cz-section-title{ color:var(--purple); }
   .cz-title-detail{ color:var(--ink); }
   .phone.dark-bg .cz-title-detail{ color:#F2F2F7; }
-  .phone.dark-bg .cz-edit-btn{ color:var(--white); }
+  .phone.dark-bg .cz-edit-btn, .phone.dark-bg .cz-print-btn{ color:var(--white); }
   .cz-delete-btn{ color:#B3261E; }
   .phone.dark-bg .cz-delete-btn{ color:var(--white); }
   .phone.dark-bg .cz-section-row{ background:#241C33; }
@@ -344,6 +352,49 @@
   box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
   .phone.dark-bg .cz-drag-handle{ color:var(--white); }
+
+  .cz-insert-row{ height:0; position:relative; z-index:2; }
+  .cz-insert-inner{
+    position:absolute; left:50%; top:0;
+    transform:translate(-50%, -50%);
+    display:flex; align-items:center; gap:10px;
+  }
+  .cz-insert-plus{
+    display:flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:50%; border:none;
+    color:var(--purple); background:var(--lilac); cursor:pointer; padding:0;
+    box-shadow:0 1px 4px rgba(30,20,50,0.18);
+  }
+  .phone.dark-bg .cz-insert-plus{ background:#2C2C2E; color:#C9B8E8; }
+  .cz-insert-choice{
+    display:flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%; border:none;
+    color:var(--white); background:var(--purple); cursor:pointer; padding:0;
+    box-shadow:0 1px 4px rgba(30,20,50,0.18);
+  }
+  .phone.dark-bg .cz-insert-choice{ background:#4A3670; }
+
+  .cz-picker-overlay{
+    position:fixed; inset:0; z-index:30;
+    background:rgba(0,0,0,0.45);
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .cz-picker-panel{
+    width:100%; max-width:var(--phone-max-width);
+    background:var(--white); border-radius:22px 22px 0 0;
+    padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+    max-height:75vh; display:flex; flex-direction:column;
+  }
+  .phone.dark-bg .cz-picker-panel{ background:#1C1C1E; }
+  .cz-picker-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .cz-picker-close{
+    border:none; background:var(--neutral); color:var(--ink-soft);
+    width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+  }
+  .phone.dark-bg .cz-picker-close{ background:#2C2C2E; color:#FFFFFF; }
+  .cz-picker-results{ flex:1; overflow-y:auto; margin-top:6px; }
+
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
@@ -597,7 +648,7 @@
     <button class="nav-item" data-tab="canzoni"></button>
     <button class="nav-item" data-tab="categorie"></button>
     <button class="nav-item" data-tab="canzonieri"></button>
-    <button class="nav-item" data-tab="scalette"></button>
+    <button class="nav-item" data-tab="impostazioni"></button>
   </div>
 </div>
 
@@ -644,7 +695,8 @@ const ICONS = {
   trash: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>`,
   dragHandle: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>`,
   edit: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
-  print: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`
+  print: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`,
+  settings: (s=21) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -768,7 +820,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "0.128";
+const APP_VERSION = "0.129";
 let updateAvailable = false;
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -780,6 +832,14 @@ function saveFavorites(){
   try { localStorage.setItem(FAV_KEY, JSON.stringify([...favoriti])); }
   catch(e){ /* localStorage non disponibile, i preferiti non persisteranno */ }
 }
+function clearFavorites(){
+  if(confirm("Svuotare tutti i preferiti? L'azione non è reversibile.")){
+    favoriti = new Set();
+    saveFavorites();
+    return true;
+  }
+  return false;
+}
 
 const DARK_KEY = "canzoniere_dark_mode_v1";
 function loadDarkMode(){
@@ -789,6 +849,24 @@ function loadDarkMode(){
 function saveDarkMode(){
   try { localStorage.setItem(DARK_KEY, detailDarkMode ? "1" : "0"); }
   catch(e){ /* localStorage non disponibile, il tema non persisterà */ }
+}
+
+const FONT_STATES = [
+  { name: "Normale", scale: 1 },
+  { name: "Grande", scale: 1.2 },
+  { name: "Molto grande", scale: 1.45 },
+  { name: "Piccolo", scale: 0.82 }
+];
+const FONT_SCALE_KEY = "canzoniere_font_scale_v1";
+function loadFontScaleIndex(){
+  try {
+    const v = parseInt(localStorage.getItem(FONT_SCALE_KEY), 10);
+    return Number.isInteger(v) && v >= 0 && v < FONT_STATES.length ? v : 0;
+  } catch(e){ return 0; }
+}
+function saveFontScaleIndex(){
+  try { localStorage.setItem(FONT_SCALE_KEY, String(fontScaleIndex)); }
+  catch(e){ /* localStorage non disponibile, la dimensione testo non persisterà */ }
 }
 
 const CANZONIERI_KEY = "canzoniere_canzonieri_v1";
@@ -822,7 +900,8 @@ function tempiOf(song){
 }
 let favoriti = loadFavorites();
 let showOnlyFavorites = false;
-let fontScaleIndex = 0;
+let fontScaleIndex = loadFontScaleIndex();
+document.documentElement.style.setProperty("--text-scale", FONT_STATES[fontScaleIndex].scale);
 let detailDarkMode = loadDarkMode();
 let CANZONIERI = loadCanzonieri();
 let currentTab = "canzoni";
@@ -1308,6 +1387,97 @@ function renderCanzonieri(){
   content.appendChild(card);
 }
 
+function renderImpostazioni(){
+  content.innerHTML = "";
+
+  const aspettoCard = document.createElement("div");
+  aspettoCard.className = "card";
+  aspettoCard.innerHTML = `
+    <div class="list-title">Aspetto</div>
+    <div class="song-row" style="cursor:default;">
+      <div class="row-title">Tema scuro</div>
+      <button class="settings-icon-btn" id="settingsDarkBtn" aria-label="Tema scuro"></button>
+    </div>
+    <div class="filter-row" style="margin-top:4px;">
+      <div class="filter-label">Dimensione testo canzoni (predefinita)</div>
+      <div class="filter-chips" id="settingsFontChips"></div>
+    </div>
+  `;
+  content.appendChild(aspettoCard);
+
+  const chipsWrap = aspettoCard.querySelector("#settingsFontChips");
+  function renderFontChips(){
+    chipsWrap.innerHTML = FONT_STATES.map((s, i) =>
+      `<button class="filter-chip ${i === fontScaleIndex ? "active" : ""}" data-idx="${i}">${s.name}</button>`
+    ).join("");
+    chipsWrap.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        fontScaleIndex = parseInt(chip.dataset.idx, 10);
+        document.documentElement.style.setProperty("--text-scale", FONT_STATES[fontScaleIndex].scale);
+        saveFontScaleIndex();
+        renderFontChips();
+      });
+    });
+  }
+  renderFontChips();
+  wireDarkBtnEl(document.getElementById("settingsDarkBtn"));
+
+  const updateCard = document.createElement("div");
+  updateCard.className = "card";
+  updateCard.innerHTML = `
+    <div class="list-title">Aggiornamenti</div>
+    <p class="row-meta" style="margin-bottom:14px;">Versione installata: v${APP_VERSION}</p>
+  `;
+  const updateBtn = document.createElement("button");
+  updateBtn.className = "pill-btn active";
+  updateBtn.style.width = "100%";
+  updateBtn.style.justifyContent = "center";
+  updateBtn.innerHTML = `${ICONS.refresh(16)} Cerca aggiornamenti`;
+  updateCard.appendChild(updateBtn);
+  content.appendChild(updateCard);
+  wireUpdateBtnEl(updateBtn);
+
+  const datiCard = document.createElement("div");
+  datiCard.className = "card";
+  datiCard.innerHTML = `<div class="list-title">Dati</div>`;
+  const clearFavBtn = document.createElement("button");
+  clearFavBtn.className = "pill-btn active";
+  clearFavBtn.style.width = "100%";
+  clearFavBtn.style.justifyContent = "center";
+  clearFavBtn.style.background = "#B3261E";
+  clearFavBtn.innerHTML = `${ICONS.trash(16)} Svuota preferiti`;
+  clearFavBtn.addEventListener("click", () => {
+    if(clearFavorites()) alert("Preferiti svuotati.");
+  });
+  datiCard.appendChild(clearFavBtn);
+  content.appendChild(datiCard);
+
+  const assistenzaCard = document.createElement("div");
+  assistenzaCard.className = "card";
+  const reportSubject = encodeURIComponent("Canzoniere Roma 150 - Segnalazione problema");
+  const suggestSubject = encodeURIComponent("Canzoniere Roma 150 - Nuova canzone da aggiungere");
+  assistenzaCard.innerHTML = `
+    <div class="list-title">Assistenza</div>
+    <a class="song-row" style="text-decoration:none; color:inherit;" href="mailto:agesciroma150@gmail.com?subject=${reportSubject}">
+      <div class="row-title">Segnala un problema</div>
+      <div class="row-end">${ICONS.chevronRight(18)}</div>
+    </a>
+    <a class="song-row" style="text-decoration:none; color:inherit;" href="mailto:agesciroma150@gmail.com?subject=${suggestSubject}">
+      <div class="row-title">Suggerisci una nuova canzone</div>
+      <div class="row-end">${ICONS.chevronRight(18)}</div>
+    </a>
+  `;
+  content.appendChild(assistenzaCard);
+
+  const infoCard = document.createElement("div");
+  infoCard.className = "card";
+  infoCard.innerHTML = `
+    <div class="list-title">Info app</div>
+    <p class="row-meta" style="margin-bottom:0;">Canzoniere di Gruppo · Roma 150 — v${APP_VERSION}<br>Realizzata per il gruppo scout AGESCI Roma 150.</p>
+  `;
+  content.appendChild(infoCard);
+}
+
 function showCanzoniereForm(existingId){
   const existing = existingId ? CANZONIERI.find(c => c.id === existingId) : null;
   renderHeaderBack(() => {
@@ -1372,6 +1542,22 @@ function initCzDragReorder(container, cz){
     return Array.from(container.querySelectorAll(".song-row"));
   }
 
+  // Ogni riga "song-row" è sempre seguita nel DOM dalla propria riga "+" (cz-insert-row).
+  // Queste funzioni saltano la riga "+" per trovare il vero vicino canzone/sezione.
+  function nextSongRow(row){
+    const insertRow = row.nextElementSibling;
+    return insertRow ? insertRow.nextElementSibling : null;
+  }
+  function prevSongRow(row){
+    const prevEl = row.previousElementSibling;
+    return prevEl ? prevEl.previousElementSibling : null;
+  }
+  function moveUnitBefore(row, anchorNode){
+    const insertRow = row.nextElementSibling;
+    container.insertBefore(row, anchorNode);
+    container.insertBefore(insertRow, anchorNode);
+  }
+
   function moveDrag(clientY){
     if(!draggingRow) return;
     const delta = clientY - startY;
@@ -1384,12 +1570,12 @@ function initCzDragReorder(container, cz){
       if(row === draggingRow) return;
       const rect = row.getBoundingClientRect();
       const rowCenter = rect.top + rect.height / 2;
-      if(draggingCenter > rowCenter && draggingRow.nextElementSibling === row){
-        container.insertBefore(draggingRow, row.nextSibling);
+      if(draggingCenter > rowCenter && nextSongRow(draggingRow) === row){
+        moveUnitBefore(draggingRow, nextSongRow(row));
         draggingRow.style.transform = "none";
         startY = clientY;
-      } else if(draggingCenter < rowCenter && draggingRow.previousElementSibling === row){
-        container.insertBefore(draggingRow, row);
+      } else if(draggingCenter < rowCenter && prevSongRow(draggingRow) === row){
+        moveUnitBefore(draggingRow, row);
         draggingRow.style.transform = "none";
         startY = clientY;
       }
@@ -1405,28 +1591,13 @@ function initCzDragReorder(container, cz){
 
   function endDrag(){
     if(!draggingRow) return;
-    draggingRow.style.transition = "";
-    draggingRow.style.transform = "";
-    draggingRow.classList.remove("cz-dragging");
     const rows = getRows();
     cz.canzoni = rows.map(row => row.dataset.key);
     cz.dataModifica = new Date().toISOString();
     saveCanzonieri();
-    let songCounter = 0;
-    let sectionCounter = 0;
-    rows.forEach((row) => {
-      const numEl = row.querySelector(".cz-order-num");
-      if(!numEl) return;
-      if(row.classList.contains("cz-section-row")){
-        sectionCounter++;
-        numEl.textContent = String.fromCharCode(64 + sectionCounter);
-      } else {
-        songCounter++;
-        numEl.textContent = songCounter;
-      }
-    });
     draggingRow = null;
     activePointerId = null;
+    showCanzoniereDetail(cz.id);
   }
 
   function onPointerDown(e){
@@ -1783,6 +1954,75 @@ function showCanzoniereAddSongs(id){
   });
 }
 
+function openCzInsertSongPicker(cz, insertIndex){
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel">
+      <div class="cz-picker-header">
+        <div class="list-title" style="margin:0;">Aggiungi canzone</div>
+        <button class="cz-picker-close" aria-label="Chiudi">${ICONS.clear(14)}</button>
+      </div>
+      <div class="search-box" style="margin:10px 0;">
+        ${ICONS.search(17)}
+        <input type="text" id="czPickerSearch" placeholder="Cerca titolo...">
+      </div>
+      <div class="cz-picker-results" id="czPickerResults"></div>
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+
+  const resultsEl = overlay.querySelector("#czPickerResults");
+  const searchInput = overlay.querySelector("#czPickerSearch");
+
+  function closeOverlay(){
+    overlay.remove();
+  }
+
+  function renderPickerResults(query){
+    const filtered = SONGS.filter(s => matchesSearch(s, query))
+      .sort((a, b) => a.titolo.localeCompare(b.titolo, "it", { sensitivity: "base" }));
+    resultsEl.innerHTML = "";
+    if(filtered.length === 0){
+      resultsEl.innerHTML = `<div class="empty">Nessuna canzone trovata${query ? ` per "${query}"` : ""}.</div>`;
+      return;
+    }
+    filtered.forEach(song => {
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div style="flex:1; min-width:0;">
+          <div class="row-title">${song.titolo}</div>
+          <div class="row-meta">${metaLine(song)}</div>
+        </div>
+      `;
+      row.addEventListener("click", () => {
+        cz.canzoni.splice(insertIndex, 0, favKey(song));
+        cz.dataModifica = new Date().toISOString();
+        saveCanzonieri();
+        closeOverlay();
+        showCanzoniereDetail(cz.id);
+      });
+      resultsEl.appendChild(row);
+    });
+  }
+  renderPickerResults("");
+  searchInput.addEventListener("input", () => renderPickerResults(searchInput.value));
+
+  overlay.querySelector(".cz-picker-close").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
+}
+
+function promptAddSectionAt(cz, insertIndex){
+  const titolo = prompt("Titolo della sezione:");
+  if(titolo && titolo.trim()){
+    cz.canzoni.splice(insertIndex, 0, CZ_SECTION_PREFIX + titolo.trim());
+    cz.dataModifica = new Date().toISOString();
+    saveCanzonieri();
+    showCanzoniereDetail(cz.id);
+  }
+}
+
 function showCanzoniereDetail(id){
   const cz = CANZONIERI.find(c => c.id === id);
   if(!cz){ showTab("canzonieri"); return; }
@@ -1847,7 +2087,7 @@ function showCanzoniereDetail(id){
   addSectionBtn.addEventListener("click", () => {
     const titolo = prompt("Titolo della sezione:");
     if(titolo && titolo.trim()){
-      cz.canzoni.push(CZ_SECTION_PREFIX + titolo.trim());
+      cz.canzoni.unshift(CZ_SECTION_PREFIX + titolo.trim());
       cz.dataModifica = new Date().toISOString();
       saveCanzonieri();
       showCanzoniereDetail(cz.id);
@@ -1870,8 +2110,9 @@ function showCanzoniereDetail(id){
       if(k.startsWith(CZ_SECTION_PREFIX)) sezioneCorrente = k.slice(CZ_SECTION_PREFIX.length);
       else sezioneDiCanzone[k] = sezioneCorrente;
     });
-    cz.canzoni.forEach((key) => {
-      if(key.startsWith(CZ_SECTION_PREFIX)){
+    cz.canzoni.forEach((key, idx) => {
+      const isSection = key.startsWith(CZ_SECTION_PREFIX);
+      if(isSection){
         sectionNum++;
         const sectionLetter = String.fromCharCode(64 + sectionNum);
         const titoloSezione = key.slice(CZ_SECTION_PREFIX.length);
@@ -1904,40 +2145,64 @@ function showCanzoniereDetail(id){
           showCanzoniereDetail(cz.id);
         });
         listCard.appendChild(row);
-        return;
+      } else {
+        const song = findSongByFavKey(key);
+        if(!song) return;
+        songNum++;
+        const row = document.createElement("div");
+        row.className = "song-row";
+        row.dataset.key = key;
+        row.innerHTML = `
+          <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+          <div class="cz-order-num">${songNum}</div>
+          <div style="flex:1; min-width:0;">
+            <div class="row-title">${song.titolo}</div>
+            <div class="row-meta">${metaLine(song)}</div>
+          </div>
+          <div class="row-end">
+            <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
+          </div>
+        `;
+        row.addEventListener("click", () => {
+          returnToView = () => showCanzoniereDetail(cz.id);
+          returnToViewLabel = "Torna a " + cz.titolo;
+          currentCzQueue = cz.canzoni.filter(k => !k.startsWith(CZ_SECTION_PREFIX));
+          currentCzInfo = { titolo: cz.titolo, descrizione: cz.descrizione, sezione: sezioneDiCanzone[key] || null, fullList: cz.canzoni.slice() };
+          showDetail(SONGS.indexOf(song));
+        });
+        row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          cz.canzoni = cz.canzoni.filter(k => k !== key);
+          cz.dataModifica = new Date().toISOString();
+          saveCanzonieri();
+          showCanzoniereDetail(cz.id);
+        });
+        listCard.appendChild(row);
       }
-      const song = findSongByFavKey(key);
-      if(!song) return;
-      songNum++;
-      const row = document.createElement("div");
-      row.className = "song-row";
-      row.dataset.key = key;
-      row.innerHTML = `
-        <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
-        <div class="cz-order-num">${songNum}</div>
-        <div style="flex:1; min-width:0;">
-          <div class="row-title">${song.titolo}</div>
-          <div class="row-meta">${metaLine(song)}</div>
-        </div>
-        <div class="row-end">
-          <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
-        </div>
-      `;
-      row.addEventListener("click", () => {
-        returnToView = () => showCanzoniereDetail(cz.id);
-        returnToViewLabel = "Torna a " + cz.titolo;
-        currentCzQueue = cz.canzoni.filter(k => !k.startsWith(CZ_SECTION_PREFIX));
-        currentCzInfo = { titolo: cz.titolo, descrizione: cz.descrizione, sezione: sezioneDiCanzone[key] || null, fullList: cz.canzoni.slice() };
-        showDetail(SONGS.indexOf(song));
+
+      const insertRow = document.createElement("div");
+      insertRow.className = "cz-insert-row";
+      const insertInner = document.createElement("div");
+      insertInner.className = "cz-insert-inner";
+      insertRow.appendChild(insertInner);
+      const plusBtn = document.createElement("button");
+      plusBtn.className = "cz-insert-plus";
+      plusBtn.setAttribute("aria-label", "Aggiungi qui");
+      plusBtn.innerHTML = ICONS.plusCircle(20);
+      insertInner.appendChild(plusBtn);
+      plusBtn.addEventListener("click", () => {
+        if(isSection){
+          openCzInsertSongPicker(cz, idx + 1);
+          return;
+        }
+        insertInner.innerHTML = `
+          <button class="cz-insert-choice" data-action="song" aria-label="Aggiungi canzone">${ICONS.music(16)}</button>
+          <button class="cz-insert-choice" data-action="section" aria-label="Aggiungi sezione">${ICONS.tags(16)}</button>
+        `;
+        insertInner.querySelector('[data-action="song"]').addEventListener("click", () => openCzInsertSongPicker(cz, idx + 1));
+        insertInner.querySelector('[data-action="section"]').addEventListener("click", () => promptAddSectionAt(cz, idx + 1));
       });
-      row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
-        e.stopPropagation();
-        cz.canzoni = cz.canzoni.filter(k => k !== key);
-        cz.dataModifica = new Date().toISOString();
-        saveCanzonieri();
-        showCanzoniereDetail(cz.id);
-      });
-      listCard.appendChild(row);
+      listCard.appendChild(insertRow);
     });
     if(cz.canzoni.length > 1) initCzDragReorder(listCard, cz);
   }
@@ -1950,11 +2215,6 @@ const TAB_PLACEHOLDERS = {
     icon: ICONS.tags,
     title: "Categorie",
     text: "Presto potrai sfogliare le canzoni per Branca, Sede e Luogo direttamente da qui."
-  },
-  scalette: {
-    icon: ICONS.listCheck,
-    title: "Scalette",
-    text: "Qui potrai creare scalette ordinate di canzoni per veglie, fuochi e momenti speciali."
   }
 };
 
@@ -1962,7 +2222,7 @@ const NAV_TABS = [
   { tab: "canzoni", icon: ICONS.music, label: "Canzoni" },
   { tab: "categorie", icon: ICONS.tags, label: "Categorie" },
   { tab: "canzonieri", icon: ICONS.books, label: "Canzonieri" },
-  { tab: "scalette", icon: ICONS.listCheck, label: "Scalette" }
+  { tab: "impostazioni", icon: ICONS.settings, label: "Impostazioni" }
 ];
 
 bottomNav.querySelectorAll(".nav-item").forEach(btn => {
@@ -1996,6 +2256,10 @@ function showTab(tab){
   }
   if(tab === "canzonieri"){
     renderCanzonieri();
+    return;
+  }
+  if(tab === "impostazioni"){
+    renderImpostazioni();
     return;
   }
   const p = TAB_PLACEHOLDERS[tab];
@@ -2179,9 +2443,9 @@ function groupSongs(list){
   return groups;
 }
 
-function wireUpdateBtn(){
-  const btn = document.getElementById("headerUpdate");
+function wireUpdateBtnEl(btn){
   if(!btn) return;
+  btn.classList.add("update-check-btn");
   btn.classList.toggle("offline", !navigator.onLine);
   btn.classList.toggle("has-update", updateAvailable);
   btn.addEventListener("click", async () => {
@@ -2199,23 +2463,33 @@ function wireUpdateBtn(){
     setTimeout(() => window.location.reload(), 400);
   });
 }
+function wireUpdateBtn(){
+  wireUpdateBtnEl(document.getElementById("headerUpdate"));
+}
 
-function wireDarkBtn(){
-  const btn = document.getElementById("headerDark");
+function updateAllDarkButtons(){
+  document.querySelectorAll(".dark-mode-btn").forEach(btn => {
+    btn.classList.toggle("active", detailDarkMode);
+    btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
+  });
+}
+function wireDarkBtnEl(btn){
   if(!btn) return;
+  btn.classList.add("dark-mode-btn");
   btn.classList.toggle("active", detailDarkMode);
   btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
   btn.addEventListener("click", () => {
     detailDarkMode = !detailDarkMode;
     document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
-    btn.classList.toggle("active", detailDarkMode);
-    btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
+    updateAllDarkButtons();
     saveDarkMode();
   });
 }
+function wireDarkBtn(){
+  wireDarkBtnEl(document.getElementById("headerDark"));
+}
 window.addEventListener("online", () => {
-  const btn = document.getElementById("headerUpdate");
-  if(btn) btn.classList.remove("offline");
+  document.querySelectorAll(".update-check-btn").forEach(btn => btn.classList.remove("offline"));
   checkForUpdate();
 });
 
@@ -2225,14 +2499,12 @@ function checkForUpdate(){
     .then(r => r.json())
     .then(data => {
       updateAvailable = !!data.version && data.version !== APP_VERSION;
-      const btn = document.getElementById("headerUpdate");
-      if(btn) btn.classList.toggle("has-update", updateAvailable);
+      document.querySelectorAll(".update-check-btn").forEach(btn => btn.classList.toggle("has-update", updateAvailable));
     })
     .catch(() => {});
 }
 window.addEventListener("offline", () => {
-  const btn = document.getElementById("headerUpdate");
-  if(btn) btn.classList.add("offline");
+  document.querySelectorAll(".update-check-btn").forEach(btn => btn.classList.add("offline"));
 });
 
 function renderHeaderBrand(){
@@ -3354,12 +3626,6 @@ function showDetail(index){
   `;
   content.appendChild(card1);
 
-  const FONT_STATES = [
-    { name: "Normale", scale: 1 },
-    { name: "Grande", scale: 1.2 },
-    { name: "Molto grande", scale: 1.45 },
-    { name: "Piccolo", scale: 0.82 }
-  ];
   const fontSizeTile = document.getElementById("fontSizeTile");
   const aSample = document.getElementById("aSample");
   const fontStateName = document.getElementById("fontStateName");
@@ -3374,6 +3640,7 @@ function showDetail(index){
   fontSizeTile.addEventListener("click", () => {
     fontScaleIndex = (fontScaleIndex + 1) % FONT_STATES.length;
     applyFontState();
+    saveFontScaleIndex();
   });
 
   let chordsVisible = true;
