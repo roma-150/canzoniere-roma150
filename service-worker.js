@@ -7,6 +7,7 @@ const APP_SHELL = [
   './icons/icon-ios.jpg',
   './icons/icon-android.jpg',
   './icons/agesci.png',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
 ];// Installazione: mette in cache i file base dell'app (guscio)
 self.addEventListener('install', (event) => {
   event.waitUntil(

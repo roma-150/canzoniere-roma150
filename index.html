@@ -580,6 +580,7 @@
     .phone.dark-bg .nav-item.active:hover .nav-pill{ background:rgba(255,255,255,0.16); }
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="phone">
@@ -642,7 +643,8 @@ const ICONS = {
   checkCircle: (s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
   trash: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>`,
   dragHandle: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>`,
-  edit: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`
+  edit: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
+  print: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -2768,6 +2770,7 @@ function showDetail(index){
         <p class="song-title">${song.titolo}</p>
         <p class="song-meta">${metaLine(song)}</p>
       </div>
+      <button class="cz-edit-btn" id="printSongBtn" aria-label="Stampa / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0;">${ICONS.print(22)}</button>
     </div>
     <div class="tile-row">
       <div class="mini-tile key-tile">
@@ -2832,172 +2835,6 @@ function showDetail(index){
       ? (song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi")
       : "";
   });
-
-  const card2 = document.createElement("div");
-  card2.className = "card";
-  const body = document.createElement("div");
-  card2.appendChild(body);
-  content.appendChild(card2);
-
-  let pendingNavRow = null;
-
-  if(currentCzQueue){
-    const czIdx = currentCzQueue.indexOf(favKey(song));
-    if(czIdx !== -1){
-      const prevKey = czIdx > 0 ? currentCzQueue[czIdx - 1] : null;
-      const nextKey = czIdx < currentCzQueue.length - 1 ? currentCzQueue[czIdx + 1] : null;
-      const detailNavBtns = document.getElementById("detailNavBtns");
-      if(detailNavBtns){
-        const navIconsRow = document.createElement("div");
-        navIconsRow.className = "detail-nav-icons";
-        if(prevKey){
-          const firstBtn = document.createElement("button");
-          firstBtn.className = "detail-nav-btn";
-          firstBtn.setAttribute("aria-label", "Torna alla prima pagina");
-          firstBtn.innerHTML = ICONS.skipToStart(24);
-          firstBtn.addEventListener("click", () => {
-            const firstSong = findSongByFavKey(currentCzQueue[0]);
-            if(firstSong) showDetail(SONGS.indexOf(firstSong));
-          });
-          navIconsRow.appendChild(firstBtn);
-        }
-        if(prevKey){
-          const topPrevBtn = document.createElement("button");
-          topPrevBtn.className = "detail-nav-btn";
-          topPrevBtn.setAttribute("aria-label", "Canzone precedente");
-          topPrevBtn.innerHTML = ICONS.chevronLeft(28);
-          topPrevBtn.addEventListener("click", () => {
-            const prevSong = findSongByFavKey(prevKey);
-            if(prevSong) showDetail(SONGS.indexOf(prevSong));
-          });
-          navIconsRow.appendChild(topPrevBtn);
-        }
-        if(nextKey){
-          const topNextBtn = document.createElement("button");
-          topNextBtn.className = "detail-nav-btn";
-          topNextBtn.setAttribute("aria-label", "Canzone successiva");
-          topNextBtn.innerHTML = ICONS.chevronRight(28);
-          topNextBtn.addEventListener("click", () => {
-            const nextSong = findSongByFavKey(nextKey);
-            if(nextSong) showDetail(SONGS.indexOf(nextSong));
-          });
-          navIconsRow.appendChild(topNextBtn);
-        }
-        detailNavBtns.appendChild(navIconsRow);
-
-        const navPageLabel = document.createElement("div");
-        navPageLabel.className = "detail-nav-page";
-        navPageLabel.textContent = `Pag. ${czIdx + 1}/${currentCzQueue.length}`;
-        detailNavBtns.appendChild(navPageLabel);
-
-        const navPageLabelBottom = document.createElement("div");
-        navPageLabelBottom.className = "detail-nav-page-bottom";
-        navPageLabelBottom.textContent = `Pag. ${czIdx + 1}/${currentCzQueue.length}`;
-        card2.appendChild(navPageLabelBottom);
-      }
-      if(prevKey || nextKey){
-        const navRow = document.createElement("div");
-        navRow.style.display = "flex";
-        navRow.style.gap = "8px";
-        navRow.style.marginTop = "8px";
-        if(prevKey){
-          const prevBtn = document.createElement("button");
-          prevBtn.className = "pill-btn active";
-          prevBtn.style.flex = "1";
-          prevBtn.style.justifyContent = "center";
-          prevBtn.innerHTML = `${ICONS.chevronLeft(16)} Precedente`;
-          prevBtn.addEventListener("click", () => {
-            const prevSong = findSongByFavKey(prevKey);
-            if(prevSong) showDetail(SONGS.indexOf(prevSong));
-          });
-          navRow.appendChild(prevBtn);
-        }
-        if(nextKey){
-          const nextBtn = document.createElement("button");
-          nextBtn.className = "pill-btn active";
-          nextBtn.style.flex = "1";
-          nextBtn.style.justifyContent = "center";
-          nextBtn.innerHTML = `Successiva ${ICONS.chevronRight(16)}`;
-          nextBtn.addEventListener("click", () => {
-            const nextSong = findSongByFavKey(nextKey);
-            if(nextSong) showDetail(SONGS.indexOf(nextSong));
-          });
-          navRow.appendChild(nextBtn);
-        }
-        pendingNavRow = navRow;
-      }
-    }
-  }
-
-  const backBtn = document.createElement("button");
-  backBtn.className = "pill-btn active";
-  backBtn.style.width = "100%";
-  backBtn.style.justifyContent = "center";
-  backBtn.style.marginTop = "4px";
-  backBtn.innerHTML = `${ICONS.arrowBack(16)}${returnToViewLabel}`;
-  backBtn.addEventListener("click", goBack);
-  if(pendingNavRow) content.appendChild(pendingNavRow);
-  content.appendChild(backBtn);
-
-  function render(){
-    body.innerHTML = "";
-    const blocks = song.testo_accordi.split(/\n===\n/);
-    blocks.forEach(b => {
-      b.split(/\n---\n/).forEach(sub => body.appendChild(renderBlock(sub, semitones)));
-    });
-    document.getElementById("currentKey").textContent = song.tonalita ? transposeChord(song.tonalita, semitones) : "—";
-  }
-
-  document.getElementById("up").addEventListener("click", () => { semitones++; render(); });
-  document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
-
-  const SCROLL_SPEEDS = [
-    { label: "1×", step: 1, interval: 55 },
-    { label: "2×", step: 1, interval: 30 },
-    { label: "3×", step: 2, interval: 22 }
-  ];
-  let speedIndex = -1; // -1 = fermo
-  let scrollInterval = null;
-  const scrollBtn = document.getElementById("scrollToggle");
-  const scrollIcon = document.getElementById("scrollIcon");
-  const scrollStateName = document.getElementById("scrollStateName");
-
-  function stopScroll(){
-    speedIndex = -1;
-    scrollBtn.classList.remove("active");
-    scrollIcon.innerHTML = ICONS.play(20);
-    scrollStateName.textContent = "";
-    clearInterval(scrollInterval);
-  }
-
-  function startScrollAt(index){
-    speedIndex = index;
-    const speed = SCROLL_SPEEDS[speedIndex];
-    scrollBtn.classList.add("active");
-    scrollIcon.innerHTML = ICONS.pause(20);
-    scrollStateName.textContent = speed.label;
-    clearInterval(scrollInterval);
-    scrollInterval = setInterval(() => {
-      window.scrollBy({ top: speed.step, behavior: "auto" });
-      if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
-        stopScroll();
-      }
-    }, speed.interval);
-  }
-
-  scrollBtn.addEventListener("click", () => {
-    if(speedIndex === -1){
-      startScrollAt(0);
-    } else if(speedIndex < SCROLL_SPEEDS.length - 1){
-      startScrollAt(speedIndex + 1);
-    } else {
-      stopScroll();
-    }
-  });
-
-  render();
-  footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
-}
 
 if(/Android/i.test(navigator.userAgent)){
   document.body.classList.add("is-android");
