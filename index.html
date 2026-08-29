@@ -1640,20 +1640,11 @@ function renderCanzonieri(){
   const addRow = document.createElement("div");
   addRow.className = "song-row";
   addRow.innerHTML = `
-    <div class="row-title">+ Nuovo canzoniere</div>
+    <div class="row-title">+ Nuovo</div>
     <div class="row-end">${ICONS.chevronRight(18)}</div>
   `;
   addRow.addEventListener("click", () => showCanzoniereForm());
   personalRowsContainer.appendChild(addRow);
-
-  const addMessaRow = document.createElement("div");
-  addMessaRow.className = "song-row";
-  addMessaRow.innerHTML = `
-    <div class="row-title">+ Nuovo foglio messa</div>
-    <div class="row-end">${ICONS.chevronRight(18)}</div>
-  `;
-  addMessaRow.addEventListener("click", () => showCanzoniereForm(null, true));
-  personalRowsContainer.appendChild(addMessaRow);
 
   if(CANZONIERI.length === 0){
     const empty = document.createElement("div");
@@ -1783,7 +1774,7 @@ function renderImpostazioni(){
   content.appendChild(infoCard);
 }
 
-function showCanzoniereForm(existingId, foglioMessa){
+function showCanzoniereForm(existingId){
   const existing = existingId ? CANZONIERI.find(c => c.id === existingId) : null;
   renderHeaderBack(() => {
     if(existing) showCanzoniereDetail(existing.id); else showTab("canzonieri");
@@ -1799,11 +1790,12 @@ function showCanzoniereForm(existingId, foglioMessa){
 
   let selectedTipo = existing ? czTipoOf(existing) : "Canzoniere";
   let importedCanzoni = null;
+  let foglioMessaChosen = false;
 
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = `
-    <div class="list-title">${existing ? "Modifica canzoniere" : (foglioMessa ? "Nuovo foglio messa" : "Nuovo canzoniere")}</div>
+    <div class="list-title">${existing ? "Modifica canzoniere" : "Nuovo canzoniere"}</div>
     <div class="filter-row">
       <div class="filter-label">Titolo</div>
       <input type="text" class="form-input" id="czTitolo" placeholder="Es. Fuoco di sabato" value="${existing ? existing.titolo.replace(/"/g, "&quot;") : ""}">
@@ -1819,14 +1811,16 @@ function showCanzoniereForm(existingId, foglioMessa){
   `;
   content.appendChild(card);
 
+  const FORM_TIPI_CHIPS = existing ? CZ_TIPI : [...CZ_TIPI, "Foglio Messa"];
   const tipoChipsWrap = card.querySelector("#czTipoChips");
   function renderTipoChips(){
-    tipoChipsWrap.innerHTML = CZ_TIPI.map(t =>
+    tipoChipsWrap.innerHTML = FORM_TIPI_CHIPS.map(t =>
       `<button class="filter-chip ${t === selectedTipo ? "active" : ""}" data-tipo="${t}">${t}</button>`
     ).join("");
     tipoChipsWrap.querySelectorAll(".filter-chip").forEach(chip => {
       chip.addEventListener("click", () => {
         selectedTipo = chip.dataset.tipo;
+        foglioMessaChosen = selectedTipo === "Foglio Messa";
         renderTipoChips();
       });
     });
@@ -1876,15 +1870,16 @@ function showCanzoniereForm(existingId, foglioMessa){
     if(!titolo) return;
     const now = new Date().toISOString();
     let targetId;
+    const tipoDaSalvare = selectedTipo === "Foglio Messa" ? "Canzoniere" : selectedTipo;
     if(existing){
       existing.titolo = titolo;
       existing.descrizione = descrizione;
-      existing.tipo = selectedTipo;
+      existing.tipo = tipoDaSalvare;
       existing.dataModifica = now;
       targetId = existing.id;
     } else {
       targetId = generateCanzoniereId();
-      CANZONIERI.unshift({ id: targetId, titolo, descrizione, tipo: selectedTipo, dataCreazione: now, dataModifica: now, canzoni: importedCanzoni || (foglioMessa ? FOGLIO_MESSA_SEZIONI.map(s => CZ_SECTION_PREFIX + s) : []) });
+      CANZONIERI.unshift({ id: targetId, titolo, descrizione, tipo: tipoDaSalvare, dataCreazione: now, dataModifica: now, canzoni: importedCanzoni || (foglioMessaChosen ? FOGLIO_MESSA_SEZIONI.map(s => CZ_SECTION_PREFIX + s) : []) });
     }
     saveCanzonieri();
     showCanzoniereDetail(targetId);

@@ -33,5 +33,28 @@
     "descrizione": "",
     "tipo": "Cerimonia",
     "canzoni": ["§SEZIONE§Cerimonia di inizio", "Attorno alla Rupe__1950", "§SIMBOLO§Due lupetti ricordano la legge e il motto", "§SEZIONE§Consiglio della Rupe", "§GIOCO§Consiglio della Rupe\n§TESTO§\nNon più di tre o quattro domande, semplici e chiare, a cui ciascuno deve rispondere.", "§SEZIONE§Chiusura", "§SIMBOLO§Grande Urlo"]
+    },
+    {
+    "id": "canti-tempo-ordinario-2025",
+    "titolo": "Canti tempo ordinario 2025",
+    "descrizione": "",
+    "tipo": "Canzoniere",
+    "canzoni": [
+        "§SEZIONE§INGRESSO",
+        "Camminerò__1969",
+        "§SEZIONE§GLORIA",
+        "Gloria (A Dio nell'alto dei cieli)-GIOMBINI__1969",
+        "§SEZIONE§ALLELUIA",
+        "Alleluia (Passeranno i cieli)__1970",
+        "§SEZIONE§OFFERTORIO",
+        "Com'è bello (Salmo 133)__1974",
+        "§SEZIONE§SANTO",
+        "Santo (Osanna eh)__1979",
+        "§SEZIONE§COMUNIONE",
+        "Pane del cielo__1979",
+        "Il Disegno (Avevi scritto già)__1980",
+        "§SEZIONE§CANTO FINALE",
+        "Ti ringrazio mio Signore__1974"
+    ]
     }
 ]
