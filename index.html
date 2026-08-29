@@ -398,6 +398,8 @@
     width:30px; height:30px; border-radius:50%; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
   }
+  .cz-typed-detail-text{ white-space:pre-wrap; font-size:14px; line-height:1.5; color:var(--ink); max-height:50vh; overflow-y:auto; }
+  .phone.dark-bg .cz-typed-detail-text{ color:#F2F2F7; }
 
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
@@ -714,7 +716,9 @@ const ICONS = {
   sparkle: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M12 2l2.2 7.3L21 12l-6.8 2.7L12 22l-2.2-7.3L3 12l6.8-2.7z"/></svg>`,
   dice: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" stroke="none"/></svg>`,
   disco: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16M6.34 6.34l11.32 11.32M17.66 6.34L6.34 17.66"/></svg>`,
-  clapper: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 9l1.5-4h4L7 9M9 9l1.5-4h4L13 9M15 9l1.5-4h4L19 9"/><rect x="3" y="9" width="18" height="11" rx="1.2"/></svg>`
+  clapper: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 9l1.5-4h4L7 9M9 9l1.5-4h4L13 9M15 9l1.5-4h4L19 9"/><rect x="3" y="9" width="18" height="11" rx="1.2"/></svg>`,
+  copy: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>`,
+  share: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
@@ -833,6 +837,8 @@ let savedCategoriesHomeScrollY = 0;
 let savedCategoriesSezioneScrollY = 0;
 let savedLuoghiListScrollY = 0;
 let openCategoryGroups = new Set();
+let openPresetGroups = new Set();
+let czPersonalGroupOpen = true;
 
 const CATEGORY_SECTIONS = [
   { label: "Scout", gruppi: ["Canti del Roma 150", "Canti AGESCI"] },
@@ -897,8 +903,81 @@ function saveCanzonieri(){
   try { localStorage.setItem(CANZONIERI_KEY, JSON.stringify(CANZONIERI)); }
   catch(e){ /* localStorage non disponibile, i canzonieri non persisteranno */ }
 }
+
+let PRESET_CANZONIERI = [];
+const HIDDEN_PRESET_KEY = "canzoniere_preset_nascosti_v1";
+function loadHiddenPresetIds(){
+  try { return new Set(JSON.parse(localStorage.getItem(HIDDEN_PRESET_KEY) || "[]")); }
+  catch(e){ return new Set(); }
+}
+function saveHiddenPresetIds(){
+  try { localStorage.setItem(HIDDEN_PRESET_KEY, JSON.stringify([...hiddenPresetIds])); }
+  catch(e){ /* localStorage non disponibile, i canzonieri nascosti non persisteranno */ }
+}
+let hiddenPresetIds = loadHiddenPresetIds();
+function findCzById(id){
+  const personal = CANZONIERI.find(c => c.id === id);
+  if(personal) return { cz: personal, isPreset: false };
+  const preset = PRESET_CANZONIERI.find(c => c.id === id);
+  if(preset) return { cz: preset, isPreset: true };
+  return null;
+}
 function generateCanzoniereId(){
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+async function shareCzJson(cz){
+  const payload = {
+    titolo: cz.titolo,
+    descrizione: cz.descrizione || "",
+    tipo: czTipoOf(cz),
+    canzoni: cz.canzoni
+  };
+  const jsonText = JSON.stringify(payload);
+
+  function copyToClipboard(){
+    const done = () => alert("Canzoniere copiato negli appunti. Ora puoi incollarlo e condividerlo.");
+    const fail = () => alert("Non è stato possibile copiare automaticamente. Copia questo testo manualmente:\n\n" + jsonText);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(jsonText).then(done).catch(fail);
+    } else {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = jsonText;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        done();
+      } catch(e){ fail(); }
+    }
+  }
+
+  if(navigator.share){
+    try {
+      await navigator.share({ title: cz.titolo, text: jsonText });
+      return;
+    } catch(err){
+      // condivisione annullata o fallita: ripiega su copia negli appunti
+    }
+  }
+  copyToClipboard();
+}
+
+function parseImportedCzJson(text){
+  let data;
+  try { data = JSON.parse(text); } catch(e){ return null; }
+  if(!data || typeof data.titolo !== "string" || !data.titolo.trim()) return null;
+  if(!Array.isArray(data.canzoni) || !data.canzoni.every(k => typeof k === "string")) return null;
+  return {
+    titolo: data.titolo.trim(),
+    descrizione: typeof data.descrizione === "string" ? data.descrizione : "",
+    tipo: CZ_TIPI.includes(data.tipo) ? data.tipo : "Canzoniere",
+    canzoni: data.canzoni.slice()
+  };
 }
 const CZ_TIPI = ["Canzoniere", "Scaletta fuoco", "Preghiera", "Cerimonia", "Altro"];
 function czTipoOf(cz){
@@ -907,26 +986,41 @@ function czTipoOf(cz){
 
 const CZ_ITEM_TYPES = [
   { key: "lettura", prefix: "§LETTURA§", label: "Lettura", icon: ICONS.bookOpen, color: "#2F6FED" },
-  { key: "letturaBiblica", prefix: "§LETTURABIBLICA§", label: "Lettura biblica", icon: ICONS.cross, color: "#8B5E3C" },
-  { key: "intenzione", prefix: "§INTENZIONE§", label: "Intenzione", icon: ICONS.candle, color: "#D89B00" },
-  { key: "simbolo", prefix: "§SIMBOLO§", label: "Simbolo", icon: ICONS.sparkle, color: "#7A46B0" },
-  { key: "gioco", prefix: "§GIOCO§", label: "Gioco", icon: ICONS.dice, color: "#00AE04" },
+  { key: "intenzione", prefix: "§INTENZIONE§", label: "Preghiera", icon: ICONS.candle, color: "#D89B00" },
+  { key: "simbolo", prefix: "§SIMBOLO§", label: "Simbolo/Gesto", icon: ICONS.sparkle, color: "#7A46B0" },
+  { key: "gioco", prefix: "§GIOCO§", label: "Gioco/Attività", icon: ICONS.dice, color: "#00AE04" },
   { key: "ballo", prefix: "§BALLO§", label: "Ban/Danza", icon: ICONS.disco, color: "#E4573D" },
   { key: "scenetta", prefix: "§SCENETTA§", label: "Scenetta", icon: ICONS.clapper, color: "#0EA5A5" }
 ];
 function czItemTypeForKey(key){
   return CZ_ITEM_TYPES.find(t => key.startsWith(t.prefix)) || null;
 }
+
+const TYPED_ITEM_TEXT_SEP = "\n§TESTO§\n";
+function buildTypedItemKey(itemType, titolo, testo){
+  let key = itemType.prefix + titolo;
+  if(testo && testo.trim()) key += TYPED_ITEM_TEXT_SEP + testo;
+  return key;
+}
+function parseTypedItemBody(key, itemType){
+  const rest = key.slice(itemType.prefix.length);
+  const sepIdx = rest.indexOf(TYPED_ITEM_TEXT_SEP);
+  if(sepIdx === -1) return { titolo: rest, testo: "" };
+  return { titolo: rest.slice(0, sepIdx), testo: rest.slice(sepIdx + TYPED_ITEM_TEXT_SEP.length) };
+}
 const CZ_TIPO_ALLOWED_ITEM_KEYS = {
   "Canzoniere": [],
   "Scaletta fuoco": ["lettura", "gioco", "ballo", "scenetta"],
-  "Preghiera": ["lettura", "letturaBiblica", "intenzione", "simbolo"],
-  "Cerimonia": ["lettura", "letturaBiblica", "intenzione", "simbolo"],
-  "Altro": ["lettura", "letturaBiblica", "intenzione", "simbolo", "gioco", "ballo", "scenetta"]
+  "Preghiera": ["lettura", "intenzione", "simbolo", "gioco"],
+  "Cerimonia": ["lettura", "intenzione", "simbolo", "gioco"],
+  "Altro": ["lettura", "intenzione", "simbolo", "gioco", "ballo", "scenetta"]
 };
 function czAllowedItemTypes(cz){
   const keys = CZ_TIPO_ALLOWED_ITEM_KEYS[czTipoOf(cz)] || [];
   return CZ_ITEM_TYPES.filter(t => keys.includes(t.key));
+}
+function czAllowsSections(cz){
+  return true;
 }
 function favKey(song){ return song.titolo + "__" + song.anno; }
 function findSongByFavKey(key){ return SONGS.find(s => favKey(s) === key); }
@@ -955,6 +1049,7 @@ let currentTab = "canzoni";
 let inDetailView = false;
 const content = document.getElementById("content");
 const CZ_SECTION_PREFIX = "§SEZIONE§";
+const FOGLIO_MESSA_SEZIONI = ["Ingresso", "Gloria", "Alleluia", "Offertorio", "Santo", "Comunione", "Scambio della pace", "Agnello di Dio", "Canto finale"];
 const footer = document.getElementById("footer");
 const appHeader = document.getElementById("appHeader");
 const bottomNav = document.getElementById("bottomNav");
@@ -1396,11 +1491,151 @@ function categoryCount(cat){
   return SONGS.filter(song => matchesCategory(song, cat)).length;
 }
 
+function initCanzonieriListDragReorder(container){
+  let draggingRow = null;
+  let activePointerId = null;
+  let startY = 0;
+
+  function getRows(){
+    return Array.from(container.querySelectorAll(".cz-list-row"));
+  }
+
+  function moveDrag(clientY){
+    if(!draggingRow) return;
+    const delta = clientY - startY;
+    draggingRow.style.transform = `translateY(${delta}px)`;
+
+    const draggingRect = draggingRow.getBoundingClientRect();
+    const draggingCenter = draggingRect.top + draggingRect.height / 2;
+
+    getRows().forEach(row => {
+      if(row === draggingRow) return;
+      const rect = row.getBoundingClientRect();
+      const rowCenter = rect.top + rect.height / 2;
+      if(draggingCenter > rowCenter && draggingRow.nextElementSibling === row){
+        container.insertBefore(draggingRow, row.nextSibling);
+        draggingRow.style.transform = "none";
+        startY = clientY;
+      } else if(draggingCenter < rowCenter && draggingRow.previousElementSibling === row){
+        container.insertBefore(draggingRow, row);
+        draggingRow.style.transform = "none";
+        startY = clientY;
+      }
+    });
+
+    const margin = 60;
+    if(clientY < margin){
+      window.scrollBy(0, -8);
+    } else if(clientY > window.innerHeight - margin){
+      window.scrollBy(0, 8);
+    }
+  }
+
+  function endDrag(){
+    if(!draggingRow) return;
+    const newOrder = getRows().map(row => row.dataset.id);
+    CANZONIERI.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+    saveCanzonieri();
+    draggingRow = null;
+    activePointerId = null;
+    renderCanzonieri();
+  }
+
+  function onPointerDown(e){
+    if(e.pointerType === "mouse" && e.button !== 0) return;
+    e.preventDefault();
+    const handle = e.currentTarget;
+    draggingRow = handle.closest(".cz-list-row");
+    startY = e.clientY;
+    activePointerId = e.pointerId;
+    draggingRow.classList.add("cz-dragging");
+    draggingRow.style.transition = "none";
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("pointercancel", onPointerUp);
+  }
+  function onPointerMove(e){
+    if(e.pointerId !== activePointerId) return;
+    moveDrag(e.clientY);
+  }
+  function onPointerUp(e){
+    if(e.pointerId !== activePointerId) return;
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+    document.removeEventListener("pointercancel", onPointerUp);
+    endDrag();
+  }
+
+  getRows().forEach(row => {
+    const handle = row.querySelector(".cz-drag-handle");
+    if(!handle) return;
+    handle.addEventListener("click", e => e.stopPropagation());
+    handle.addEventListener("pointerdown", onPointerDown);
+  });
+}
+
+const PRESET_GROUP_DEFS = [
+  { key: "canzonieri", label: "Canzonieri ufficiali", tipi: ["Canzoniere", "Scaletta fuoco"] },
+  { key: "cerimonie", label: "Cerimonie ufficiali", tipi: ["Preghiera", "Cerimonia", "Altro"] }
+];
+
 function renderCanzonieri(){
   content.innerHTML = "";
+
+  const visiblePresets = PRESET_CANZONIERI;
+
+  PRESET_GROUP_DEFS.forEach(group => {
+    const items = visiblePresets.filter(cz => group.tipi.includes(czTipoOf(cz)));
+    if(items.length === 0) return;
+
+    const groupCard = document.createElement("div");
+    groupCard.className = "card";
+
+    const isOpen = openPresetGroups.has(group.key);
+    const titleEl = document.createElement("div");
+    titleEl.className = "list-title cat-group-title" + (isOpen ? " open" : "");
+    titleEl.innerHTML = `${group.label}<span class="cat-group-chevron">${ICONS.chevronRight(16)}</span>`;
+    groupCard.appendChild(titleEl);
+
+    const rowsContainer = document.createElement("div");
+    rowsContainer.className = "cat-group-rows" + (isOpen ? " open" : "");
+    items.forEach(cz => {
+      const row = document.createElement("div");
+      row.className = "song-row";
+      row.innerHTML = `
+        <div>
+          <div class="row-title">${cz.titolo}</div>
+          <div class="row-meta">${cz.canzoni.length} voci</div>
+        </div>
+        <div class="row-end">
+          <span class="cz-tipo-badge">${czTipoOf(cz)}</span>
+          ${ICONS.chevronRight(18)}
+        </div>
+      `;
+      row.addEventListener("click", () => showCanzoniereDetail(cz.id));
+      rowsContainer.appendChild(row);
+    });
+    groupCard.appendChild(rowsContainer);
+
+    titleEl.addEventListener("click", () => {
+      const open = rowsContainer.classList.toggle("open");
+      titleEl.classList.toggle("open", open);
+      if(open) openPresetGroups.add(group.key); else openPresetGroups.delete(group.key);
+    });
+
+    content.appendChild(groupCard);
+  });
+
   const card = document.createElement("div");
   card.className = "card";
-  card.innerHTML = '<div class="list-title">Canzonieri</div>';
+
+  const personalTitleEl = document.createElement("div");
+  personalTitleEl.className = "list-title cat-group-title" + (czPersonalGroupOpen ? " open" : "");
+  personalTitleEl.innerHTML = `Canzonieri e altro<span class="cat-group-chevron">${ICONS.chevronRight(16)}</span>`;
+  card.appendChild(personalTitleEl);
+
+  const personalRowsContainer = document.createElement("div");
+  personalRowsContainer.className = "cat-group-rows" + (czPersonalGroupOpen ? " open" : "");
 
   const addRow = document.createElement("div");
   addRow.className = "song-row";
@@ -1409,19 +1644,30 @@ function renderCanzonieri(){
     <div class="row-end">${ICONS.chevronRight(18)}</div>
   `;
   addRow.addEventListener("click", () => showCanzoniereForm());
-  card.appendChild(addRow);
+  personalRowsContainer.appendChild(addRow);
+
+  const addMessaRow = document.createElement("div");
+  addMessaRow.className = "song-row";
+  addMessaRow.innerHTML = `
+    <div class="row-title">+ Nuovo foglio messa</div>
+    <div class="row-end">${ICONS.chevronRight(18)}</div>
+  `;
+  addMessaRow.addEventListener("click", () => showCanzoniereForm(null, true));
+  personalRowsContainer.appendChild(addMessaRow);
 
   if(CANZONIERI.length === 0){
     const empty = document.createElement("div");
     empty.className = "empty";
     empty.textContent = "Nessun canzoniere creato ancora.";
-    card.appendChild(empty);
+    personalRowsContainer.appendChild(empty);
   } else {
-    [...CANZONIERI].sort((a, b) => new Date(b.dataModifica) - new Date(a.dataModifica)).forEach(cz => {
+    CANZONIERI.forEach(cz => {
       const row = document.createElement("div");
-      row.className = "song-row";
+      row.className = "song-row cz-list-row";
+      row.dataset.id = cz.id;
       row.innerHTML = `
-        <div>
+        <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+        <div style="flex:1; min-width:0;">
           <div class="row-title">${cz.titolo}</div>
           <div class="row-meta">${cz.canzoni.length} canzoni</div>
         </div>
@@ -1431,10 +1677,19 @@ function renderCanzonieri(){
         </div>
       `;
       row.addEventListener("click", () => showCanzoniereDetail(cz.id));
-      card.appendChild(row);
+      personalRowsContainer.appendChild(row);
     });
   }
+  card.appendChild(personalRowsContainer);
+
+  personalTitleEl.addEventListener("click", () => {
+    const open = personalRowsContainer.classList.toggle("open");
+    personalTitleEl.classList.toggle("open", open);
+    czPersonalGroupOpen = open;
+  });
+
   content.appendChild(card);
+  if(CANZONIERI.length > 1) initCanzonieriListDragReorder(card);
 }
 
 function renderImpostazioni(){
@@ -1528,7 +1783,7 @@ function renderImpostazioni(){
   content.appendChild(infoCard);
 }
 
-function showCanzoniereForm(existingId){
+function showCanzoniereForm(existingId, foglioMessa){
   const existing = existingId ? CANZONIERI.find(c => c.id === existingId) : null;
   renderHeaderBack(() => {
     if(existing) showCanzoniereDetail(existing.id); else showTab("canzonieri");
@@ -1543,11 +1798,12 @@ function showCanzoniereForm(existingId){
   window.scrollTo(0, 0);
 
   let selectedTipo = existing ? czTipoOf(existing) : "Canzoniere";
+  let importedCanzoni = null;
 
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = `
-    <div class="list-title">${existing ? "Modifica canzoniere" : "Nuovo canzoniere"}</div>
+    <div class="list-title">${existing ? "Modifica canzoniere" : (foglioMessa ? "Nuovo foglio messa" : "Nuovo canzoniere")}</div>
     <div class="filter-row">
       <div class="filter-label">Titolo</div>
       <input type="text" class="form-input" id="czTitolo" placeholder="Es. Fuoco di sabato" value="${existing ? existing.titolo.replace(/"/g, "&quot;") : ""}">
@@ -1577,6 +1833,38 @@ function showCanzoniereForm(existingId){
   }
   renderTipoChips();
 
+  let importStatusEl = null;
+  if(!existing){
+    const importBtn = document.createElement("button");
+    importBtn.className = "pill-btn active";
+    importBtn.style.width = "100%";
+    importBtn.style.justifyContent = "center";
+    importBtn.style.marginBottom = "10px";
+    importBtn.innerHTML = `${ICONS.copy(14)} Importa da JSON`;
+    importBtn.addEventListener("click", () => {
+      const text = prompt("Incolla qui il JSON del canzoniere ricevuto:");
+      if(text === null || !text.trim()) return;
+      const parsed = parseImportedCzJson(text.trim());
+      if(!parsed){
+        alert("Il testo incollato non è un JSON di canzoniere valido.");
+        return;
+      }
+      document.getElementById("czTitolo").value = parsed.titolo;
+      document.getElementById("czDescrizione").value = parsed.descrizione;
+      selectedTipo = parsed.tipo;
+      renderTipoChips();
+      importedCanzoni = parsed.canzoni;
+      if(importStatusEl) importStatusEl.textContent = `Importate ${parsed.canzoni.length} voci — controlla titolo e tipo prima di salvare.`;
+    });
+    content.appendChild(importBtn);
+
+    importStatusEl = document.createElement("p");
+    importStatusEl.className = "row-meta";
+    importStatusEl.style.marginTop = "-4px";
+    importStatusEl.style.marginBottom = "10px";
+    content.appendChild(importStatusEl);
+  }
+
   const saveBtn = document.createElement("button");
   saveBtn.className = "pill-btn active";
   saveBtn.style.width = "100%";
@@ -1596,7 +1884,7 @@ function showCanzoniereForm(existingId){
       targetId = existing.id;
     } else {
       targetId = generateCanzoniereId();
-      CANZONIERI.push({ id: targetId, titolo, descrizione, tipo: selectedTipo, dataCreazione: now, dataModifica: now, canzoni: [] });
+      CANZONIERI.unshift({ id: targetId, titolo, descrizione, tipo: selectedTipo, dataCreazione: now, dataModifica: now, canzoni: importedCanzoni || (foglioMessa ? FOGLIO_MESSA_SEZIONI.map(s => CZ_SECTION_PREFIX + s) : []) });
     }
     saveCanzonieri();
     showCanzoniereDetail(targetId);
@@ -2094,20 +2382,10 @@ function promptAddSectionAt(cz, insertIndex){
   }
 }
 
-function promptAddTypedItemAt(cz, insertIndex, itemType){
-  const titolo = prompt(`Titolo (${itemType.label}):`);
-  if(titolo && titolo.trim()){
-    cz.canzoni.splice(insertIndex, 0, itemType.prefix + titolo.trim());
-    cz.dataModifica = new Date().toISOString();
-    saveCanzonieri();
-    showCanzoniereDetail(cz.id);
-  }
-}
-
 function runCzInsertOption(cz, insertIndex, opt){
   if(opt.action === "song"){ openCzInsertSongPicker(cz, insertIndex); return; }
   if(opt.action === "sezione"){ promptAddSectionAt(cz, insertIndex); return; }
-  promptAddTypedItemAt(cz, insertIndex, opt.itemType);
+  openCzTypedItemForm(cz, opt.itemType, insertIndex, null);
 }
 
 function openCzInsertMenu(cz, insertIndex, options){
@@ -2144,9 +2422,133 @@ function openCzInsertMenu(cz, insertIndex, options){
   overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
 }
 
+// Form di creazione/modifica per una voce tipizzata (titolo + testo facoltativo).
+// existingKey null => crea nuova voce in insertIndex; existingKey valorizzata => modifica quella voce.
+function openCzTypedItemForm(cz, itemType, insertIndex, existingKey){
+  const isEdit = !!existingKey;
+  let initialTitolo = "", initialTesto = "";
+  if(isEdit){
+    const parsed = parseTypedItemBody(existingKey, itemType);
+    initialTitolo = parsed.titolo;
+    initialTesto = parsed.testo;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel">
+      <div class="cz-picker-header">
+        <div class="list-title" style="margin:0;">${isEdit ? "Modifica" : "Aggiungi"} ${itemType.label}</div>
+        <button class="cz-picker-close" aria-label="Chiudi">${ICONS.clear(14)}</button>
+      </div>
+      <div class="filter-row" style="margin-top:10px;">
+        <div class="filter-label">Titolo</div>
+        <input type="text" class="form-input" id="czTypedTitolo" placeholder="Titolo" value="${initialTitolo.replace(/"/g, "&quot;")}">
+      </div>
+      <div class="filter-row">
+        <div class="filter-label">Testo (facoltativo)</div>
+        <textarea class="form-textarea" id="czTypedTesto" placeholder="Testo da leggere...">${initialTesto}</textarea>
+      </div>
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+
+  function closeOverlay(){ overlay.remove(); }
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "pill-btn active";
+  saveBtn.style.width = "100%";
+  saveBtn.style.justifyContent = "center";
+  saveBtn.style.marginTop = "10px";
+  saveBtn.textContent = "Salva";
+  saveBtn.addEventListener("click", () => {
+    const titolo = overlay.querySelector("#czTypedTitolo").value.trim();
+    const testo = overlay.querySelector("#czTypedTesto").value;
+    if(!titolo) return;
+    const newKey = buildTypedItemKey(itemType, titolo, testo);
+    if(isEdit){
+      const i = cz.canzoni.indexOf(existingKey);
+      if(i !== -1) cz.canzoni[i] = newKey;
+    } else {
+      cz.canzoni.splice(insertIndex, 0, newKey);
+    }
+    cz.dataModifica = new Date().toISOString();
+    saveCanzonieri();
+    closeOverlay();
+    showCanzoniereDetail(cz.id);
+  });
+  overlay.querySelector(".cz-picker-panel").appendChild(saveBtn);
+
+  overlay.querySelector(".cz-picker-close").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
+}
+
+// Dettaglio a comparsa di una voce tipizzata: mostra testo intero, con Modifica/Elimina se non è predefinita.
+function openCzTypedItemDetail(cz, key, itemType, isPreset){
+  const { titolo, testo } = parseTypedItemBody(key, itemType);
+
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel">
+      <div class="cz-picker-header">
+        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+          <div class="cz-type-icon" style="color:${itemType.color}; background:${itemType.color}22; flex-shrink:0;">${itemType.icon(16)}</div>
+          <div class="list-title" style="margin:0;">${titolo}</div>
+        </div>
+        <button class="cz-picker-close" aria-label="Chiudi">${ICONS.clear(14)}</button>
+      </div>
+      <p class="row-meta" style="margin:6px 0 10px;">${itemType.label}</p>
+      ${testo ? `<div class="cz-typed-detail-text">${testo.replace(/</g, "&lt;")}</div>` : `<p class="empty">Nessun testo inserito.</p>`}
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+
+  function closeOverlay(){ overlay.remove(); }
+
+  if(!isPreset){
+    const actionsRow = document.createElement("div");
+    actionsRow.style.display = "flex";
+    actionsRow.style.gap = "8px";
+    actionsRow.style.marginTop = "12px";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "pill-btn active";
+    editBtn.style.flex = "1";
+    editBtn.style.justifyContent = "center";
+    editBtn.textContent = "Modifica";
+    editBtn.addEventListener("click", () => {
+      closeOverlay();
+      openCzTypedItemForm(cz, itemType, null, key);
+    });
+    actionsRow.appendChild(editBtn);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "pill-btn active";
+    deleteBtn.style.flex = "1";
+    deleteBtn.style.justifyContent = "center";
+    deleteBtn.style.background = "#B3261E";
+    deleteBtn.textContent = "Elimina";
+    deleteBtn.addEventListener("click", () => {
+      cz.canzoni = cz.canzoni.filter(k => k !== key);
+      cz.dataModifica = new Date().toISOString();
+      saveCanzonieri();
+      closeOverlay();
+      showCanzoniereDetail(cz.id);
+    });
+    actionsRow.appendChild(deleteBtn);
+
+    overlay.querySelector(".cz-picker-panel").appendChild(actionsRow);
+  }
+
+  overlay.querySelector(".cz-picker-close").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeOverlay(); });
+}
+
 function showCanzoniereDetail(id){
-  const cz = CANZONIERI.find(c => c.id === id);
-  if(!cz){ showTab("canzonieri"); return; }
+  const found = findCzById(id);
+  if(!found){ showTab("canzonieri"); return; }
+  const { cz, isPreset } = found;
   renderHeaderBack(() => showTab("canzonieri"));
   appHeader.classList.add("sticky");
   bottomNav.classList.remove("hidden");
@@ -2157,67 +2559,85 @@ function showCanzoniereDetail(id){
   content.innerHTML = "";
   window.scrollTo(0, 0);
 
-  const dataCreazioneFmt = new Date(cz.dataCreazione).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
-  const dataModificaFmt = new Date(cz.dataModifica).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
-
   const infoCard = document.createElement("div");
   infoCard.className = "card";
   infoCard.style.position = "relative";
-  infoCard.innerHTML = `
-    <button class="cz-delete-btn" aria-label="Elimina canzoniere" style="position:absolute; top:14px; right:14px; border:none; background:none; padding:6px; margin:-6px; cursor:pointer; display:flex; align-items:center;">${ICONS.trash(18)}</button>
-    <div style="display:flex; align-items:center; gap:8px; padding-right:60px;">
-      <div class="list-title" style="margin-bottom:0;">${cz.titolo}</div>
-      <button class="cz-print-btn" aria-label="Stampa canzoniere / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.print(18)}</button>
-      <button class="cz-edit-btn" aria-label="Modifica canzoniere" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.edit(18)}</button>
-    </div>
-    <div style="margin:6px 0 14px;"><span class="cz-tipo-badge">${czTipoOf(cz)}</span></div>
-    ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
-    <p class="row-meta" style="margin-bottom:0;">Creato il ${dataCreazioneFmt} · Ultima modifica il ${dataModificaFmt}</p>
-  `;
-  content.appendChild(infoCard);
 
-  infoCard.querySelector(".cz-edit-btn").addEventListener("click", () => showCanzoniereForm(cz.id));
-  infoCard.querySelector(".cz-print-btn").addEventListener("click", () => exportCanzoniereePdf(cz));
-  infoCard.querySelector(".cz-delete-btn").addEventListener("click", () => {
-    if(confirm(`Eliminare "${cz.titolo}"? L'azione non è reversibile.`)){
-      CANZONIERI = CANZONIERI.filter(c => c.id !== cz.id);
-      saveCanzonieri();
-      showTab("canzonieri");
+  if(isPreset){
+    infoCard.innerHTML = `
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="list-title" style="margin-bottom:0;">${cz.titolo}</div>
+        <button class="cz-print-btn" aria-label="Stampa canzoniere / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.print(18)}</button>
+      </div>
+      <div style="margin:6px 0 14px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <span class="cz-tipo-badge">${czTipoOf(cz)}</span>
+        <span class="cz-tipo-badge">Ufficiale</span>
+      </div>
+      ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
+    `;
+    content.appendChild(infoCard);
+    infoCard.querySelector(".cz-print-btn").addEventListener("click", () => exportCanzoniereePdf(cz));
+  } else {
+    const dataCreazioneFmt = new Date(cz.dataCreazione).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+    const dataModificaFmt = new Date(cz.dataModifica).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+    infoCard.innerHTML = `
+      <button class="cz-delete-btn" aria-label="Elimina canzoniere" style="position:absolute; top:14px; right:14px; border:none; background:none; padding:6px; margin:-6px; cursor:pointer; display:flex; align-items:center;">${ICONS.trash(18)}</button>
+      <div style="display:flex; align-items:center; gap:8px; padding-right:60px;">
+        <div class="list-title" style="margin-bottom:0;">${cz.titolo}</div>
+        <button class="cz-print-btn" aria-label="Stampa canzoniere / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.print(18)}</button>
+        <button class="cz-share-btn" aria-label="Condividi canzoniere" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.share(18)}</button>
+        <button class="cz-edit-btn" aria-label="Modifica canzoniere" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0; align-self:center;">${ICONS.edit(18)}</button>
+      </div>
+      <div style="margin:6px 0 14px;"><span class="cz-tipo-badge">${czTipoOf(cz)}</span></div>
+      ${cz.descrizione ? `<p class="song-meta" style="margin-bottom:14px;">${cz.descrizione}</p>` : ""}
+      <p class="row-meta" style="margin-bottom:0;">Creato il ${dataCreazioneFmt} · Ultima modifica il ${dataModificaFmt}</p>
+    `;
+    content.appendChild(infoCard);
+
+    infoCard.querySelector(".cz-edit-btn").addEventListener("click", () => showCanzoniereForm(cz.id));
+    infoCard.querySelector(".cz-print-btn").addEventListener("click", () => exportCanzoniereePdf(cz));
+    infoCard.querySelector(".cz-share-btn").addEventListener("click", () => shareCzJson(cz));
+    infoCard.querySelector(".cz-delete-btn").addEventListener("click", () => {
+      if(confirm(`Eliminare "${cz.titolo}"? L'azione non è reversibile.`)){
+        CANZONIERI = CANZONIERI.filter(c => c.id !== cz.id);
+        saveCanzonieri();
+        showTab("canzonieri");
+      }
+    });
+
+    const addRow = document.createElement("div");
+    addRow.style.display = "flex";
+    addRow.style.gap = "8px";
+    addRow.style.marginBottom = "10px";
+
+    const addBtn = document.createElement("button");
+    addBtn.className = "pill-btn active";
+    addBtn.style.flex = "1";
+    addBtn.style.justifyContent = "center";
+    addBtn.textContent = "+ Aggiungi canzoni";
+    addBtn.addEventListener("click", () => showCanzoniereAddSongs(cz.id));
+    addRow.appendChild(addBtn);
+
+    if(czAllowsSections(cz)){
+      const addSectionBtn = document.createElement("button");
+      addSectionBtn.className = "pill-btn active";
+      addSectionBtn.style.flex = "1";
+      addSectionBtn.style.justifyContent = "center";
+      addSectionBtn.textContent = "+ Aggiungi sezione";
+      addSectionBtn.addEventListener("click", () => {
+        const titolo = prompt("Titolo della sezione:");
+        if(titolo && titolo.trim()){
+          cz.canzoni.unshift(CZ_SECTION_PREFIX + titolo.trim());
+          cz.dataModifica = new Date().toISOString();
+          saveCanzonieri();
+          showCanzoniereDetail(cz.id);
+        }
+      });
+      addRow.appendChild(addSectionBtn);
     }
-  });
 
-  const CZ_SECTION_PREFIX = "§SEZIONE§";
-
-  const addRow = document.createElement("div");
-  addRow.style.display = "flex";
-  addRow.style.gap = "8px";
-  addRow.style.marginBottom = "10px";
-
-  const addBtn = document.createElement("button");
-  addBtn.className = "pill-btn active";
-  addBtn.style.flex = "1";
-  addBtn.style.justifyContent = "center";
-  addBtn.textContent = "+ Aggiungi canzoni";
-  addBtn.addEventListener("click", () => showCanzoniereAddSongs(cz.id));
-  addRow.appendChild(addBtn);
-
-  const addSectionBtn = document.createElement("button");
-  addSectionBtn.className = "pill-btn active";
-  addSectionBtn.style.flex = "1";
-  addSectionBtn.style.justifyContent = "center";
-  addSectionBtn.textContent = "+ Aggiungi sezione";
-  addSectionBtn.addEventListener("click", () => {
-    const titolo = prompt("Titolo della sezione:");
-    if(titolo && titolo.trim()){
-      cz.canzoni.unshift(CZ_SECTION_PREFIX + titolo.trim());
-      cz.dataModifica = new Date().toISOString();
-      saveCanzonieri();
-      showCanzoniereDetail(cz.id);
-    }
-  });
-  addRow.appendChild(addSectionBtn);
-
-  content.appendChild(addRow);
+    content.appendChild(addRow);
+  }
 
   const listCard = document.createElement("div");
   listCard.className = "card";
@@ -2236,38 +2656,30 @@ function showCanzoniereDetail(id){
       const isSection = key.startsWith(CZ_SECTION_PREFIX);
       const typeItem = !isSection ? czItemTypeForKey(key) : null;
       if(typeItem){
-        const titoloItem = key.slice(typeItem.prefix.length);
+        const { titolo: titoloItem, testo: testoItem } = parseTypedItemBody(key, typeItem);
+        const preview = testoItem ? (testoItem.length > 60 ? testoItem.slice(0, 60).replace(/\n/g, " ") + "…" : testoItem.replace(/\n/g, " ")) : "";
         const row = document.createElement("div");
         row.className = "song-row";
         row.dataset.key = key;
         row.innerHTML = `
-          <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+          ${isPreset ? "" : `<div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>`}
           <div class="cz-type-icon" style="color:${typeItem.color}; background:${typeItem.color}22;">${typeItem.icon(16)}</div>
           <div style="flex:1; min-width:0;">
             <div class="row-title">${titoloItem}</div>
-            <div class="row-meta">${typeItem.label}</div>
+            <div class="row-meta">${typeItem.label}${preview ? " · " + preview : ""}</div>
           </div>
-          <div class="row-end">
-            <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
-          </div>
+          ${isPreset ? "" : `<div class="row-end"><button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button></div>`}
         `;
-        row.addEventListener("click", () => {
-          const nuovoTitolo = prompt(`Rinomina (${typeItem.label}):`, titoloItem);
-          if(nuovoTitolo && nuovoTitolo.trim()){
-            const i = cz.canzoni.indexOf(key);
-            if(i !== -1) cz.canzoni[i] = typeItem.prefix + nuovoTitolo.trim();
+        row.addEventListener("click", () => openCzTypedItemDetail(cz, key, typeItem, isPreset));
+        if(!isPreset){
+          row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            cz.canzoni = cz.canzoni.filter(k => k !== key);
             cz.dataModifica = new Date().toISOString();
             saveCanzonieri();
             showCanzoniereDetail(cz.id);
-          }
-        });
-        row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
-          e.stopPropagation();
-          cz.canzoni = cz.canzoni.filter(k => k !== key);
-          cz.dataModifica = new Date().toISOString();
-          saveCanzonieri();
-          showCanzoniereDetail(cz.id);
-        });
+          });
+        }
         listCard.appendChild(row);
       } else if(isSection){
         sectionNum++;
@@ -2277,30 +2689,30 @@ function showCanzoniereDetail(id){
         row.className = "song-row cz-section-row";
         row.dataset.key = key;
         row.innerHTML = `
-          <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+          ${isPreset ? "" : `<div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>`}
           <div class="cz-order-num">${sectionLetter}</div>
           <div class="cz-section-title" style="flex:1; min-width:0; font-weight:800; text-transform:uppercase; font-size:13px; letter-spacing:0.3px;">${titoloSezione}</div>
-          <div class="row-end">
-            <button class="cz-remove-btn" aria-label="Rimuovi sezione">${ICONS.trash(18)}</button>
-          </div>
+          ${isPreset ? "" : `<div class="row-end"><button class="cz-remove-btn" aria-label="Rimuovi sezione">${ICONS.trash(18)}</button></div>`}
         `;
-        row.addEventListener("click", () => {
-          const nuovoTitolo = prompt("Rinomina sezione:", titoloSezione);
-          if(nuovoTitolo && nuovoTitolo.trim()){
-            const i = cz.canzoni.indexOf(key);
-            if(i !== -1) cz.canzoni[i] = CZ_SECTION_PREFIX + nuovoTitolo.trim();
+        if(!isPreset){
+          row.addEventListener("click", () => {
+            const nuovoTitolo = prompt("Rinomina sezione:", titoloSezione);
+            if(nuovoTitolo && nuovoTitolo.trim()){
+              const i = cz.canzoni.indexOf(key);
+              if(i !== -1) cz.canzoni[i] = CZ_SECTION_PREFIX + nuovoTitolo.trim();
+              cz.dataModifica = new Date().toISOString();
+              saveCanzonieri();
+              showCanzoniereDetail(cz.id);
+            }
+          });
+          row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            cz.canzoni = cz.canzoni.filter(k => k !== key);
             cz.dataModifica = new Date().toISOString();
             saveCanzonieri();
             showCanzoniereDetail(cz.id);
-          }
-        });
-        row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
-          e.stopPropagation();
-          cz.canzoni = cz.canzoni.filter(k => k !== key);
-          cz.dataModifica = new Date().toISOString();
-          saveCanzonieri();
-          showCanzoniereDetail(cz.id);
-        });
+          });
+        }
         listCard.appendChild(row);
       } else {
         const song = findSongByFavKey(key);
@@ -2310,70 +2722,72 @@ function showCanzoniereDetail(id){
         row.className = "song-row";
         row.dataset.key = key;
         row.innerHTML = `
-          <div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>
+          ${isPreset ? "" : `<div class="cz-drag-handle" aria-label="Trascina per riordinare">${ICONS.dragHandle(20)}</div>`}
           <div class="cz-order-num">${songNum}</div>
           <div style="flex:1; min-width:0;">
             <div class="row-title">${song.titolo}</div>
             <div class="row-meta">${metaLine(song)}</div>
           </div>
-          <div class="row-end">
-            <button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>
-          </div>
+          ${isPreset ? "" : `<div class="row-end"><button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button></div>`}
         `;
         row.addEventListener("click", () => {
           returnToView = () => showCanzoniereDetail(cz.id);
           returnToViewLabel = "Torna a " + cz.titolo;
-          currentCzQueue = cz.canzoni.filter(k => !k.startsWith(CZ_SECTION_PREFIX));
+          currentCzQueue = cz.canzoni.filter(k => !k.startsWith(CZ_SECTION_PREFIX) && !czItemTypeForKey(k));
           currentCzInfo = { titolo: cz.titolo, descrizione: cz.descrizione, sezione: sezioneDiCanzone[key] || null, fullList: cz.canzoni.slice() };
           showDetail(SONGS.indexOf(song));
         });
-        row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
-          e.stopPropagation();
-          cz.canzoni = cz.canzoni.filter(k => k !== key);
-          cz.dataModifica = new Date().toISOString();
-          saveCanzonieri();
-          showCanzoniereDetail(cz.id);
-        });
+        if(!isPreset){
+          row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            cz.canzoni = cz.canzoni.filter(k => k !== key);
+            cz.dataModifica = new Date().toISOString();
+            saveCanzonieri();
+            showCanzoniereDetail(cz.id);
+          });
+        }
         listCard.appendChild(row);
       }
 
-      const insertRow = document.createElement("div");
-      insertRow.className = "cz-insert-row";
-      const insertInner = document.createElement("div");
-      insertInner.className = "cz-insert-inner";
-      insertRow.appendChild(insertInner);
-      const plusBtn = document.createElement("button");
-      plusBtn.className = "cz-insert-plus";
-      plusBtn.setAttribute("aria-label", "Aggiungi qui");
-      plusBtn.innerHTML = ICONS.plus(16);
-      insertInner.appendChild(plusBtn);
+      if(!isPreset){
+        const insertRow = document.createElement("div");
+        insertRow.className = "cz-insert-row";
+        const insertInner = document.createElement("div");
+        insertInner.className = "cz-insert-inner";
+        insertRow.appendChild(insertInner);
+        const plusBtn = document.createElement("button");
+        plusBtn.className = "cz-insert-plus";
+        plusBtn.setAttribute("aria-label", "Aggiungi qui");
+        plusBtn.innerHTML = ICONS.plus(16);
+        insertInner.appendChild(plusBtn);
 
-      const extraTypes = czAllowedItemTypes(cz);
-      const insertOptions = [
-        { action: "song", icon: ICONS.music, label: "Canzone" },
-        ...(isSection ? [] : [{ action: "sezione", icon: ICONS.tags, label: "Sezione" }]),
-        ...extraTypes.map(t => ({ action: t.key, icon: t.icon, label: t.label, itemType: t, color: t.color }))
-      ];
+        const extraTypes = czAllowedItemTypes(cz);
+        const insertOptions = [
+          { action: "song", icon: ICONS.music, label: "Canzone" },
+          ...(isSection || !czAllowsSections(cz) ? [] : [{ action: "sezione", icon: ICONS.tags, label: "Sezione" }]),
+          ...extraTypes.map(t => ({ action: t.key, icon: t.icon, label: t.label, itemType: t, color: t.color }))
+        ];
 
-      plusBtn.addEventListener("click", () => {
-        if(insertOptions.length === 1){
-          runCzInsertOption(cz, idx + 1, insertOptions[0]);
-          return;
-        }
-        if(insertOptions.length === 2){
-          insertInner.innerHTML = insertOptions.map(opt =>
-            `<button class="cz-insert-choice" data-action="${opt.action}" aria-label="Aggiungi ${opt.label}">${opt.icon(16)}</button>`
-          ).join("");
-          insertOptions.forEach(opt => {
-            insertInner.querySelector(`[data-action="${opt.action}"]`).addEventListener("click", () => runCzInsertOption(cz, idx + 1, opt));
-          });
-          return;
-        }
-        openCzInsertMenu(cz, idx + 1, insertOptions);
-      });
-      listCard.appendChild(insertRow);
+        plusBtn.addEventListener("click", () => {
+          if(insertOptions.length === 1){
+            runCzInsertOption(cz, idx + 1, insertOptions[0]);
+            return;
+          }
+          if(insertOptions.length === 2){
+            insertInner.innerHTML = insertOptions.map(opt =>
+              `<button class="cz-insert-choice" data-action="${opt.action}" aria-label="Aggiungi ${opt.label}">${opt.icon(16)}</button>`
+            ).join("");
+            insertOptions.forEach(opt => {
+              insertInner.querySelector(`[data-action="${opt.action}"]`).addEventListener("click", () => runCzInsertOption(cz, idx + 1, opt));
+            });
+            return;
+          }
+          openCzInsertMenu(cz, idx + 1, insertOptions);
+        });
+        listCard.appendChild(insertRow);
+      }
     });
-    if(cz.canzoni.length > 1) initCzDragReorder(listCard, cz);
+    if(!isPreset && cz.canzoni.length > 1) initCzDragReorder(listCard, cz);
   }
   content.appendChild(listCard);
 
@@ -3315,24 +3729,64 @@ function measureSongPages(doc, song){
   return pagesUsed;
 }
 
+function measureNotePages(doc, entry, sectionTitle, opts){
+  const { maxWidth, pageHeight, marginBottom } = opts;
+  let y = 20;
+  let pagesUsed = 1;
+
+  y += sectionTitle ? 12 : 6;
+  y += 10; // etichetta tipo
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  const titleLines = doc.splitTextToSize(entry.titolo, maxWidth);
+  y += titleLines.length * 10;
+
+  if(entry.testo && entry.testo.trim()){
+    y += 4;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    entry.testo.split("\n").forEach(par => {
+      const lines = par === "" ? [""] : doc.splitTextToSize(par, maxWidth);
+      lines.forEach(() => {
+        if(y > pageHeight - marginBottom){
+          pagesUsed++;
+          y = 20;
+        }
+        y += 6.5;
+      });
+    });
+  }
+
+  return pagesUsed;
+}
+
 function measureAllSongPages(doc, orderedEntries){
   const results = [];
   let currentPage = 1;
+  let pendingSection = null;
+  const marginX = 15;
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = doc.internal.pageSize.getWidth() - marginX * 2;
+
   orderedEntries.forEach(entry => {
     if(entry.isSection){
       results.push({ isSection: true, titolo: entry.titolo });
+      pendingSection = entry.titolo;
       return;
     }
     if(entry.isNote){
+      const pageCount = measureNotePages(doc, entry, pendingSection, { maxWidth, pageHeight, marginBottom: 15 });
       results.push({
         isSection: false,
         isNote: true,
         itemType: entry.itemType,
         titolo: entry.titolo,
         startPage: currentPage,
-        pageCount: 1
+        pageCount
       });
-      currentPage += 1;
+      currentPage += pageCount;
+      pendingSection = null;
       return;
     }
     const pageCount = measureSongPages(doc, entry.song);
@@ -3345,6 +3799,7 @@ function measureAllSongPages(doc, orderedEntries){
       pageCount
     });
     currentPage += pageCount;
+    pendingSection = null;
   });
   return results;
 }
@@ -3365,7 +3820,8 @@ function buildCzOrderedEntries(cz){
         entries.push({ isSection: true, titolo: pendingSection });
         pendingSection = null;
       }
-      entries.push({ isSection: false, isNote: true, itemType, titolo: key.slice(itemType.prefix.length) });
+      const { titolo: itemTitolo, testo: itemTesto } = parseTypedItemBody(key, itemType);
+      entries.push({ isSection: false, isNote: true, itemType, titolo: itemTitolo, testo: itemTesto });
       return;
     }
     const song = findSongByFavKey(key);
@@ -3560,7 +4016,7 @@ function drawCzSongPage(doc, song, sectionTitle, opts){
 }
 
 function drawCzNotePage(doc, entry, sectionTitle, opts){
-  const { marginX, maxWidth } = opts;
+  const { marginX, maxWidth, pageHeight, marginBottom } = opts;
   let y = 20;
 
   if(sectionTitle){
@@ -3582,11 +4038,29 @@ function drawCzNotePage(doc, entry, sectionTitle, opts){
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   doc.setTextColor(0, 0, 0);
-  const lines = doc.splitTextToSize(entry.titolo, maxWidth);
-  lines.forEach(line => {
+  const titleLines = doc.splitTextToSize(entry.titolo, maxWidth);
+  titleLines.forEach(line => {
     doc.text(line, marginX, y);
     y += 10;
   });
+
+  if(entry.testo && entry.testo.trim()){
+    y += 4;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    entry.testo.split("\n").forEach(par => {
+      const lines = par === "" ? [""] : doc.splitTextToSize(par, maxWidth);
+      lines.forEach(line => {
+        if(y > pageHeight - marginBottom){
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, marginX, y);
+        y += 6.5;
+      });
+    });
+  }
 }
 
 // --- Export PDF canzoniere intero ---
@@ -4221,6 +4695,14 @@ fetch("songs.json")
   .catch(() => {
     content.innerHTML = '<div class="card"><div class="empty">Impossibile caricare le canzoni. Controlla la connessione e riprova.</div></div>';
   });
+
+fetch("canzonieri_predefiniti.json")
+  .then(r => r.json())
+  .then(data => {
+    PRESET_CANZONIERI = Array.isArray(data) ? data : [];
+    if(currentTab === "canzonieri") renderCanzonieri();
+  })
+  .catch(() => { PRESET_CANZONIERI = []; });
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {

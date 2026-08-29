@@ -54,7 +54,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (url.pathname.endsWith('songs.json')) {
+  if (url.pathname.endsWith('songs.json') || url.pathname.endsWith('canzonieri_predefiniti.json')) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {

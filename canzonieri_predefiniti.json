@@ -1,0 +1,37 @@
+[
+    {
+    "id": "canzoniere-branco-candida-luna-2026",
+    "titolo": "Canzoniere Branco Candida Luna 2026",
+    "descrizione": "Canti giungla;\nCanti dalle VDB (Canti di gruppo e canti AGESCI, poi alcuni canti VDB Casalotti, poi tutti i canti delle VDBC di Selva Candida)",
+    "tipo": "Canzoniere",
+    "canzoni": ["§SEZIONE§Canti Giungla", "La canzone dell'alba__1945", "I fratelli della Giungla__1985", "Attorno alla Rupe__1950", "Ulula alla luna__1990", "Guardate bene, o lupi!__1975", "Fratelli alla Candida Luna__1950", "Buona Caccia__1950", "La canzone del Bandar-Log__1985", "La caccia di Kaa__1985", "Tane fredde__2000", "La tregua dell'acqua__1985", "Danza del fiore rosso__1955", "L'ankus del Re__1965", "Un bravo lupo__1990", "La caccia di Mowgli__1985", "I cani rossi__1985", "Danza dei cani rossi__1965", "Il grido del Pheeal__1990", "L'uomo torna all'uomo__1980", "La legge della giungla__1955", "§SEZIONE§Canti dalle Vacanze di Branco", "Inno di gruppo__1980", "Il canto del quarantennale - 40 e non ci basta__2020", "I pirati ballano__1960", "Il leone si è addormentato (The lion sleeps tonight)__1932", "Luce rossa__1960", "Oleanna (Oleana)__1853", "Storie__1994", "Il canto del gufo__1994", "Acqua Chiara__1995", "Le stelle di Scai__1998", "La foresta di Robin__1999", "A fare il giro del mondo__2003", "Il nostro motto__2004", "La ballata di Callahorn__2005", "Buona Caccia e Buon Volo sarà__2010", "Se tu sapessi__2011", "Il paese delle meraviglie__2012", "L'isola della gioia__2013", "La pentola magica__2014", "Un sogno in più__2016", "Terra di mezzo__2017", "Insieme a Dorchester__2018", "In quel di Stella Vitae__2019", "Expecto Felicitatem__2021", "Le mille e una notte__2022", "Còmlà nì sinn – Lo faremo__2023", "モンテネローネ – I 4 ELEMENTI – THE LAST AIRBENDER__2024", "A Brittoli ritornerò…__2025", "Il viaggio dei pirati__2026"]
+    },
+    {
+    "id": "fuoco-esempio-lc",
+    "titolo": "Fuoco esempio L/C",
+    "descrizione": "",
+    "tipo": "Scaletta fuoco",
+    "canzoni": ["§SEZIONE§Inizio attività serale", "§GIOCO§Gridi di sestiglia", "Il viaggio dei pirati__2026", "A Brittoli ritornerò…__2025", "§SCENETTA§Due scenetta (Una L, una C)", "Oleanna (Oleana)__1853", "Luce rossa__1960", "§SCENETTA§Altre due scenette", "Storie__1994", "§BALLO§Danza proposta da Mi", "§SCENETTA§Altre due", "Se tu sapessi__2011", "§BALLO§Danze proposte da L/C", "§SCENETTA§Ultime due", "Il leone si è addormentato (The lion sleeps tonight)__1932", "La foresta di Robin__1999", "§SEZIONE§Chiusura/preghiera e buonanotte"]
+    },
+    {
+    "id": "passaggi-lc",
+    "titolo": "Passaggi L/C",
+    "descrizione": "",
+    "tipo": "Cerimonia",
+    "canzoni": ["§SIMBOLO§Gridi di sestiglia", "§SEZIONE§Canti iniziali", "Formiamo un grande cerchio (Passaggi)__1994", "L'uomo torna all'uomo__1980", "La ghiandaia__1965", "§SEZIONE§Saluto del lupetto/Coccinella - da ripetersi per ciascuno", "§SIMBOLO§Giro intorno al cerchio, salutando tutti, a partire da Akela se coccinella e viceversa.", "Ti ringraziamo (OMG)__1991", "§SIMBOLO§Dopo aver salutato il proprio capo unità, lascia il berretto/zucchetto al centro, ed esce dal cerchio, passando tra Akela e Arcanda", "§SEZIONE§Dopo la cerimonia, con chi rimane", "§INTENZIONE§Preghiera e buonanotte (niente gridi)"]
+    },
+    {
+    "id": "accoglienza-cuccioli-branco-candida-luna",
+    "titolo": "Accoglienza cuccioli Branco Candida Luna",
+    "descrizione": "",
+    "tipo": "Cerimonia",
+    "canzoni": ["§SEZIONE§Ingresso cuccioli", "Guardate bene, o lupi!__1975", "§SEZIONE§I cuccioli si presentano", "§GIOCO§Domande per i cuccioli\n§TESTO§\nCome ti chiami?\nQuanti anni hai?\nQual è il tuo colore preferito?\nQual è il tuo gioco preferito?", "§SEZIONE§I cuccioli sono distribuiti nel cerchio", "§SIMBOLO§Ogni cucciolo si posizione vicino a un fratellino di terzo o quarto anno", "§SEZIONE§Gioco per conoscere i nomi", "§GIOCO§Gioco pensato dai lupetti", "§SEZIONE§Consegna dei quaderni e accoglienza", "§SIMBOLO§I lupeti consegnano quaderno e ciò che hanno preparato ai cuccioli"]
+    },
+    {
+    "id": "consiglio-della-rupe-candida-luna",
+    "titolo": "Consiglio della Rupe - Candida Luna",
+    "descrizione": "",
+    "tipo": "Cerimonia",
+    "canzoni": ["§SEZIONE§Cerimonia di inizio", "Attorno alla Rupe__1950", "§SIMBOLO§Due lupetti ricordano la legge e il motto", "§SEZIONE§Consiglio della Rupe", "§GIOCO§Consiglio della Rupe\n§TESTO§\nNon più di tre o quattro domande, semplici e chiare, a cui ciascuno deve rispondere.", "§SEZIONE§Chiusura", "§SIMBOLO§Grande Urlo"]
+    }
+]

@@ -160,6 +160,12 @@ v0.130
 ----------------------------------------------------------------------------------------
 v0.131
 - Dettaglio preghiere inserimento letture (specifiche dalla bibbia, basta inserire il versetto e lui lo pesca, letture con copia incolla, attività da fare...)
+- Canzonieri ufficiali (Canzoniere Branco Candida Luna, Cerimonia passaggi L/C, Cerimonia ingresso cuccioli, Cerimonia promessa L/C, consiglio della Rupe)
+    - Canzoniere Branco Candida Luna
+    - Cerimonia passaggi L/C
+    - Cerimonia ingresso cuccioli
+    - Cerimonia promessa L/C
+    - Consiglio della Rupe
 
 
 
