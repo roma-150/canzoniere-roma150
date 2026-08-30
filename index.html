@@ -592,9 +592,9 @@
   .lock-suggest-toast{
     display:none;
     position:fixed; left:16px; right:16px;
-    top:50%; transform:translateY(-50%);
+    top:calc(env(safe-area-inset-top) + 16px);
     z-index:101;
-    background:var(--purple); color:var(--white);
+    background:var(--gold); color:var(--ink);
     border-radius:16px; padding:16px 16px;
     box-shadow:0 8px 24px rgba(0,0,0,0.3);
     align-items:center; gap:10px;
@@ -603,7 +603,7 @@
   .lock-suggest-toast-text{ flex:1; font-size:13px; font-weight:600; line-height:1.4; }
   .lock-suggest-toast-close{
     width:28px; height:28px; border-radius:50%; border:none; flex-shrink:0;
-    background:rgba(255,255,255,0.18); color:var(--white); font-size:16px; font-weight:700;
+    background:rgba(0,0,0,0.12); color:var(--ink); font-size:16px; font-weight:700;
     display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;
   }
 
