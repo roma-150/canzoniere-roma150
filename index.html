@@ -861,6 +861,24 @@ function loadDeviceId(){
   } catch(e){ return "sconosciuto"; }
 }
 const DEVICE_ID = loadDeviceId();
+const USERNAME_KEY = "canzoniere_username_v1";
+function loadUsername(){
+  try {
+    let nome = localStorage.getItem(USERNAME_KEY);
+    if(!nome){
+      let input = prompt("Come ti chiami? (max 20 caratteri) — serve solo per le statistiche d'uso dell'app");
+      if(input !== null){
+        input = input.trim().slice(0, 20);
+        if(input){
+          localStorage.setItem(USERNAME_KEY, input);
+          nome = input;
+        }
+      }
+    }
+    return nome || "";
+  } catch(e){ return ""; }
+}
+const USERNAME = loadUsername();
 function logEvento(tipo, titolo){
   if(!ANALYTICS_URL || ANALYTICS_URL.indexOf("http") !== 0) return;
   try {
@@ -868,7 +886,7 @@ function logEvento(tipo, titolo){
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ tipo, titolo: titolo || "", utente: DEVICE_ID })
+      body: JSON.stringify({ tipo, titolo: titolo || "", utente: DEVICE_ID, nome: USERNAME })
     });
   } catch(e) { /* l'analytics non deve mai bloccare l'app */ }
 }
