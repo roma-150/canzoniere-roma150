@@ -845,7 +845,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.0.2";
+const APP_VERSION = "1.0.5";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -866,7 +866,7 @@ function loadUsername(){
   try {
     let nome = localStorage.getItem(USERNAME_KEY);
     if(!nome){
-      let input = prompt("Come ti chiami? (max 20 caratteri) — serve solo per le statistiche d'uso dell'app");
+      let input = prompt("Scegli un username (max 20 caratteri)");
       if(input !== null){
         input = input.trim().slice(0, 20);
         if(input){
@@ -879,16 +879,51 @@ function loadUsername(){
   } catch(e){ return ""; }
 }
 const USERNAME = loadUsername();
+
+const EVENTS_QUEUE_KEY = "canzoniere_eventi_in_coda_v1";
+function loadEventQueue(){
+  try { return JSON.parse(localStorage.getItem(EVENTS_QUEUE_KEY) || "[]"); }
+  catch(e){ return []; }
+}
+function saveEventQueue(queue){
+  try { localStorage.setItem(EVENTS_QUEUE_KEY, JSON.stringify(queue)); }
+  catch(e){ /* localStorage non disponibile, la coda eventi non persister\u00e0 */ }
+}
+function queueEvento(payload){
+  const queue = loadEventQueue();
+  queue.push(payload);
+  saveEventQueue(queue);
+}
+function inviaEvento(payload){
+  return fetch(ANALYTICS_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+}
 function logEvento(tipo, titolo){
   if(!ANALYTICS_URL || ANALYTICS_URL.indexOf("http") !== 0) return;
+  const payload = { tipo, titolo: titolo || "", utente: DEVICE_ID, nome: USERNAME };
+  if(!navigator.onLine){
+    queueEvento(payload);
+    return;
+  }
   try {
-    fetch(ANALYTICS_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ tipo, titolo: titolo || "", utente: DEVICE_ID, nome: USERNAME })
-    });
-  } catch(e) { /* l'analytics non deve mai bloccare l'app */ }
+    inviaEvento(payload).catch(() => queueEvento(payload));
+  } catch(e){ queueEvento(payload); }
+}
+function flushEventQueue(){
+  if(!ANALYTICS_URL || ANALYTICS_URL.indexOf("http") !== 0) return;
+  if(!navigator.onLine) return;
+  const queue = loadEventQueue();
+  if(queue.length === 0) return;
+  saveEventQueue([]);
+  queue.forEach(payload => {
+    try {
+      inviaEvento(payload).catch(() => queueEvento(payload));
+    } catch(e){ queueEvento(payload); }
+  });
 }
 
 const FAV_KEY = "canzoniere_preferiti_v1";
@@ -3112,6 +3147,7 @@ function wireDarkBtn(){
 window.addEventListener("online", () => {
   document.querySelectorAll(".update-check-btn").forEach(btn => btn.classList.remove("offline"));
   checkForUpdate();
+  flushEventQueue();
 });
 
 function checkForUpdate(){
@@ -4697,6 +4733,7 @@ renderHeaderBrand();
 setActiveTab("canzoni");
 checkForUpdate();
 logEvento("apertura_app");
+flushEventQueue();
 
 content.addEventListener("pointerdown", (e) => {
   if(e.pointerType !== "touch") return;
