@@ -573,6 +573,17 @@
   .phone.dark-bg .form-input, .phone.dark-bg .form-textarea{ background:#2C2C2E; color:#F2F2F7; }
   .phone.dark-bg .form-input::placeholder, .phone.dark-bg .form-textarea::placeholder{ color:#8E8E93; }
 
+  .splash-screen{
+    position:fixed; inset:0; z-index:200;
+    background:var(--purple); color:var(--white);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:16px; text-align:center; padding:32px;
+    transition:opacity 0.4s ease;
+  }
+  .splash-screen.hidden{ opacity:0; pointer-events:none; }
+  .splash-logo{ width:88px; height:88px; border-radius:22px; box-shadow:0 8px 24px rgba(0,0,0,0.25); }
+  .splash-greeting{ font-size:19px; font-weight:800; }
+
   .orientation-overlay{
     display:none;
     position:fixed; inset:0; z-index:100;
@@ -646,6 +657,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+<div class="splash-screen" id="splashScreen">
+  <img class="splash-logo" src="icons/icon-ios.jpg" alt="Logo">
+  <div class="splash-greeting" id="splashGreeting"></div>
+</div>
 <div class="phone">
 
   <div class="app-header" id="appHeader"></div>
@@ -845,7 +860,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.0.5";
+const APP_VERSION = "1.1.0";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -863,22 +878,43 @@ function loadDeviceId(){
 const DEVICE_ID = loadDeviceId();
 const USERNAME_KEY = "canzoniere_username_v1";
 function loadUsername(){
-  try {
-    let nome = localStorage.getItem(USERNAME_KEY);
-    if(!nome){
-      let input = prompt("Scegli un username (max 20 caratteri)");
-      if(input !== null){
-        input = input.trim().slice(0, 20);
-        if(input){
-          localStorage.setItem(USERNAME_KEY, input);
-          nome = input;
-        }
-      }
-    }
-    return nome || "";
-  } catch(e){ return ""; }
+  try { return localStorage.getItem(USERNAME_KEY) || ""; }
+  catch(e){ return ""; }
 }
-const USERNAME = loadUsername();
+let USERNAME = loadUsername();
+function saveUsername(nome){
+  nome = (nome || "").trim().slice(0, 20);
+  try { localStorage.setItem(USERNAME_KEY, nome); } catch(e){ /* localStorage non disponibile */ }
+  USERNAME = nome;
+}
+function showUsernamePrompt(){
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel">
+      <div class="cz-picker-header">
+        <div class="list-title" style="margin:0;">Come ti chiami?</div>
+      </div>
+      <input type="text" class="form-input" id="firstUsernameInput" maxlength="20" placeholder="Il tuo nome o username">
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "pill-btn active";
+  saveBtn.style.width = "100%";
+  saveBtn.style.justifyContent = "center";
+  saveBtn.style.marginTop = "10px";
+  saveBtn.textContent = "Continua";
+  saveBtn.addEventListener("click", () => {
+    const val = overlay.querySelector("#firstUsernameInput").value.trim();
+    if(val){
+      saveUsername(val);
+      overlay.remove();
+    }
+  });
+  overlay.querySelector(".cz-picker-panel").appendChild(saveBtn);
+}
 
 const EVENTS_QUEUE_KEY = "canzoniere_eventi_in_coda_v1";
 function loadEventQueue(){
@@ -1795,6 +1831,26 @@ function renderImpostazioni(){
   }
   renderFontChips();
   wireDarkBtnEl(document.getElementById("settingsDarkBtn"));
+
+  const usernameCard = document.createElement("div");
+  usernameCard.className = "card";
+  usernameCard.innerHTML = `
+    <div class="list-title">Il tuo nome</div>
+    <input type="text" class="form-input" id="usernameInput" maxlength="20" placeholder="Il tuo nome o username" value="${USERNAME.replace(/"/g, "&quot;")}">
+  `;
+  const usernameSaveBtn = document.createElement("button");
+  usernameSaveBtn.className = "pill-btn active";
+  usernameSaveBtn.style.width = "100%";
+  usernameSaveBtn.style.justifyContent = "center";
+  usernameSaveBtn.style.marginTop = "10px";
+  usernameSaveBtn.textContent = "Salva nome";
+  usernameSaveBtn.addEventListener("click", () => {
+    const val = document.getElementById("usernameInput").value;
+    saveUsername(val);
+    document.getElementById("usernameInput").value = USERNAME;
+  });
+  usernameCard.appendChild(usernameSaveBtn);
+  content.appendChild(usernameCard);
 
   const updateCard = document.createElement("div");
   updateCard.className = "card";
@@ -4731,9 +4787,27 @@ if(isIPhoneDevice){
 document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
 renderHeaderBrand();
 setActiveTab("canzoni");
+function getGreeting(){
+  const h = new Date().getHours();
+  if(h < 12) return "Buongiorno";
+  if(h < 18) return "Buon pomeriggio";
+  return "Buona sera";
+}
+function showSplashScreen(onHide){
+  const splash = document.getElementById("splashScreen");
+  const greetingEl = document.getElementById("splashGreeting");
+  if(!splash || !greetingEl){ if(onHide) onHide(); return; }
+  greetingEl.textContent = getGreeting() + (USERNAME ? ", " + USERNAME : "") + "!";
+  setTimeout(() => {
+    splash.classList.add("hidden");
+    setTimeout(() => { splash.remove(); if(onHide) onHide(); }, 400);
+  }, 2000);
+}
+
 checkForUpdate();
 logEvento("apertura_app");
 flushEventQueue();
+showSplashScreen(() => { if(!USERNAME) showUsernamePrompt(); });
 
 content.addEventListener("pointerdown", (e) => {
   if(e.pointerType !== "touch") return;
