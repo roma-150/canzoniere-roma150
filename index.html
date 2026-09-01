@@ -860,7 +860,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.1.1";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -4791,7 +4791,7 @@ function getGreeting(){
   const h = new Date().getHours();
   if(h < 12) return "Buongiorno";
   if(h < 18) return "Buon pomeriggio";
-  return "Buona sera";
+  return "Buonasera";
 }
 function showSplashScreen(onHide){
   const splash = document.getElementById("splashScreen");
