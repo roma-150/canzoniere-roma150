@@ -134,6 +134,26 @@
     transition:opacity 0.15s ease, transform 0.15s ease;
   }
   .back-to-top.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
+
+  .scroll-float{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:calc(78px + env(safe-area-inset-bottom));
+    height:46px;
+    z-index:21;
+    background:var(--purple); color:var(--white);
+    border-radius:999px; padding:0 16px;
+    display:none; align-items:center; gap:10px;
+    box-shadow:0 6px 18px rgba(30,20,50,0.28);
+  }
+  .scroll-float.visible{ display:flex; }
+  .scroll-float button{
+    width:26px; height:26px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6);
+    background:transparent; color:var(--white); font-size:14px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
+  }
+  .scroll-float button:active{ background:rgba(255,255,255,0.15); }
+  #scrollFloatPlayPause{ background:rgba(255,255,255,0.18); border:none; }
+  .scroll-float-label{ font-size:12.5px; font-weight:700; white-space:nowrap; }
   .placeholder-icon{
     width:56px; height:56px; border-radius:16px; margin:0 auto 14px;
     background:var(--neutral); color:var(--purple); font-size:26px;
@@ -466,10 +486,26 @@
   .chordtoggle-tile .label{ color:var(--ink-soft); }
   .chordtoggle-tile .chordtoggle-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
   .chordtoggle-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; }
-  .scroll-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
+  .scroll-tile{ background:var(--neutral); cursor:pointer; user-select:none; padding-left:4px; padding-right:4px; }
   .scroll-tile .label{ color:var(--ink-soft); }
   .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
   .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; min-height:13px; }
+  .scroll-controls{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; margin-top:6px;
+  }
+  .scroll-controls button{
+    width:18px; height:18px; border-radius:50%; border:1.5px solid var(--purple);
+    background:var(--white); color:var(--purple); font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
+  }
+  .scroll-controls button:active{ background:var(--neutral); }
+  .scroll-controls #scrollPlayPause{
+    width:22px; height:22px; border:none; background:var(--purple); color:var(--white);
+  }
+  .phone.dark-bg .scroll-controls button{ border-color:var(--white); color:var(--white); background:transparent; }
+  .phone.dark-bg .scroll-controls button:active{ background:rgba(255,255,255,0.15); }
+  .phone.dark-bg .scroll-controls #scrollPlayPause{ background:var(--white); color:var(--purple); border:none; }
 
   .verse{ margin-bottom:22px; }
   .verse:last-child{ margin-bottom:0; }
@@ -860,7 +896,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.1.1";
+const APP_VERSION = "1.2.0";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -991,17 +1027,18 @@ function saveDarkMode(){
 }
 
 const FONT_STATES = [
+  { name: "Piccolo", scale: 0.82 },
   { name: "Normale", scale: 1 },
   { name: "Grande", scale: 1.2 },
-  { name: "Molto grande", scale: 1.45 },
-  { name: "Piccolo", scale: 0.82 }
+  { name: "Molto grande", scale: 1.45 }
 ];
+const FONT_STATES_DEFAULT_INDEX = FONT_STATES.findIndex(s => s.name === "Normale");
 const FONT_SCALE_KEY = "canzoniere_font_scale_v1";
 function loadFontScaleIndex(){
   try {
     const v = parseInt(localStorage.getItem(FONT_SCALE_KEY), 10);
-    return Number.isInteger(v) && v >= 0 && v < FONT_STATES.length ? v : 0;
-  } catch(e){ return 0; }
+    return Number.isInteger(v) && v >= 0 && v < FONT_STATES.length ? v : FONT_STATES_DEFAULT_INDEX;
+  } catch(e){ return FONT_STATES_DEFAULT_INDEX; }
 }
 function saveFontScaleIndex(){
   try { localStorage.setItem(FONT_SCALE_KEY, String(fontScaleIndex)); }
@@ -4302,6 +4339,7 @@ function showDetail(index){
   function goBack(){
     clearInterval(activeScrollInterval);
     activeScrollInterval = null;
+    document.querySelectorAll(".scroll-float").forEach(el => el.remove());
     returnToView();
     requestAnimationFrame(() => window.scrollTo(0, savedScrollY));
   }
@@ -4311,6 +4349,7 @@ function showDetail(index){
   inDetailView = true;
   listFilterCollapsed = false;
   backToTopBtn.classList.remove("visible");
+  document.querySelectorAll(".scroll-float").forEach(el => el.remove());
   content.innerHTML = "";
   window.scrollTo(0, 0);
 
@@ -4446,15 +4485,19 @@ function showDetail(index){
         <div class="a-sample" id="aSample">A</div>
         <div class="state-name" id="fontStateName">Normale</div>
       </div>
-      <div class="mini-tile scroll-tile" id="scrollToggle">
-        <div class="label">Scorri</div>
-        <div class="scroll-icon" id="scrollIcon">${ICONS.play(20)}</div>
-        <div class="state-name" id="scrollStateName"></div>
-      </div>
       <div class="mini-tile chordtoggle-tile" id="chordToggleTile">
         <div class="label">Accordi</div>
         <div class="chordtoggle-icon" id="chordToggleIcon">${ICONS.chordsOn(20)}</div>
         <div class="state-name" id="chordToggleStateName">Mostra</div>
+      </div>
+      <div class="mini-tile scroll-tile" id="scrollTile">
+        <div class="label">Scorri</div>
+        <div class="scroll-controls" id="scrollControls">
+          <button id="scrollMinus" aria-label="Rallenta">–</button>
+          <button id="scrollPlayPause" aria-label="Avvia scorrimento">${ICONS.play(12)}</button>
+          <button id="scrollPlus" aria-label="Accelera">+</button>
+        </div>
+        <div class="state-name" id="scrollStateName">Velocità 5</div>
       </div>
     </div>
   `;
@@ -4695,50 +4738,95 @@ function showDetail(index){
   document.getElementById("down").addEventListener("click", () => { semitones--; render(); });
 
   const SCROLL_SPEEDS = [
-    { label: "1×", step: 1, interval: 55 },
-    { label: "2×", step: 1, interval: 30 },
-    { label: "3×", step: 2, interval: 22 }
+    { step: 1, interval: 140 }, // livello 1
+    { step: 1, interval: 115 }, // livello 2
+    { step: 1, interval: 95 },  // livello 3
+    { step: 1, interval: 75 },  // livello 4
+    { step: 1, interval: 55 },  // livello 5 (predefinito)
+    { step: 1, interval: 42 },  // livello 6
+    { step: 1, interval: 32 },  // livello 7
+    { step: 2, interval: 30 },  // livello 8
+    { step: 2, interval: 22 },  // livello 9
+    { step: 2, interval: 16 }   // livello 10
   ];
-  let speedIndex = -1; // -1 = fermo
+  let scrollLevel = 5;
+  let scrolling = false;
   let scrollInterval = null;
-  const scrollBtn = document.getElementById("scrollToggle");
-  const scrollIcon = document.getElementById("scrollIcon");
+  const scrollPlayPauseBtn = document.getElementById("scrollPlayPause");
+  const scrollMinusBtn = document.getElementById("scrollMinus");
+  const scrollPlusBtn = document.getElementById("scrollPlus");
   const scrollStateName = document.getElementById("scrollStateName");
 
+  const scrollFloat = document.createElement("div");
+  scrollFloat.className = "scroll-float";
+  scrollFloat.innerHTML = `
+    <button id="scrollFloatMinus" aria-label="Rallenta">–</button>
+    <button id="scrollFloatPlayPause" aria-label="Avvia scorrimento">${ICONS.play(14)}</button>
+    <button id="scrollFloatPlus" aria-label="Accelera">+</button>
+    <span class="scroll-float-label" id="scrollFloatLabel">Velocità 5</span>
+  `;
+  document.querySelector(".phone").appendChild(scrollFloat);
+  const scrollFloatPlayPauseBtn = scrollFloat.querySelector("#scrollFloatPlayPause");
+  const scrollFloatMinusBtn = scrollFloat.querySelector("#scrollFloatMinus");
+  const scrollFloatPlusBtn = scrollFloat.querySelector("#scrollFloatPlus");
+  const scrollFloatLabel = scrollFloat.querySelector("#scrollFloatLabel");
+
+  function updateScrollUI(){
+    scrollStateName.textContent = "Velocità " + scrollLevel;
+    scrollFloatLabel.textContent = "Velocità " + scrollLevel;
+  }
+
   function stopScroll(){
-    speedIndex = -1;
-    scrollBtn.classList.remove("active");
-    scrollIcon.innerHTML = ICONS.play(20);
-    scrollStateName.textContent = "";
+    scrolling = false;
+    scrollPlayPauseBtn.innerHTML = ICONS.play(14);
+    scrollFloatPlayPauseBtn.innerHTML = ICONS.play(14);
+    scrollFloat.classList.remove("visible");
     clearInterval(scrollInterval);
     activeScrollInterval = null;
   }
 
-  function startScrollAt(index){
-    speedIndex = index;
-    const speed = SCROLL_SPEEDS[speedIndex];
-    scrollBtn.classList.add("active");
-    scrollIcon.innerHTML = ICONS.pause(20);
-    scrollStateName.textContent = speed.label;
+  function applyScrollInterval(){
+    if(!scrolling) return;
+    const speed = SCROLL_SPEEDS[scrollLevel - 1];
     clearInterval(scrollInterval);
     scrollInterval = setInterval(() => {
       window.scrollBy({ top: speed.step, behavior: "auto" });
-      if(window.innerHeight + window.scrollY >= document.body.scrollHeight){
+      if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2){
         stopScroll();
       }
     }, speed.interval);
     activeScrollInterval = scrollInterval;
   }
 
-  scrollBtn.addEventListener("click", () => {
-    if(speedIndex === -1){
-      startScrollAt(0);
-    } else if(speedIndex < SCROLL_SPEEDS.length - 1){
-      startScrollAt(speedIndex + 1);
-    } else {
-      stopScroll();
-    }
-  });
+  function startScroll(){
+    scrolling = true;
+    scrollPlayPauseBtn.innerHTML = ICONS.pause(14);
+    scrollFloatPlayPauseBtn.innerHTML = ICONS.pause(14);
+    scrollFloat.classList.add("visible");
+    applyScrollInterval();
+  }
+
+  function toggleScroll(){
+    if(scrolling) stopScroll(); else startScroll();
+  }
+  function decreaseScrollLevel(){
+    scrollLevel = Math.max(1, scrollLevel - 1);
+    updateScrollUI();
+    applyScrollInterval();
+  }
+  function increaseScrollLevel(){
+    scrollLevel = Math.min(10, scrollLevel + 1);
+    updateScrollUI();
+    applyScrollInterval();
+  }
+
+  scrollPlayPauseBtn.addEventListener("click", toggleScroll);
+  scrollMinusBtn.addEventListener("click", decreaseScrollLevel);
+  scrollPlusBtn.addEventListener("click", increaseScrollLevel);
+  scrollFloatPlayPauseBtn.addEventListener("click", toggleScroll);
+  scrollFloatMinusBtn.addEventListener("click", decreaseScrollLevel);
+  scrollFloatPlusBtn.addEventListener("click", increaseScrollLevel);
+  updateScrollUI();
 
   render();
   footer.textContent = song.tonalita ? ("Trasposizione automatica · tonalità originale " + song.tonalita) : "Canzone senza accordi";
