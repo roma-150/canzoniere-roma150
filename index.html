@@ -141,14 +141,14 @@
     height:46px;
     z-index:21;
     background:var(--purple); color:var(--white);
-    border-radius:999px; padding:0 16px;
-    display:none; align-items:center; gap:10px;
+    border-radius:999px; padding:0 12px;
+    display:none; align-items:center; gap:6px;
     box-shadow:0 6px 18px rgba(30,20,50,0.28);
   }
   .scroll-float.visible{ display:flex; }
   .scroll-float button{
-    width:26px; height:26px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6);
-    background:transparent; color:var(--white); font-size:14px; font-weight:700;
+    width:32px; height:32px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.6);
+    background:transparent; color:var(--white); font-size:16px; font-weight:700;
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
   }
   .scroll-float button:active{ background:rgba(255,255,255,0.15); }
@@ -490,22 +490,26 @@
   .scroll-tile .label{ color:var(--ink-soft); }
   .scroll-tile .scroll-icon{ margin-top:6px; display:flex; align-items:center; justify-content:center; height:20px; color:var(--purple); }
   .scroll-tile .state-name{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:4px; min-height:13px; }
+  .scroll-play-btn{
+    width:26px; height:26px; border-radius:50%; border:none;
+    background:var(--purple); color:var(--white);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;
+    margin:6px auto 0;
+  }
+  .scroll-play-btn:active{ opacity:0.85; }
   .scroll-controls{
-    display:flex; align-items:center; justify-content:space-between;
-    width:100%; margin-top:6px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-top:4px;
   }
   .scroll-controls button{
-    width:18px; height:18px; border-radius:50%; border:1.5px solid var(--purple);
-    background:var(--white); color:var(--purple); font-size:11px; font-weight:700;
+    width:20px; height:20px; border-radius:50%; border:1.5px solid var(--purple);
+    background:var(--white); color:var(--purple); font-size:12px; font-weight:700;
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
   }
   .scroll-controls button:active{ background:var(--neutral); }
-  .scroll-controls #scrollPlayPause{
-    width:22px; height:22px; border:none; background:var(--purple); color:var(--white);
-  }
+  .phone.dark-bg .scroll-play-btn{ background:var(--white); color:var(--purple); }
   .phone.dark-bg .scroll-controls button{ border-color:var(--white); color:var(--white); background:transparent; }
   .phone.dark-bg .scroll-controls button:active{ background:rgba(255,255,255,0.15); }
-  .phone.dark-bg .scroll-controls #scrollPlayPause{ background:var(--white); color:var(--purple); border:none; }
 
   .verse{ margin-bottom:22px; }
   .verse:last-child{ margin-bottom:0; }
@@ -896,7 +900,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.2.4";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -4491,13 +4495,12 @@ function showDetail(index){
         <div class="state-name" id="chordToggleStateName">Mostra</div>
       </div>
       <div class="mini-tile scroll-tile" id="scrollTile">
-        <div class="label">Scorri</div>
+        <div class="label" id="scrollLabel">Scorri (5)</div>
+        <button class="scroll-play-btn" id="scrollPlayPause" aria-label="Avvia scorrimento">${ICONS.play(14)}</button>
         <div class="scroll-controls" id="scrollControls">
           <button id="scrollMinus" aria-label="Rallenta">–</button>
-          <button id="scrollPlayPause" aria-label="Avvia scorrimento">${ICONS.play(12)}</button>
           <button id="scrollPlus" aria-label="Accelera">+</button>
         </div>
-        <div class="state-name" id="scrollStateName">Velocità 5</div>
       </div>
     </div>
   `;
@@ -4755,7 +4758,7 @@ function showDetail(index){
   const scrollPlayPauseBtn = document.getElementById("scrollPlayPause");
   const scrollMinusBtn = document.getElementById("scrollMinus");
   const scrollPlusBtn = document.getElementById("scrollPlus");
-  const scrollStateName = document.getElementById("scrollStateName");
+  const scrollLabel = document.getElementById("scrollLabel");
 
   const scrollFloat = document.createElement("div");
   scrollFloat.className = "scroll-float";
@@ -4772,7 +4775,7 @@ function showDetail(index){
   const scrollFloatLabel = scrollFloat.querySelector("#scrollFloatLabel");
 
   function updateScrollUI(){
-    scrollStateName.textContent = "Velocità " + scrollLevel;
+    scrollLabel.textContent = "Scorri (" + scrollLevel + ")";
     scrollFloatLabel.textContent = "Velocità " + scrollLevel;
   }
 
