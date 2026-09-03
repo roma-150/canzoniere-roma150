@@ -900,7 +900,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.2.4";
+const APP_VERSION = "1.2.5";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -1312,7 +1312,8 @@ function buildAnnataCategories(){
   const musicali = SONGS.filter(s => s.tipo === "musica" && s.anno != null);
   const fasce = [
     { label: "Canti antichi", annoMax: 1899 },
-    { label: "Primi del '900", annoMin: 1900, annoMax: 1949 }
+    { label: "Primi del '900", annoMin: 1900, annoMax: 1939 },
+    { label: "Anni '40", annoMin: 1940, annoMax: 1949 }
   ];
   const maxAnno = musicali.reduce((max, s) => Math.max(max, s.anno), 1949);
   for(let decade = 1950; decade <= Math.floor(maxAnno / 10) * 10; decade += 10){
