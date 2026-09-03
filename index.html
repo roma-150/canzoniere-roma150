@@ -876,6 +876,7 @@ let selectedMomenti = new Set();
 let selectedTempi = new Set();
 let selectedTipi = new Set();
 let selectedOrigini = new Set();
+let selectedAmbientazioni = new Set();
 let filterPanelOpen = false;
 let categorySearchQuery = "";
 let czAddSearchQuery = "";
@@ -900,7 +901,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.2.5";
+const APP_VERSION = "1.3.0";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -2181,6 +2182,7 @@ function showCanzoniereAddSongs(id){
   let czSelectedBranche = new Set();
   let czSelectedSedi = new Set();
   let czSelectedOrigini = new Set();
+  let czSelectedAmbientazioni = new Set();
   let czSelectedGeneri = new Set();
   let czSelectedMomenti = new Set();
   let czSelectedTempi = new Set();
@@ -2235,8 +2237,9 @@ function showCanzoniereAddSongs(id){
     const tempoOk = czSelectedTempi.size === 0 || tempiOf(song).some(t => czSelectedTempi.has(t));
     const tipoOk = czSelectedTipi.size === 0 || czSelectedTipi.has(song.tipo);
     const origineOk = czSelectedOrigini.size === 0 || song.tipo !== "scout" || czSelectedOrigini.has(song.origine);
+    const ambientazioneOk = czSelectedAmbientazioni.size === 0 || czSelectedAmbientazioni.has(song.ambientazione);
     const favOk = !czShowOnlyFavorites || favoriti.has(favKey(song));
-    return brancaOk && sedeOk && genereOk && momentoOk && tempoOk && tipoOk && origineOk && favOk;
+    return brancaOk && sedeOk && genereOk && momentoOk && tempoOk && tipoOk && origineOk && ambientazioneOk && favOk;
   }
 
   function czGroupSongs(list){
@@ -2332,6 +2335,9 @@ function showCanzoniereAddSongs(id){
   }
 
   function rebuildFilterPanel(){
+    if(!(czSelectedBranche.has("L/C") && czSelectedOrigini.has("AGESCI"))){
+      czSelectedAmbientazioni.clear();
+    }
     filterPanel.innerHTML = "";
 
     const tipiLabel = { scout: "Scout", messa: "Messa", musica: "Brani famosi" };
@@ -2391,6 +2397,10 @@ function showCanzoniereAddSongs(id){
         });
         if(sedeRow) filterPanel.appendChild(sedeRow);
       }
+      if(czSelectedBranche.has("L/C") && czSelectedOrigini.has("AGESCI")){
+        const ambientazioneRow = buildFilterRow("Ambiente fantastico", ["Bosco", "Giungla"], czSelectedAmbientazioni);
+        if(ambientazioneRow) filterPanel.appendChild(ambientazioneRow);
+      }
     }
     if(czSelectedTipi.has("musica")){
       const genereDisponibili = [...new Set(SONGS.filter(s => s.tipo === "musica").map(s => s.genere).filter(Boolean))].sort();
@@ -2426,7 +2436,7 @@ function showCanzoniereAddSongs(id){
   });
 
   function updateFilterBtnState(){
-    const anyActive = czSelectedBranche.size > 0 || czSelectedSedi.size > 0 || czSelectedTipi.size > 0 || czSelectedOrigini.size > 0 || czSelectedGeneri.size > 0 || czSelectedMomenti.size > 0 || czSelectedTempi.size > 0 || czShowOnlyFavorites;
+    const anyActive = czSelectedBranche.size > 0 || czSelectedSedi.size > 0 || czSelectedTipi.size > 0 || czSelectedOrigini.size > 0 || czSelectedAmbientazioni.size > 0 || czSelectedGeneri.size > 0 || czSelectedMomenti.size > 0 || czSelectedTempi.size > 0 || czShowOnlyFavorites;
     filterBtn.classList.toggle("active", anyActive);
   }
   updateFilterBtnState();
@@ -3336,8 +3346,9 @@ function matchesFilters(song){
   const tempoOk = selectedTempi.size === 0 || tempiOf(song).some(t => selectedTempi.has(t));
   const tipoOk = selectedTipi.size === 0 || selectedTipi.has(song.tipo);
   const origineOk = selectedOrigini.size === 0 || song.tipo !== "scout" || selectedOrigini.has(song.origine);
+  const ambientazioneOk = selectedAmbientazioni.size === 0 || selectedAmbientazioni.has(song.ambientazione);
   const favOk = !showOnlyFavorites || favoriti.has(favKey(song));
-  return brancaOk && sedeOk && decadeOk && genereOk && autoreOk && momentoOk && tempoOk && tipoOk && origineOk && favOk;}
+  return brancaOk && sedeOk && decadeOk && genereOk && autoreOk && momentoOk && tempoOk && tipoOk && origineOk && ambientazioneOk && favOk;}
 
 function renderResults(card){
   let results = card.querySelector("#resultsArea");
@@ -3385,6 +3396,9 @@ function renderResults(card){
 }
 
 function showList(){
+  if(!(selectedBranche.has("L/C") && selectedOrigini.has("AGESCI"))){
+    selectedAmbientazioni.clear();
+  }
   returnToView = () => showList();
   returnToViewLabel = "Torna all'elenco";
   renderHeaderBrand();
@@ -3547,6 +3561,7 @@ function showList(){
     const showBrancaSede = scoutSelezionato;
     const showOrigine = scoutSelezionato;
     const showSede = scoutSelezionato && (origineVuoto || selectedOrigini.has("Roma 150"));
+    const showAmbientazione = selectedBranche.has("L/C") && selectedOrigini.has("AGESCI");
     const showGenere = selectedTipi.has("musica");
     const showMessa = selectedTipi.has("messa");
 
@@ -3569,7 +3584,12 @@ function showList(){
         }
       });
       if(sedeRow) filterPanel.appendChild(sedeRow);
-    }    if(showGenere){
+    }
+    if(showAmbientazione){
+      const ambientazioneRow = buildFilterRow("Ambiente fantastico", ["Bosco", "Giungla"], selectedAmbientazioni, null, true);
+      if(ambientazioneRow) filterPanel.appendChild(ambientazioneRow);
+    }
+    if(showGenere){
       const genereDisponibili = [...new Set(SONGS.filter(s => s.tipo === "musica").map(s => s.genere).filter(Boolean))].sort();
       const genereRow = buildFilterRow("Genere", genereDisponibili, selectedGeneri);
       if(genereRow) filterPanel.appendChild(genereRow);
@@ -3602,7 +3622,8 @@ function showList(){
     });
 
     function updateFilterBtnState(){
-      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || selectedDecadi.size > 0 || selectedTipi.size > 0 || selectedOrigini.size > 0 || selectedGeneri.size > 0 || selectedMomenti.size > 0 || selectedTempi.size > 0 || showOnlyFavorites;      filterBtn.classList.toggle("active", anyActive);
+      const anyActive = selectedBranche.size > 0 || selectedSedi.size > 0 || selectedDecadi.size > 0 || selectedTipi.size > 0 || selectedOrigini.size > 0 || selectedGeneri.size > 0 || selectedMomenti.size > 0 || selectedTempi.size > 0 || selectedAmbientazioni.size > 0 || showOnlyFavorites;
+      filterBtn.classList.toggle("active", anyActive);
     }
     updateFilterBtnState();
   }

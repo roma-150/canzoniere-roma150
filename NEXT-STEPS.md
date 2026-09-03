@@ -166,9 +166,13 @@ v0.131
     - Cerimonia ingresso cuccioli
     - Cerimonia promessa L/C
     - Consiglio della Rupe
-
-
-
+----------------------------------------------------------------------------------------
+v1.3
+- Impostazioni
+----------------------------------------------------------------------------------------
+v1.4
+- fix di tutte le canzoni della categoria:
+- Aggiunta di canzoni varie
 
 
 
@@ -183,8 +187,6 @@ v0.131
 - PIù BRANI FAMOSI (MAGARI VAI PER GENERE), DOPO AVER CORRETTO QUELLI CHE CI SONO GIà...
 - PROCEDI CON:
 - CANTI SCOUT VARI (L/C, E/G, AGESCI)
----------------------------------------------------------------------------------------------------------
-- CANTI DAL CANZONIERE DI CLAN (NOTION)
 
 ---------------------------------------------------------------------------------------------------------
 - CANTI DAL CANZONIERE MESSA
@@ -201,8 +203,6 @@ CANTI NON MESSI, DA METTERE NELLA NOSTRA VERSIONE:
 - ECCO QUEL CHE ABBIAMO PAGINA 25
 - PACE A TE PAGINA 27
 - CANTI CANZONIERE MESSA DA PAGINA 29 INCLUSA IN POI PARTI DA CAMMINIAMO INCONTRO AL SIGNORE
-
-
 
 - METTI CATEGORIA SPIRITUAL IN CANTI MESSA????
 ---------------------------------------------------------------------------------------------------------
