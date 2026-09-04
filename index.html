@@ -901,7 +901,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -1843,12 +1843,43 @@ function renderCanzonieri(){
 function renderImpostazioni(){
   content.innerHTML = "";
 
+  const assistenzaCard = document.createElement("div");
+  assistenzaCard.className = "card";
+  assistenzaCard.style.background = "var(--amber-tint)";
+  const reportSubject = encodeURIComponent("Canzoniere Roma 150 - Segnalazione problema");
+  const reportBody = encodeURIComponent(
+    "Descrivi qui il problema riscontrato:\n\n\n" +
+    "In quale schermata/canzone si verifica:\n\n" +
+    "Cosa ti aspettavi succedesse:\n\n" +
+    "Dispositivo e browser (es. iPhone Safari, Android Chrome):\n\n" +
+    `Versione app: ${APP_VERSION}`
+  );
+  const suggestSubject = encodeURIComponent("Canzoniere Roma 150 - Nuova canzone da aggiungere");
+  const suggestBody = encodeURIComponent(
+    "Titolo canzone:\n\n" +
+    "Autore (se noto):\n\n" +
+    "Anno (se noto):\n\n" +
+    "Categoria (Scout / Messa / Brano famoso):\n\n" +
+    "Testo e accordi (o allega un file/link):\n\n"
+  );
+  assistenzaCard.innerHTML = `
+    <div class="list-title">Assistenza</div>
+    <p class="row-meta" style="margin-bottom:14px;">Hai trovato un errore o vuoi proporre una canzone? Scrivici!</p>
+    <a href="mailto:agesciroma150@gmail.com?subject=${reportSubject}&body=${reportBody}" style="text-decoration:none; display:block; margin-bottom:10px;">
+      <button class="pill-btn active" style="width:100%; justify-content:center; background:var(--amber); color:var(--white);">${ICONS.flag(15)} Segnala un problema</button>
+    </a>
+    <a href="mailto:agesciroma150@gmail.com?subject=${suggestSubject}&body=${suggestBody}" style="text-decoration:none; display:block;">
+      <button class="pill-btn active" style="width:100%; justify-content:center; background:var(--purple); color:var(--white);">${ICONS.music(15)} Suggerisci una nuova canzone</button>
+    </a>
+  `;
+  content.appendChild(assistenzaCard);
+
   const aspettoCard = document.createElement("div");
   aspettoCard.className = "card";
   aspettoCard.innerHTML = `
     <div class="list-title">Aspetto</div>
     <div class="song-row" style="cursor:default;">
-      <div class="row-title">Tema scuro</div>
+      <div class="row-title" id="settingsDarkLabel">${detailDarkMode ? "Tema scuro" : "Tema chiaro"}</div>
       <button class="settings-icon-btn" id="settingsDarkBtn" aria-label="Tema scuro"></button>
     </div>
     <div class="filter-row" style="margin-top:4px;">
@@ -1924,23 +1955,6 @@ function renderImpostazioni(){
   });
   datiCard.appendChild(clearFavBtn);
   content.appendChild(datiCard);
-
-  const assistenzaCard = document.createElement("div");
-  assistenzaCard.className = "card";
-  const reportSubject = encodeURIComponent("Canzoniere Roma 150 - Segnalazione problema");
-  const suggestSubject = encodeURIComponent("Canzoniere Roma 150 - Nuova canzone da aggiungere");
-  assistenzaCard.innerHTML = `
-    <div class="list-title">Assistenza</div>
-    <a class="song-row" style="text-decoration:none; color:inherit;" href="mailto:agesciroma150@gmail.com?subject=${reportSubject}">
-      <div class="row-title">Segnala un problema</div>
-      <div class="row-end">${ICONS.chevronRight(18)}</div>
-    </a>
-    <a class="song-row" style="text-decoration:none; color:inherit;" href="mailto:agesciroma150@gmail.com?subject=${suggestSubject}">
-      <div class="row-title">Suggerisci una nuova canzone</div>
-      <div class="row-end">${ICONS.chevronRight(18)}</div>
-    </a>
-  `;
-  content.appendChild(assistenzaCard);
 
   const infoCard = document.createElement("div");
   infoCard.className = "card";
@@ -3237,6 +3251,10 @@ function updateAllDarkButtons(){
     btn.innerHTML = detailDarkMode ? ICONS.sun(18) : ICONS.moon(18);
   });
 }
+function updateDarkModeLabel(){
+  const label = document.getElementById("settingsDarkLabel");
+  if(label) label.textContent = detailDarkMode ? "Tema scuro" : "Tema chiaro";
+}
 function wireDarkBtnEl(btn){
   if(!btn) return;
   btn.classList.add("dark-mode-btn");
@@ -3246,6 +3264,7 @@ function wireDarkBtnEl(btn){
     detailDarkMode = !detailDarkMode;
     document.querySelector(".phone").classList.toggle("dark-bg", detailDarkMode);
     updateAllDarkButtons();
+    updateDarkModeLabel();
     saveDarkMode();
   });
 }

@@ -168,12 +168,19 @@ v0.131
     - Consiglio della Rupe
 ----------------------------------------------------------------------------------------
 v1.3
-- Impostazioni
+- Nuova sezione impostazioni
 ----------------------------------------------------------------------------------------
 v1.4
-- fix di tutte le canzoni della categoria:
-- Aggiunta di canzoni varie
-
+- Finito il check delle canzoni AGESCI
+- Finito il check delle canzoni messa
+- Migliorata la sezione impostazioni - reso più evidente il pulsante per segnalare canzoni o errori
+- Inseriti tutti i canti bosco richiesti
+----------------------------------------------------------------------------------------
+v1.5
+- Finito il check dei brani famosi
+----------------------------------------------------------------------------------------
+v1.6
+- Finito il check delle canzoni di gruppo
 
 
 
