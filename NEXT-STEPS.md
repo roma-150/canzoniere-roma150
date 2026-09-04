@@ -180,6 +180,9 @@ v1.5
 - Finito il check dei brani famosi
 ----------------------------------------------------------------------------------------
 v1.6
+- Finito l'upload dei canti del canzoniere di clan...
+----------------------------------------------------------------------------------------
+v1.7
 - Finito il check delle canzoni di gruppo
 
 
