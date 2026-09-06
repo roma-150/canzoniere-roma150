@@ -1572,6 +1572,19 @@
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
     "testo_accordi": "[RE]Chiudi gli occhi e sogna,\ndin [SOL]don [RE]dan,\ngli uccellini dormono [SOL]di [RE]già,\n[SIm]solo l'usi[LA]gnolo an[SOL]cora cante[RE]rà,\n[LA]ma se t'addor[SIm]menti\n[LA7]il bosco tace[RE]rà.\n---\n[RE]Chiudi gli occhi e sogna,\ndin [SOL]don [RE]dan,\nsu nell'alto il vento [SOL]cante[RE]rà,\n[SIm]una ninna [LA]nanna e [SOL]t'addormen[RE]terà,\n[LA]chiudi gli occhi e [SIm]sogna,\n[LA7]il vento tace[RE]rà.\n---\n[RE]Chiudi gli occhi e sogna,\ndin [SOL]don [RE]dan,\nsu nel cielo c'è la [SOL]luna [RE]già,\n[SIm]presto il si[LA]lenzio sul [SOL]prato scen[RE]derà,\n[LA]anche l'usi[SIm]gnolo\n[LA7]gli occhi chiude[RE]rà."
+  },     
+  {
+    "titolo": "Il canto della procellaria",
+    "anno": 1978,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [SOL] [RE] [LA] [RE]\n---\n{rit}\n[RE]Cocci[SOL]nella [RE]dimmi perché [LA]vai,\n[RE]che se[SOL]greti [RE]speri di tro[LA]var.\nIl [RE]mondo è sempre uguale,\nnon si [SOL]scopre niente mai,\ne nei [LA7]prati scono[RE]sciuti\n[SOL]crescon solo [RE]le pa[LA]ure e i [RE]guai.\n---\nIl [SIm]bosco di [FA#m]notte è [SOL]pieno di ma[RE]gie,\n[SIm]fruscii, [FA#m]rumori, [SOL]ali che ti [LA]sfiorano;\n[SOL]sotto una ra[RE]dice tre[LA]mavo di pa[RE]ura\n[SOL]ma la [RE]voce [LA]mi par[RE]lò:\n[SIm]guarda dentro il [FA#m]buio un [SOL]mondo appari[RE]rà,\n[SIm]ascolta questa [FA#m]notte, [SOL]molto ti di[LA]rà,\nnel [SOL]buio il tuo [RE]cuore più [LA]forte cante[RE]rà,\ncol [RE]freddo l'ami[RE]cizia più [LA]calda diver[RE]rà.\n---\n{rit}\n[RE]Cocci[SOL]nella [RE]dimmi perché [LA]vai,\n[RE]che se[SOL]greti [RE]speri di tro[LA]var.\nIl [RE]mondo è sempre uguale,\nnon si [SOL]scopre niente mai,\ne nei [LA7]prati scono[RE]sciuti\n[SOL]crescon solo [RE]le pa[LA]ure e i [RE]guai.\n---\n[SIm]Stanchezza [FA#m]nelle ali, sen[SOL]tieri scono[RE]sciuti,\n[SIm]presenze miste[FA#m]riose, che in[SOL]contro mai fa[LA]rò?\n[SOL]Volare io vo[RE]levo, lon[LA]tano, via di [RE]lì,\n[SOL]ma la [RE]voce [LA]sussur[RE]rò:\n[SIm]in ogni in[FA#m]contro è na[SOL]scosto un se[RE]greto,\n[SIm]prova a gua[FA#m]rdare con gli [SOL]occhi del [LA]cuore,\n[SOL]con un [RE]sorriso la [LA]chiave trove[RE]rai,\n[SOL]con un [RE]sorriso ogni [LA]cuore apri[RE]rai.\n---\n{rit}\nIl [RE]mio [SOL]volo io [RE]continue[LA]rò,\n[RE]i se[SOL]greti [RE]ancora cerche[LA]rò.\nIl [RE]mondo è sempre uguale,\n[SOL]può essere però:\ncon un [LA7]sorriso ho la [RE]gioia\n[SOL]e la mia casa [RE]tutto il [LA]mondo sa[RE]rà."
   },  
   {
     "titolo": "Canto di marcia",
@@ -1635,6 +1648,19 @@
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
     "testo_accordi": "[SOL]Cocci è l'amica [DO]della for[SOL]mica Mi\ne con le altre cantano e la[RE]vorano.\n[SOL]Cocci è amica [DO]delle for[SOL]miche\nanche se è rossa e [RE]loro sono [SOL]ner.\n---\n{rit}\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du,\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du.\n---\n[SOL]Un amico è un [DO]dono pre[SOL]zioso\ne l'amicizia non muore [RE]mai,\n[SOL]non conta il co[DO]lore della [SOL]pelle\nma il colore [RE]dentro al [SOL]cuor.\n---\n{rit}\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du,\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du.\n---\n[SOL]Cocci è l'amicizia [DO]della for[SOL]mica\nperciò è l'amica di tutti [RE]noi,\n[SOL]insieme can[DO]tando e lavo[SOL]rando\nfaremo cre[RE]scere l'[SOL]amor.\n---\n{rit}\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du,\n[SOL]Sciabadabadu, [DO]sciabadaba[RE]daba[SOL]du."
+  },
+  {
+    "titolo": "Festa nel bosco",
+    "anno": 1980,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "DO",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[DO] [SOL] [LAm] [SOL] [FA] [DO] [SOL] [DO]\n---\n[DO]Cocci[SOL]nella, [LAm]danza un po' con [SOL]me\n[FA]che nel [DO]bosco [SOL]oggi festa [DO]c'è.\n[FA]Anche il [DO]vecchio cala[SOL]brone\n[DO]oggi è al[FA]legro [DO]sotto il sole [SOL]d'or.\n---\n{rit}\n[DO]Cocci[SOL]nella, [LAm]danza un po' con [SOL]me\n[FA]che nel [DO]bosco [SOL]oggi festa [DO]c'è.\n---\n[DO]Messer [SOL]bruco, [LAm]sotto un fungo [SOL]sta\n[FA]e tra [DO]poco an[SOL]ch'egli danze[DO]rà,\n[FA]e dall'[DO]albero il cu[SOL]cù\n[DO]canta al[FA]legro [DO]verso il cielo [SOL]blu.\n---\n{rit}\n[DO]Cocci[SOL]nella, [LAm]danza un po' con [SOL]me\n[FA]che nel [DO]bosco [SOL]oggi festa [DO]c'è.\n---\n[DO]Il le[SOL]protto [LAm]viene a curio[SOL]sar,\n[FA]anche [DO]lui si [SOL]mette già a dan[DO]zar,\n[FA]il ru[DO]scello cante[SOL]rà\n[DO]ed il [FA]ballo [DO]accompagne[SOL]rà.\n---\n{rit}\n[DO]Cocci[SOL]nella, [LAm]danza un po' con [SOL]me\n[FA]che nel [DO]bosco [SOL]oggi festa [DO]c'è."
   },
   {
     "titolo": "L'acqua, la terra, il cielo (In principio)",
@@ -1775,19 +1801,68 @@
     "autore": "Nicola Catellani-Carpi 1",
     "origine": "AGESCI",
     "testo_accordi": "[DO]Noi giochiamo in[SOL7]sie-e-me\ne cantiamo in[DO]sie-e-me\n[DO]noi mangiamo in[SOL7]sie-e-me\ne lavoriamo in[DO]sie-e-me.\n---\n[DO7]Noi facciamo [FA]tu-tu-tu,\nnoi facciamo [DO]tu-tu-tu,\nnoi facciamo [SOL7]tutto tutti insieme\ndentro al nostro formicaio\nda marzo a febbraio!\n---\n{rit}\nSiamo le for[DO]miche, sotto[RE7]terra vi[SOL]viamo,\nle for[DO]miche, qui che [RE7]ti aspet[SOL]tiamo,\nle for[DO]miche con la [MI]regola [LAm]sola:\ntutto [FA]tutti in[DO]sieme è la [RE7]nostra pa[SOL7]rola\nSiamo le for[DO]miche, sotto[RE7]terra vi[SOL]viamo,\nle for[DO]miche, qui che [RE7]ti aspet[SOL]tiamo,\nle for[DO]miche dicci [MI]cosa [LAm]vuoi\ntutto [FA]tutti in[DO]sieme, vuoi gio[RE7]care con [SOL7]noi?\n---\n[DO]Noi dormiamo in[SOL7]sie-e-me\ne ridiamo in[DO]sie-e-me\n[DO]noi corriamo in[SOL7]sie-e-me\nchiacchieriamo in[DO]sie-e-me.\n---\n[DO7]Noi facciamo [FA]tu-tu-tu,\nnoi facciamo [DO]tu-tu-tu,\nnoi facciamo [SOL7]tutto tutti insieme\ndentro al nostro formicaio\nda marzo a febbraio!\n---\n{rit}\nSiamo le for[DO]miche, sotto[RE7]terra vi[SOL]viamo,\nle for[DO]miche, qui che [RE7]ti aspet[SOL]tiamo,\nle for[DO]miche con la [MI]regola [LAm]sola:\ntutto [FA]tutti in[DO]sieme è la [RE7]nostra pa[SOL7]rola\nSiamo le for[DO]miche, sotto[RE7]terra vi[SOL]viamo,\nle for[DO]miche, qui che [RE7]ti aspet[SOL]tiamo,\nle for[DO]miche dicci [MI]cosa [LAm]vuoi\ntutto [FA]tutti in[DO]sieme, vuoi gio[RE7]care con [SOL7]noi?"
-  },
+  }, 
   {
-    "titolo": "Un bravo lupo",
+    "titolo": "Mille e ancora mille",
     "anno": 1990,
     "anno_incerto": true,
     "luogo": null,
     "tonalita": "DO",
     "branca": ["L/C"],
-    "ambientazione": "Giungla",
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Nicola Catellani-Carpi 1",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[SOL] [DO] [SOL] [RE] [SOL]\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\nRestano...\n[SOL]Mille e ancora mille\nprati [DO]da attraver[SOL]sare,\nmille e ancora mille\nboschi [LA]da esplo[RE]rare.\n[SOL]Mille e ancora mille\nmontagne [DO]da sca[SOL]lare,\n[DO]mille e ancora [SOL]mille\nfra[RE]telli da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n[DO]Mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare."
+  },
+  {
+    "titolo": "La notte delle lanterne",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "REm",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[REm] [DO] [REm] [DO] [REm]\n---\n[REm]Questa è una [DO]notte [REm]buia,\n[REm]gelida e [DO]senza [REm]luna,\n[FA]e con la [SOL]pioggia [DO]che vien [REm]giù\nil [REm]prato è un [DO]lago im[REm]men[DO]so.\n[REm]I rospi che [DO]hanno [REm]fame\n[REm]ci vengo[DO]no a ce[REm]rcar,\n[FA]ma non sap[DO]piam nuo[SOL]ta[REm]re,\n[DO]cosa pos[SOL]siamo [FA]far?\n[REm]Io sono [DO]cocci[REm]nella,\n[REm]a lungo [DO]so vo[REm]lar,\n[FA]ed io che [SOL]sono [DO]luccio[REm]la\n[DO]la strada illu[SOL]mi[FA]nar.\n---\n{rit}\nCo[REm]sì unite stretta[LA]mente\npiù pa[REm]ura non ab[LA]biam,\n[REm]col coraggio della [LA]luce\nci dob[LA]biamo a[REm]mar.\n---\n[REm]Lucciola e [DO]cocci[REm]nella\n[REm]ora si ab[DO]bracce[REm]ran,\n[FA]con picco[SOL]la lan[DO]ter[REm]na\n[DO]il viaggio illu[SOL]mi[FA]nar.\n---\n[REm]Tra gli alti [DO]fili [REm]d'erba\n[REm]si vedo[DO]no dan[REm]zar,\n[FA]come la [SOL]stella [DO]che nel [REm]buio\n[DO]la via ti sa in[SOL]di[FA]car.\n---\n[REm]Da allora [DO]la lan[REm]terna\n[REm]nel cerchio [DO]sempre ap[REm]par,\n[FA]perché in me[SOL]moria [DO]di quel [REm]patto\n[DO]ci possa illu[SOL]mi[FA]nar.\n---\n{rit}\nCo[REm]sì unite stretta[LA]mente\npiù pa[REm]ura non ab[LA]biam,\n[REm]col coraggio della [LA]luce\nci dob[LA]biamo a[REm]mar."
+  },
+  {
+    "titolo": "Il canto dell'arcobaleno",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "tipo": "scout",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [LA] [RE]\n---\n[RE]Insieme con noi venite anche voi,\nla vita è per tutti un'occa[LA]sione,\nnon fa niente se uguali non siam,\nfaremo bandiera ovunque an[RE]dremo.\nLa felicità colore non ha,\nè un pezzo di cielo\nche dopo la pioggia ritorna se[RE]reno.\n---\n{rit}\n[SOL]Bianco, verde, rosso, giallo\ne [RE]tu prendi il posto che [LA]vuoi\ne con noi cante[RE]rai.\n[RE]Noi siamo quelli che formiam l'arcoba[SOL]leno,\ntanti colori che si tengono per [RE]mano,\nin tutto il mondo un po' d'amore noi por[SOL]tiamo\ne rega[RE]liamo a tutti [LA]la felici[RE]tà.\n---\n[RE]La gente non sa che amore e bontà\nson fiori che stanno in un giar[LA]dino,\ndonarli tu puoi se solo lo vuoi,\nraccoglili e dalli al tuo vi[RE]cino.\nTu sei come me, stringiamo le mani,\ntutti domani insieme re[SOL]stiamo.\n---\n{rit}\n[SOL]Bianco, verde, rosso, giallo\ne [RE]tu prendi il posto che [LA]vuoi\ne con noi cante[RE]rai.\n[RE]Noi siamo quelli che formiam l'arcoba[SOL]leno,\ntanti colori che si tengono per [RE]mano,\nin tutto il mondo un po' d'amore noi por[SOL]tiamo\ne rega[RE]liamo a tutti [LA]la felici[RE]tà."
+  },
+  {
+    "titolo": "Mille e ancora mille",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "DO",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Nicola Catellani-Carpi 1",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[SOL] [DO] [SOL] [RE] [SOL]\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\nRestano...\n[SOL]Mille e ancora mille\nprati [DO]da attraver[SOL]sare,\nmille e ancora mille\nboschi [LA]da esplo[RE]rare.\n[SOL]Mille e ancora mille\nmontagne [DO]da sca[SOL]lare,\n[DO]mille e ancora [SOL]mille\nfra[RE]telli da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n[DO]Mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare."
+  },
+  {
+    "titolo": "Coccinella vuoi venire",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "SOL",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
     "tipo": "scout",
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
-    "testo_accordi": "{rit}\n[RE]Un bravo lupo io voglio diven[LA]tare\ne la promessa per sempre rispet[RE]tare\ngentile e più cortese con tutti io sa[SOL]rò\nla buona a[LA]zione sempre fa[RE]rò\n---\n[RE]Akela [LA]oh, Akela [RE]oh\nte lo pro[SOL]metto, in [LA]gamba io sa[RE]rò…\n[RE]Akela [LA]oh, Akela [RE]oh\nte lo pro[SOL]metto, in [LA]gamba io sa[RE]rò…\n---\n{rit}\n[RE]Un bravo lupo io voglio diven[LA]tare\ne la promessa per sempre rispet[RE]tare\ngentile e più cortese con tutti io sa[SOL]rò\nla buona a[LA]zione sempre fa[RE]rò\n---\n[RE]Caro Ba[LA]loo, caro Ba[RE]loo\ne io la [SOL]legge os[LA]serverò di [RE]più...\n[RE]Caro Ba[LA]loo, caro Ba[RE]loo\ne io la [SOL]legge os[LA]serverò di [RE]più...\n---\n{rit}\n[RE]Un bravo lupo io voglio diven[LA]tare\ne la promessa per sempre rispet[RE]tare\ngentile e più cortese con tutti io sa[SOL]rò\nla buona a[LA]zione sempre fa[RE]rò\n---\n[RE]Bagheera [LA]oh, Bagheera [RE]oh\nte lo pro[SOL]metto in [LA]caccia io ver[RE]rò…\n[RE]Bagheera [LA]oh, Bagheera [RE]oh\nte lo pro[SOL]metto in [LA]caccia io ver[RE]rò…\n---\n{rit}\n[RE]Un bravo lupo io voglio diven[LA]tare\ne la promessa per sempre rispet[RE]tare\ngentile e più cortese con tutti io sa[SOL]rò\nla buona a[LA]zione sempre fa[RE]rò\n---\n[RE]Mio caro [LA]Kaa, mio caro [RE]Kaa,\nte lo pro[SOL]metto fa[LA]rò tante B[RE]A…\n[RE]Mio caro [LA]Kaa, mio caro [RE]Kaa,\nte lo pro[SOL]metto fa[LA]rò tante B[RE]A…\n---\n{rit}\n[RE]Un bravo lupo io voglio diven[LA]tare\ne la promessa per sempre rispet[RE]tare\ngentile e più cortese con tutti io sa[SOL]rò\nla buona a[LA]zione sempre fa[RE]rò"
+    "testo_accordi": "{strumentale}\n[SOL] [RE7] [SOL]\n---\n[SOL]Coccinella vuoi ve[RE7]nire,\nvuoi venir dammi la [SOL]mano,\ncoccinella vuoi ve[RE7]nire\nche nel bosco voglio an[SOL]dar.\n---\n{rit}\nTralala[RE7]trala tralala[SOL]trala\ntralala[RE7]trala Trala la la [SOL]la\n---\n[SOL]Tu lo sai ci son dei [RE7]fiori\ne ci sono due sen[SOL]tieri\nche insiem percorre[RE7]remo\ne la gioia trove[SOL]remo.\n---\n{rit}\nTralala[RE7]trala tralala[SOL]trala\ntralala[RE7]trala Trala la la [SOL]la\n---\n[SOL]Che bel muschio che bei [RE7]fiori,\noh ci sono anche i mu[SOL]ghetti\ne un gran numero di in[RE7]setti\nche nel ciel vanno a dan[SOL]zar.\n---\n{rit}\nTralala[RE7]trala tralala[SOL]trala\ntralala[RE7]trala Trala la la [SOL]la\n---\n[SOL]E il sentiero che ser[RE7]peggia\ntra le querce e le be[SOL]tulle\nci conduce cocci[RE7]nella\nla genziana a conqui[SOL]star.\n---\n{rit}\nTralala[RE7]trala tralala[SOL]trala\ntralala[RE7]trala Trala la la [SOL]la"
   },  
   {
     "titolo": "Il canto dell'Amicizia (In un mondo di maschere)",
@@ -1798,6 +1873,32 @@
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
     "testo_accordi": "[DO]In un mondo di [SOL]maschere, [LAm]dove sembra impo[MIm]ssibile\n[FA]riuscire a scon[DO]figgere [RE]tutto ciò che an[SOL]nienta l’uomo:\n[DO]L'egoismo e la [SOL]falsità, [LAm]la violenza e l’a[MIm]vidità\n[FA]sono Mostri da [DO]abbattere. [RE]Noi però non [SOL]siamo soli.\n---\n{rit}\n[DO]Canta con me, [SOL]batti le mani,\n[LAm]alzale in [MIm]alto, [FA]muovile al [SOL]ritmo del canto.\n[DO]Stringi la mano [SOL]del tuo vicino\n[LAm]e scopri[MIm]rai [FA]che è meno [SOL]duro il cammino co[DO]sì.\n---\n[DO]Ci hai donato lo [SOL]spirito, [LAm]lo sentiamo è in [MIm]mezzo a noi\n[FA]e perciò possiam [DO]credere [RE]che ogni cosa [SOL]può cambiare.\n[DO]Non possiamo più as[SOL]sistere [LAm]impotenti ed [MIm]attoniti,\n[FA]perché siam respon[DO]sabili [RE]della vita in[SOL]torno a noi.\n---\n{rit}\n[DO]Canta con me, [SOL]batti le mani,\n[LAm]alzale in [MIm]alto, [FA]muovile al [SOL]ritmo del canto.\n[DO]Stringi la mano [SOL]del tuo vicino\n[LAm]e scopri[MIm]rai [FA]che è meno [SOL]duro il cammino co[DO]sì."
+  },
+  {
+    "titolo": "Sette punti neri",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "REm",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[REm] [FA] [DO] [SOL]\n[REm] [SIb] [FA] [DO] [SOL]\n---\n[REm]Guarda in [FA]cielo c'è un [DO]arcobal[SOL]eno\n[REm]che ci [SIb]svela un [FA]giorno impor[DO]tante.\n[REm]Sbatte ro[FA]ssa e un [DO]po' si con[SOL]fonde,\n[REm]ma io la [SIb]vedo e [FA]sta ritor[DO]nando per [SOL]noi...\n---\n{rit}\nE son...\n[REm]Sette quei punti\n[SIb]neri e dipinti\n[FA]sulle ali che [DO]Cocci ha.\nE poi...\n[REm]Matta chi pensa\n[SIb]una Cocci solo rossa,\n[FA]se vuoi li conqui[DO]sterai!\nE son...\n[REm]Sette quei punti\n[SIb]neri e dipinti\n[FA]sulle ali che [DO]Cocci ha.\nE poi...\n[REm]Matta chi pensa\n[SIb]una Cocci solo rossa,\n[FA]se vuoi li conqui[DO]sterai!\n---\n[REm]Cocci rac[FA]conta la sua [DO]grande avven[SOL]tura,\n[REm]dona i suoi [SIb]punti e non [FA]ha più pau[DO]ra.\n[REm]In mezzo al [FA]cerchio son [DO]tutti all'a[SOL]scolto\n[REm]e brilla la [SIb]gioia di[FA]pinta sul [DO]volto per[SOL]ché...\n---\n{rit}\nE son...\n[REm]Sette quei punti\n[SIb]neri e dipinti\n[FA]sulle ali che [DO]Cocci ha.\nE poi...\n[REm]Matta chi pensa\n[SIb]una Cocci solo rossa,\n[FA]se vuoi tu diven[DO]terai...\nE son...\n[REm]Sette quei punti\n[SIb]neri e dipinti\n[FA]sulle ali che [DO]Cocci ha.\nE poi...\n[REm]Matta chi pensa\n[SIb]una Cocci solo rossa,\n[FA]se vuoi tu diven[DO]terai...\n---\n{rit}\n[REm]Una coccinella,\n[SIb]una coccinella,\ne [FA]sette punti neri a[DO]vrai.\n[REm]Una coccinella,\n[SIb]una coccinella,\nin [FA]alto vole[DO]rai.\n[REm]Una coccinella,\n[SIb]una coccinella,\ne [FA]sette punti neri a[DO]vrai.\n[REm]Una coccinella,\n[SIb]una coccinella,\nin [FA]alto vole[DO]rai."
+  },
+  {
+    "titolo": "Sol soletto",
+    "anno": 1990,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [LA] [RE] [LA] [RE]\n---\nSol, [RE]soletto [LA]vola il pipi[RE]strello\ne la luna [LA]fa capol[RE]in.\nDentro al bosco, so[LA]pra un ramo[RE]scello,\nmesser gufo [LA]canta con ar[RE]dor.\n---\n{rit}\n[LA]Po po po po [RE]po po po po [SOL]po [RE]po\nPo po po [SOL]po po [RE]po po po [LA]po po [RE]po.\n[LA]Po po po po [RE]po po po po [SOL]po [RE]po\nPo po po [SOL]po po [RE]po po po [LA]po po [RE]po.\n---\nDallo [RE]stagno salta [LA]fuori in [RE]fretta\ndiguazzando un [LA]bel ranoc[RE]chion,\nche a sentire [LA]quella musi[RE]chetta\nprende fiato e [LA]si unisce al [RE]cor.\n---\n{rit}\n[LA]Cra cra cra cra [RE]cra cra cra cra [SOL]cra [RE]cra\nCra cra cra [SOL]cra cra [RE]cra cra cra [LA]cra cra [RE]cra.\n[LA]Cra cra cra cra [RE]cra cra cra cra [SOL]cra [RE]cra\nCra cra cra [SOL]cra cra [RE]cra cra cra [LA]cra cra [RE]cra.\n---\nIl con[RE]certo aumen[LA]tò di [RE]tono\nfino a quando un [LA]calabrone u[RE]dì,\nche, svegliato [LA]da quel gran fra[RE]stuono,\nirritato [LA]volò via di [RE]lì.\n---\n{rit}\n[LA]Zum zum zum zum [RE]zum zum zum zum [SOL]zum [RE]zum\nZum zum zum [SOL]zum zum [RE]zum zum zum [LA]zum zum [RE]zum.\n[LA]Zum zum zum zum [RE]zum zum zum zum [SOL]zum [RE]zum\nZum zum zum [SOL]zum zum [RE]zum zum zum [LA]zum zum [RE]zum.\n---\nMa alla [RE]vista di quei [LA]cuor con[RE]tenti,\ntutti presi e in[LA]tenti a solfeg[RE]giar,\ndié un sospiro, bor[LA]bottò fra i [RE]denti,\npoi con loro [LA]prese a cantic[RE]chiar.\n---\n{rit}\n(Tutti insieme a tre voci)\n[LA]Po po po po / [RE]Cra cra cra cra / [SOL]Zum zum [RE]zum zum\nZum zum zum [SOL]zum zum [RE]cra cra cra [LA]po po [RE]po.\n[LA]Po po po po / [RE]Cra cra cra cra / [SOL]Zum zum [RE]zum zum\nZum zum zum [SOL]zum zum [RE]cra cra cra [LA]po po [RE]po!"
   },
   {
     "titolo": "Il grido del Pheeal",
@@ -1836,7 +1937,20 @@
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
     "testo_accordi": "[DO]Che mattino [SOL]fortunato,\n[LAm]abbiamo fatto un [MI]nuovo capo,\n[FA]ora la [SOL]giungla treme[DO]rà\n[SOL](Uoo);\n[DO]noi siam furbe, [SOL]grandi e astute,\n[LAm]dalla giungla [MI]siam temute\n[FA]adesso il nostro [SOL]nome si udi[DO]rà\n[SOL](eee);\n[FA]e laggiù nella Wain[SOL]gunga\n[DO]come un tuono rim[LAm]bomberà\n[FA]“Bandarlog” il vostro\n[SOL]incubo sa[LAm]rà.\n---\n[DO]Di soppiatto [SOL]tra le foglie\n[LAm]abbiam rapito il [MI]ranocchietto\n[FA]e “Bagheera, [SOL]Mowgli non c'è [DO]più”\n[SOL](uoo);\n[DO]ed ora vieni[SOL]ci a cercare\n[LAm]tanto non ce la [MI]puoi fare,\n[FA]Tane Fredde [SOL]ci nasconde[DO]rai\n[SOL](eee);\n[FA]non c'è legge [SOL]che sconfigga\n[DO]questa veri[LAm]tà,\n[FA]oggi la [SOL]giungla\ntreme[LAm]rà.\n---\n{rit}\n[FA]Ma Chil vedrà, ma [SOL]Chil vedrà,\n[MI]il cucciolo d'uomo che [LAm]chiamerà,\n[FA]e fratellino hai lo [SOL]stesso sangue\n[DO]di chi rispetta la [MI]legge…\n[FA]Per tutto il [DO]tuo sen[SOL]tiero,\nse ci [FA]credi [DO]per dav[SOL]vero,\nil fa[FA]vore [DO]della [SOL]giungla\nti accompagne[DO]rà\nla la [LAm]la la la la [SOL]la\nti accompagne[DO]rà\nla la [LAm]la la la la [SOL]la\n---\n[DO]Ma Baloo e Ba[SOL]gheera sanno:\n[LAm]quella forza è [MI]solo inganno\n[FA]e alla lotta si pre[SOL]parano di [DO]già\n[SOL](uoo);\n[DO]nella giungla [SOL]c'è un serpente\n[LAm]che ipnotizza e [MI]poi ti stende\n[FA]“Buona Caccia” [SOL]tra le rocce si udi[DO]rà\n[SOL](eee);\n[FA]Tane Fredde all'[SOL]orizzonte\n[DO]e la luna è [LAm]alta già,\ncorri [FA]forte la bat[SOL]taglia\ninizi[LAm]erà.\n---\n{rit}\n[FA]Ma Chil vedrà, ma [SOL]Chil vedrà,\n[MI]il cucciolo d'uomo che [LAm]chiamerà,\n[FA]e fratellino hai lo [SOL]stesso sangue\n[DO]di chi rispetta la [MI]legge…\n[FA]Per tutto il [DO]tuo sen[SOL]tiero,\nse ci [FA]credi [DO]per dav[SOL]vero,\nil fa[FA]vore [DO]della [SOL]giungla\nti accompagne[DO]rà\nla la [LAm]la la la la [SOL]la\nti accompagne[DO]rà\nla la [LAm]la la la la [SOL]la"
-  },  
+  },   
+  {
+    "titolo": "Basta un filo d'erba",
+    "anno": 2000,
+    "anno_incerto": true,
+    "luogo": "Volo Regionale Emilia-Romagna",
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",    
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [SOL] [LA] [SOL] [RE]\n---\n[RE]Dimmi [SOL]Grillo [RE]dimmi,\n[MIm]tu lo [SIm]sai son canta[SOL]sto[LA]rie,\n[MIm]non ho fiabe da [SIm]raccontare,\ndimmi [SOL]tu che sai can[LA]tare,\ndimmi [SOL]tu che posso [LA]fare?\n---\n{rit}\nBasta un [RE]filo d'erba e [SOL]basta,\nun paio [RE]d'ali e un po' di co[SOL]raggio\nper spic[SIm]care il grande [SOL]volo\nche ti [MI]porta dove [LA]vuoi.\nBasta [RE]chiudere un po' [SOL]gli occhi,\nvia pa[RE]ure e pensieri [SOL]sciocchi,\n[MI]segui [SIm]solo la [SIm]fantas[SOL]ia\nche ti [MI]porterà...\na gridare ur[LA]rà! Urrà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\nla fanta[MI]sia ti insegne[LA]rà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\ne la [MI]gioia arrive[LA]rà.\n---\n[RE]Stracci [SOL]vendo [RE]stracci,\n[MIm]rendo [SIm]utile ogni [SOL]co[LA]sa,\n[MIm]qui nel Bosco niente va per[SIm]duto,\nnon mi [SOL]scappa uno star[LA]nuto,\nnon mi [SOL]scappa uno star[LA]nuto.\n---\n{rit}\nBasta un [RE]filo d'erba e [SOL]basta,\nun paio [RE]d'ali e un po' di co[SOL]raggio\nper spic[SIm]care il grande [SOL]volo\nche ti [MI]porta dove [LA]vuoi.\nBasta [RE]chiudere un po' [SOL]gli occhi,\nvia pa[RE]ure e pensieri [SOL]sciocchi,\n[MI]segui [SIm]solo la [SIm]fantas[SOL]ia\nche ti [MI]porterà...\na gridare ur[LA]rà! Urrà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\nla fanta[MI]sia ti insegne[LA]rà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\ne la [MI]gioia arrive[LA]rà.\n---\n[RE]Volo in [SOL]cielo [RE]volo,\n[MIm]sono [SIm]gazza, non mi sfugge [SOL]nien[LA]te,\n[MIm]non mi piaccion solo fiori [SIm]rosa,\nscopro il [SOL]bello in ogni [LA]cosa,\nscopro il [SOL]bello in ogni [LA]cosa.\n---\n{rit}\nBasta un [RE]filo d'erba e [SOL]basta,\nun paio [RE]d'ali e un po' di co[SOL]raggio\nper spic[SIm]care il grande [SOL]volo\nche ti [MI]porta dove [LA]vuoi.\nBasta [RE]chiudere un po' [SOL]gli occhi,\nvia pa[RE]ure e pensieri [SOL]sciocchi,\n[MI]segui [SIm]solo la [SIm]fantas[SOL]ia\nche ti [MI]porterà...\na gridare ur[LA]rà! Urrà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\nla fanta[MI]sia ti insegne[LA]rà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\ne la [MI]gioia arrive[LA]rà.\n---\n[RE]Nuoto in [SOL]mare [RE]nuoto,\n[MIm]non di[SIm]mentico dove son [SOL]na[LA]to,\n[MIm]io salmone guardo la mia [SIm]storia,\nmi rin[SOL]fresco la me[LA]moria,\nmi rin[SOL]fresco la me[LA]moria.\n---\n{rit}\nBasta un [RE]filo d'erba e [SOL]basta,\nun paio [RE]d'ali e un po' di co[SOL]raggio\nper spic[SIm]care il grande [SOL]volo\nche ti [MI]porta dove [LA]vuoi.\nBasta [RE]chiudere un po' [SOL]gli occhi,\nvia pa[RE]ure e pensieri [SOL]sciocchi,\n[MI]segui [SIm]solo la [SIm]fantas[SOL]ia\nche ti [MI]porterà...\na gridare ur[LA]rà! Urrà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\nla fanta[MI]sia ti insegne[LA]rà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\ne la [MI]gioia arrive[LA]rà.\n---\n[RE]Mille ho [SOL]mille [RE]piedi,\n[MIm]tutti in[SIm]sieme stessa dire[SOL]zio[LA]ne,\n[MIm]gran fatica per organiz[SIm]zare,\nperò [SOL]adesso posso an[LA]dare,\nin mon[SOL]tagna e anche al [LA]mare.\n---\n{rit}\nBasta un [RE]filo d'erba e [SOL]basta,\nun paio [RE]d'ali e un po' di co[SOL]raggio\nper spic[SIm]care il grande [SOL]volo\nche ti [MI]porta dove [LA]vuoi.\nBasta [RE]chiudere un po' [SOL]gli occhi,\nvia pa[RE]ure e pensieri [SOL]sciocchi,\n[MI]segui [SIm]solo la [SIm]fantas[SOL]ia\nche ti [MI]porterà...\na gridare ur[LA]rà! Urrà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\nla fanta[MI]sia ti insegne[LA]rà!\nUrrall[RE]ero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà,\nurral[RE]lero ed urral[SOL]lalà:\ne la [MI]gioia arrive[LA]rà."
+  }, 
   {
     "titolo": "La meridiana",
     "anno": 2003,
@@ -1870,6 +1984,18 @@
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
     "testo_accordi": "[DO]Sento nel pro[FA]fondo un [DO]desiderio [SOL]nascere\nè la [DO]voglia di par[FA]tire che [DO]continua a [SOL]crescere\n[LAm]verso l'oriz[FA]zonte pos[DO]siam cammi[SOL]nare\nri[LAm]corda che [FA]solo chi [DO]sogna può vo[SOL]lare\n---\n[DO]Cammino con la sag[FA]gezza [DO]del viaggia[SOL]tore\n[DO]vivo con gli [FA]occhi [DO]di un sogna[SOL]tore\n[LAm]la felici[FA]tà non è un [DO]semplice tra[SOL]guardo\n[LAm]ma la dire[FA]zione [DO]del nostro [SOL]sguardo\n---\n{rit}\n[DO]È giunta l'[SOL]ora, è [LAm]giunto il mo[FA]mento\ndi [DO]essere pro[SOL]tagonisti [LAm]del nostro [FA]tempo,\n[DO]la strada è la [SOL]stessa anche se [LAm]siamo lo[FA]ntani,\n[DO]servire è la [SOL]sfida, il fu[LAm]turo è do[FA]mani!\nAffron[DO]tiamo con co[SOL]raggio [LAm]ogni sa[FA]lita,\n[DO]diritti al fu[SOL]turo sulle [FA]strade\ndella nostra [DO]vita.\n---\n[DO]Un cielo stel[FA]lato, un [DO]fuoco e il suo ca[SOL]lore,\n[DO]ogni mo[FA]mento ha un suo [DO]dolce sa[SOL]pore,\n[LAm]vediamo in lonta[FA]nanza una [DO]stella bril[SOL]lare,\n[LAm]certezza di qual[FA]cuno a cui po[DO]tersi affi[SOL]dare.\n---\n[DO]Insieme, la bel[FA]lezza [DO]della condivi[SOL]sione,\n[DO]le semplici emo[FA]zioni [DO]di una can[SOL]zone,\n[LAm]insieme, costru[FA]iamo un [DO]mondo mi[SOL]gliore,\n[LAm]liberiamo il fu[FA]turo col co[DO]raggio nel [SOL]cuore.\n---\n{rit}\n[DO]È giunta l'[SOL]ora, è [LAm]giunto il mo[FA]mento\ndi [DO]essere pro[SOL]tagonisti [LAm]del nostro [FA]tempo,\n[DO]la strada è la [SOL]stessa anche se [LAm]siamo lo[FA]ntani,\n[DO]servire è la [SOL]sfida, il fu[LAm]turo è do[FA]mani!\nAffron[DO]tiamo con co[SOL]raggio [LAm]ogni sa[FA]lita,\n[DO]diritti al fu[SOL]turo sulle [FA]strade\ndella nostra [DO]vita.\n---\n[DO]Viviamo per l'[FA]oggi, il fu[DO]turo è sullo [SOL]sfondo,\n[DO]sporchiamo le nostre [FA]mani in [DO]questo [SOL]mondo,\n[LAm]non si può più [FA]stare [DO]fermi ad aspet[SOL]tare,\n[LAm]il nostro sor[FA]riso ha ancora [DO]molto da [SOL]dare.\n---\n[DO]Sentiamo che l'a[FA]more [DO]non è mai abba[SOL]stanza,\n[DO]a tutti vogliam gri[FA]dare che c'è an[DO]cora spe[SOL]ranza,\n[LAm]a chiunque incon[FA]triamo vo[DO]gliam far ca[SOL]pire\n[LAm]che il nostro [FA]stile è sempre [DO]\"pronti a ser[SOL]vire\"!\n---\n[DO]La promessa che orgo[SOL]gliosi por[LAm]tiamo nel [FA]cuore\n[DO]ci ricorda che a ogni i[SOL]stante dob[LAm]biam dar co[FA]lore,\n[DO]l'idea di un cambia[SOL]mento pos[LAm]siam realiz[FA]zare,\n[DO]se siamo u[SOL]niti nulla [LAm]ci può fer[FA]mare,\ne [DO]io non sono an[SOL]cora [LAm]stanco di pen[FA]sare\nche [DO]noi questo [SOL]mondo lo pos[LAm]siam cam[FA]biare!\n---\n{rit}\n[DO]È giunta l'[SOL]ora, è [LAm]giunto il mo[FA]mento\ndi [DO]essere pro[SOL]tagonisti [LAm]del nostro [FA]tempo,\n[DO]la strada è la [SOL]stessa anche se [LAm]siamo lo[FA]ntani,\n[DO]servire è la [SOL]sfida, il fu[LAm]turo è do[FA]mani!\nAffron[DO]tiamo con co[SOL]raggio [LAm]ogni sa[FA]lita,\n[DO]diritti al fu[SOL]turo sulle [FA]strade\ndella nostra [DO]vita."
+  },
+  {
+    "titolo": "Un bosco a colori",
+    "anno": 2018,
+    "luogo": "Volo Regionale Emilia-Romagna 2018",
+    "tonalita": "DO",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[DO] [SOL] [LAm] [FA] [FA]\n---\n[DO]Coccinella [SOL]vola sul sen[LAm]tiero [FA]\ntra [DO]i fili d'erba e i [SOL]fiori sotto il [LAm]cielo. [FA]\nNel [DO]grande prato [SOL]verde\ntu [LAm]chiama dolce[FA]mente,\n[DO]e alla Grande [SOL]Quercia tutti an[LAm]dremo. [FA]\n---\n{rit}\nUn bosco a c[DO]olori, [SOL]la gioia nei [LAm]cuori, [FA]\nse siamo insie[DO]me e nes[SOL]suno sta fuori[LAm], [FA]\nse ognuno ac[DO]cende di [SOL]vita un[LAm]a fogl[FA]ia,\nve[DO]drai che tutto il [SOL]bosco sa[LAm]rà una meravi[FA]glia!\n---\n[DO]Coccinella [SOL]vola dentro al [LAm]bosco, [FA]\ntra [DO]il pino mugo e l'[SOL]agrifoglio [LAm]rosso. [FA]\nIl [DO]vento tra le [SOL]foglie\nsus[LAm]surra mille [FA]storie\n[DO]da raccontare a [SOL]chi incontre[LAm]remo. [FA]\n---\n{rit}\nUn bosco a c[DO]olori, [SOL]la gioia nei [LAm]cuori, [FA]\nse siamo insie[DO]me e nes[SOL]suno sta fuori[LAm], [FA]\nse ognuno ac[DO]cende di [SOL]vita un[LAm]a fogl[FA]ia,\nve[DO]drai che tutto il [SOL]bosco sa[LAm]rà una meravi[FA]glia!\n---\nLa [DO]montagna [SOL]sali, cocci[LAm]nella, [FA]\ne [DO]ti alzi in volo [SOL]fino a quella [LAm]stella. [FA]\nDa [DO]lì poi torna agli [SOL]altri\ne la [LAm]gioia di do[FA]narti\n[DO]porta, coccinella, [SOL]nel tuo [LAm]cuore. [FA]\n---\n{rit}\nUn bosco a c[DO]olori, [SOL]la gioia nei [LAm]cuori, [FA]\nse siamo insie[DO]me e nes[SOL]suno sta fuori[LAm], [FA]\nse ognuno ac[DO]cende di [SOL]vita un[LAm]a fogl[FA]ia,\nve[DO]drai che tutto il [SOL]bosco sa[LAm]rà una meravi[FA]glia!\n---\n[DO]Coccinella, [SOL]ora hai impa[LAm]rato [FA]\nche [DO]gioia il tuo im[SOL]pegno ha por[LAm]tato. [FA]\nNon [DO]c'è festa più [SOL]bella,\nnon [LAm]c'è gioia più [FA]grande\nche colo[DO]rare il mondo in[SOL]sieme agli [LAm]altri. [FA]\n---\n{rit}\nUn bosco a c[DO]olori, [SOL]la gioia nei [LAm]cuori, [FA]\nse siamo insie[DO]me e nes[SOL]suno sta fuori[LAm], [FA]\nse ognuno ac[DO]cende di [SOL]vita un[LAm]a fogl[FA]ia,\nve[DO]drai che tutto il [SOL]bosco sa[LAm]rà una meravi[FA]glia!\n---\n{rit}\nUn bosco a c[DO]olori, [SOL]la gioia nei [LAm]cuori, [FA]\nse siamo insie[DO]me e nes[SOL]suno sta fuori[LAm], [FA]\nse ognuno ac[DO]cende di [SOL]vita un[LAm]a fogl[FA]ia,\nve[DO]drai che tutto il [SOL]bosco sa[LAm]rà una meravi[FA]glia!"
   },
   {
     "titolo": "Tangram",

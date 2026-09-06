@@ -170,7 +170,7 @@ v0.131
 v1.3
 - Nuova sezione impostazioni
 ----------------------------------------------------------------------------------------
-v1.4
+v1.4 DONE
 - Finito il check delle canzoni AGESCI
 - Finito il check delle canzoni messa
 - Migliorata la sezione impostazioni - reso più evidente il pulsante per segnalare canzoni o errori
