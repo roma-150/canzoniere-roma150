@@ -177,10 +177,17 @@ v1.4
 - Inseriti tutti i canti bosco richiesti
 ----------------------------------------------------------------------------------------
 v1.5
-- Finito il check dei brani famosi
+- Finito l'upload dei canti del canzoniere di clan...
 ----------------------------------------------------------------------------------------
 v1.6
-- Finito l'upload dei canti del canzoniere di clan...
+- Canti canzoniere messa...
+
+
+
+
+
+v1.6
+- Finito il check dei brani famosi
 ----------------------------------------------------------------------------------------
 v1.7
 - Finito il check delle canzoni di gruppo
@@ -189,14 +196,15 @@ v1.7
 
 
 
+
 - PENSA DI AGGIUNGERE LE CATEGORIE: CANTI DI PASSAGGIO/CANTI DEL BUONGIORNO/CANTI DELLA BUONANOTTE/ETC, TRA I CANTI SCOUT...
 
 
-
-
-- PIù BRANI FAMOSI (MAGARI VAI PER GENERE), DOPO AVER CORRETTO QUELLI CHE CI SONO GIà...
 - PROCEDI CON:
 - CANTI SCOUT VARI (L/C, E/G, AGESCI)
+
+- PIù BRANI FAMOSI (MAGARI VAI PER GENERE), DOPO AVER CORRETTO QUELLI CHE CI SONO GIà...
+
 
 ---------------------------------------------------------------------------------------------------------
 - CANTI DAL CANZONIERE MESSA
@@ -221,8 +229,6 @@ CANTI VARI DA AGGIUNGERE, AGGIUNGILI GIA FIXATI!!!
 - SANTO GEN VERDE (QUELLO NUOVO)
 - ALLELUIA GEN VERDE (QUELLO NUOVO)
 - I WILL FOLLOW
-- CANTI BOSCO
-- CANTO E/G CASALOTTI 2026
 - CANTO GUIDE 2007: SCONOSCIUTO
 - CANTI SCOUT R/S
 - CON UN FILO, CONVEGNO L/C 2026
