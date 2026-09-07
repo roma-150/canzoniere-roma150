@@ -2064,6 +2064,16 @@
     "testo_accordi": "[DO]Tu scendi dalle stelle, o re del [SOL]cielo\nE vieni in una grotta al freddo al [DO]gelo,\nE [SOL]vieni in una grotta al freddo al [DO]gelo.\n---\nO bam[SOL]bino mio di[DO]vino io ti [SOL]vedo qui a tre[DO]mar\nO Dio be[SOL]ato ah quanto ti costò l'avermi a[DO]mato\nAh [SOL]quanto ti costò l'avermi a[DO]mato!\n---\nA [DO]Te che sei del mondo il Cre[SOL]atore\nMancano panni e fuoco o mio Si[DO]gnore\n[SOL]Mancano panni e fuoco o mio Si[DO]gnore.\n---\nCaro e[SOL]letto pargo[DO]letto quanto [SOL]questa pover[DO]tà\nPiù m'inna[SOL]mora poichè ti fece amor povero an[DO]cora,\n[SOL]Poichè ti fece amor povero an[DO]cora."
   },
   {
+    "titolo": "Oh happy day",
+    "anno": 1755,
+    "tonalita": "SOL",
+    "tipo": "messa",
+    "autore": "Philip Doddridge",
+    "momento_liturgico": ["Finale"],
+    "tempo_liturgico": ["Pasqua", "Natale", "Battesimo"],
+    "testo_accordi": "{strumentale}\n[SOL] [DO]\n[SOL] [DO]\n---\n{rit}\nOh happy [SOL]day, oh happy [DO]day,\noh happy [SOL]day, oh happy [MI7]day,\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\noh when He [LAm7]washed,\n(when Jesus [RE7]washed)\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\nHe washed my sins a[SOL]way!\nOh happy [DO]day!\n---\nHe taught me [SOL]how to [DO]watch,\nfight and [SOL]pray, fight and [RE7]pray,\nand live re[SOL]joicing [DO]every [SOL]day,\nevery [RE7]day!\nOh happy [SOL]day!\n---\n{rit}\nOh happy [SOL]day, oh happy [DO]day,\noh happy [SOL]day, oh happy [MI7]day,\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\noh when He [LAm7]washed,\n(when Jesus [RE7]washed)\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\nHe washed my sins a[SOL]way!\nOh happy [DO]day!"
+  },
+  {
     "titolo": "Esci dalla tua terra",
     "anno": 1968,
     "luogo": null,
@@ -2288,6 +2298,15 @@
     "testo_accordi": "{strumentale}\n[SOL] [RE] [DO] [SOL] [RE] [DO]\n---\n{rit}\n[SOL]È [RE]bello can[DO]tare il tuo a[SOL]more,\n[LAm]è [LAm7]bello lo[DO]dare il tuo [RE]nome.\n[SOL]È [SI7]bello can[DO]tare il tuo amore,\nè [SOL]bello lo[RE]darti, Si[DO]gnore, è [SOL]bello can[RE]tare a [DO]Te!\n---\n[MIm]Tu che sei l’amore infi[SIm]nito\nche [DO]neppure il cielo può contenere,\nti [LAm]sei fatto [LAm7]uomo, [RE]Tu sei venuto qui\nad [SI7]abitare in mezzo a [DO]noi, allora…[SOL]\n---\n{rit}\n[SOL]È [RE]bello can[DO]tare il tuo a[SOL]more,\n[LAm]è [LAm7]bello lo[DO]dare il tuo [RE]nome.\n[SOL]È [SI7]bello can[DO]tare il tuo amore,\nè [SOL]bello lo[RE]darti, Si[DO]gnore, è [SOL]bello can[RE]tare a [DO]Te!\n---\n[MIm]Tu che conti tutte le [SIm]stelle\ne le [DO]chiami ad una ad una per nome,\nda [LAm]mille sen[LAm7]tieri [RE]ci hai radunati qui,\nci [SI7]hai chiamati figli [DO]tuoi, allora…\n---\n{rit}\n[SOL]È [RE]bello can[DO]tare il tuo a[SOL]more,\n[LAm]è [LAm7]bello lo[DO]dare il tuo [RE]nome.\n[SOL]È [SI7]bello can[DO]tare il tuo amore,\nè [SOL]bello lo[RE]darti, Si[DO]gnore, è [SOL]bello can[RE]tare a [DO]Te!"
   },
   {
+    "titolo": "Oh happy day",
+    "anno": 1755,
+    "tonalita": "SOL",
+    "tipo": "musica",
+    "autore": "Philip Doddridge",
+    "genere": "Gospel",
+    "testo_accordi": "{strumentale}\n[SOL] [DO]\n[SOL] [DO]\n---\n{rit}\nOh happy [SOL]day, oh happy [DO]day,\noh happy [SOL]day, oh happy [MI7]day,\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\noh when He [LAm7]washed,\n(when Jesus [RE7]washed)\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\nHe washed my sins a[SOL]way!\nOh happy [DO]day!\n---\nHe taught me [SOL]how to [DO]watch,\nfight and [SOL]pray, fight and [RE7]pray,\nand live re[SOL]joicing [DO]every [SOL]day,\nevery [RE7]day!\nOh happy [SOL]day!\n---\n{rit}\nOh happy [SOL]day, oh happy [DO]day,\noh happy [SOL]day, oh happy [MI7]day,\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\noh when He [LAm7]washed,\n(when Jesus [RE7]washed)\nwhen Jesus [LAm7]washed,\n(when Jesus [RE7]washed)\nHe washed my sins a[SOL]way!\nOh happy [DO]day!"
+  },
+  {
     "titolo": "The Wild Rover",
     "anno": 1800,
     "anno_incerto": true,
@@ -2346,6 +2365,16 @@
     "testo_accordi": "{strumentale}\n[DO] [SOL] [DO]\n---\n[DO]E butta in mezzo e butta,\nBarbera e Bardo[SOL7]lin,\nbasta che sia da bere,\nbasta che sia da [DO]bere!\nE butta in mezzo e butta,\nBarbera e Bardo[FA]lin,\nbasta che sia da [DO]bere\ndalla [SOL]sera alla mat[DO]tin!\n---\n{rit}\n[DO]Cipiripiri contù contelo,\ncala giù dal reggi[SOL]mento,\nparpompussà parapompussà,\nparafò contù con[DO]tà...\n[DO]Cala giù!\n---\n[DO]Aveo una monfrigotta\nche vien dalla mon[SOL7]tà,\nvendeva la ricotta,\nvendeva la ri[DO]cotta!\nAveo una monfrigotta\nche vien dalla mon[FA]tà,\nvendeva la ri[DO]cotta,\nla ven[SOL]deva bruciac[DO]chià!\n---\n{rit}\n[DO]Cipiripiri contù contelo,\ncala giù dal reggi[SOL]mento,\nparpompussà parapompussà,\nparafò contù con[DO]tà...\n[DO]Cala giù!"
   },
   {
+    "titolo": "Victoria",
+    "anno": 1900,
+    "anno_incerto": true,
+    "tonalita": "DO",
+    "tipo": "musica",
+    "autore": "Brian O'Higgins",
+    "genere": "Folk",
+    "testo_accordi": "[DO]Victoria, we are [FA]coming for you [DO]soon,\nVictoria, the [SOL]labour of the moon,\n[DO]shining from December\nto the [FA]largest part of June,\nwe are [SOL]coming down for you, Vic[FA]to[DO]ria."
+  },
+  {
     "titolo": "Down by the Riverside",
     "anno": 1918,
     "tonalita": "SOL",
@@ -2353,6 +2382,15 @@
     "autore": "Canto tradizionale",
     "genere": "Gospel",
     "testo_accordi": "[SOL]I'm going to lay down my sword and shield\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to lay down my sword and shield\nDown by the riverside\nAin't gonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I’m going to put down my heavy load\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI’m going to put down my heavy load\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I'm going to put down my cares and woes\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to put down my cares and woes\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I'm going to put on my travellin' shoes\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to put on my travellin' shoes\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I'm going to put on my long white robe\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to put on my long white robe\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I'm going to put on my starry crown\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to put on my starry crown\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\n---\n[SOL]I'm going to meet my dear old mother\nDown by the riverside\n[RE7]Down by the riverside\n[SOL]Down by the riverside\nI'm going to meet my dear old mother\nDown by the riverside\nGonna [RE]study [RE7]war no [SOL]more.\n---\n{rit}\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more.\nI ain't gonna [DO]study war no more,\nI ain't gonna [SOL]study war no more,\nI ain't gonna [RE]study [RE7]war no [SOL]more."
+  },
+  {
+    "titolo": "This land is your land",
+    "anno": 1940,
+    "tonalita": "DO",
+    "tipo": "musica",
+    "autore": "Woody Guthrie",
+    "genere": "Folk",
+    "testo_accordi": "{strumentale}\n[DO] [FA] [DO] [SOL]\n[DO] [FA] [DO] [LAm]\n[DO] [SOL] [DO] [SOL] [DO]\n---\n{rit}\nThis land is [FA]your land, this land is [DO]my land\nFrom Cali[SOL]fornia to the New York [DO]island;\nFrom the redwood [FA]forest to the Gulf Stream [DO]wa[LAm]ters\n[DO]This land was [SOL]made for you and [DO]me.\n---\nAs I was [FA]walking that ribbon of [DO]highway,\nI saw a[SOL]bove me that endless [DO]skyway:\nI saw be[FA]low me that golden [DO]val[LAm]ley:\n[DO]This land was [SOL]made for you and [DO]me.\n---\n{rit}\nThis land is [FA]your land, this land is [DO]my land\nFrom Cali[SOL]fornia to the New York [DO]island;\nFrom the redwood [FA]forest to the Gulf Stream [DO]wa[LAm]ters\n[DO]This land was [SOL]made for you and [DO]me."
   },
   {
     "titolo": "Fischia il vento",
@@ -2560,6 +2598,15 @@
     "autore": "Lucio Battisti",
     "genere": "Cantautori",
     "testo_accordi": "[REm]Fiori rosa\nfiori di [SOLm]pesco, c'eri [LA7]tu\n[REm]fiori nuovi\nstasera [SOLm]esco, ho un anno di [LA7]più\n[SIb]stessa strada, stessa porta\n[DO]scusa\n[FA]se son ve[SOL]nuto qui questa [DO]sera\n[FA]da solo non riu[SOL]scivo a dormire per[LAm]ché\n[FA]di notte ho an[SOL]cor bisogno di [DO]te\n[SIb]fammi entrare per favore\n[DO]...solo\n[FA]credevo di vo[SOL]lare e non [DO]volo\n[FA]credevo che l'az[SOL]zurro dei tuoi occhi per [LAm]me\n[FA]fosse sempre [SOL]cielo, non [DO]è\n[FA]fosse sempre [SOL]cielo, non [DO]è\n[SIb]posso stringerti le mani\n[DO]come sono fredde tu tremi\n[MIm]no, non sto sbagliando mi ami\ndimmi che è [LAm]vero\ndimmi che è [DO]vero\ndimmi che è [LAm]vero\ndimmi che è [DO]vero\ndimmi che [LAm]noi non siamo stati mai lontani\n[DO]ieri era oggi, oggi è già domani\ndimmi che è [LAm]vero\ndimmi che è [DO]ve... scusa\n[FA]credevo proprio [SOL]che fossi [DO]sola\n[FA]credevo non ci [SOL]fosse nessuno con [LAm]te\n[FA]oh, scusami [SOL]tanto se [DO]puoi\n[FA]signore chiedo [SOL]scusa anche a [DO]lei\n[FA]ma io ero [SOL]proprio fuori di [LAm]me\n[FA]io ero [SOL]proprio fuori di [LAm]me quando dicevo\n[SIb]posso stringerti le mani\n[DO]come sono fredde tu tremi\n[MIm]no, non sto sbagliando mi ami\ndimmi che è [LAm]vero\ndimmi che è [DO]vero"
+  },
+  {
+    "titolo": "Father and Son",
+    "anno": 1970,
+    "tonalita": "REm",
+    "tipo": "musica",
+    "autore": "Cat Stevens",
+    "genere": "Folk",
+    "testo_accordi": "{strumentale}\n[SOL] [DO] [SOL] [DO]\n---\n[SOL]It's not time to make a [RE]change, just re[DO]lax and take it [LAm]easy\nYou're still [SOL]young, that's your [MIm]fault, there's so [LAm]much you have to [RE]know\nFind a [SOL]girl, settle [RE]down, if you [DO]want to, you can [LAm]marry\nLook at [SOL]me, I am [MIm]old, but I'm [LAm]happy [RE]\nI was [SOL]once like you are [RE]now, and I [DO]know that it's not [LAm]easy\nTo be [SOL]calm when you've [MIm]found something going [LAm]on [RE]\nBut take your [SOL]time, think a [RE]lot, why, think of [DO]everything you've [LAm]got\nFor you will [SOL]still be here to[MIm]morrow, but your [RE]dreams may [SOL]not\n---\nHow can [SOL]I try to ex[SIm]plain? 'Cause when I [DO]do he turns a[LAm]way again\nIt's [SOL]always been the [MIm]same, same old [LAm]story [RE]\nFrom the [SOL]moment I could [SIm]talk I was [DO]ordered to [LAm]listen\nNow there's a [SOL]way, and I [MIm]know that I [RE]have to go a[SOL]way\nI [RE]know I [DO]have to [SOL]go\n---\n{strumentale}\n[SOL] [RE] [DO] [LAm]\n[SOL] [MIm] [LAm] [RE]\n[SOL] [RE] [DO] [LAm]\n[SOL] [MIm] [RE] [SOL]\n[RE] [DO]\n[SOL] [DO] [SOL] [DO]\n---\nIt's not [SOL]time to make a [RE]change, just sit [DO]down and take it [LAm]slowly\n(Away, away, away)\nYou're still [SOL]young, that's your [MIm]fault, there's so [LAm]much you have to go [RE]through\n(I know I have to make...)\nFind a [SOL]girl, settle [RE]down, if you [DO]want, you can [LAm]marry\n(...this decision alone...)\nLook at [SOL]me, I am [MIm]old, but I'm [LAm]happy [RE]\n(No...)\n---\nAll the [SOL]times that I've [SIm]cried, keeping [DO]all the things I [LAm]knew inside\n(Stay, stay, stay)\nIt's [SOL]hard, but it's [MIm]harder to ig[LAm]nore it [RE]\n(Why must you go and make...)\nIf they were [SOL]right, I'd a[SIm]gree, but it's [DO]them they know, not [LAm]me\n(...this decision alone...)\nNow there's a [SOL]way, and I [MIm]know that I [RE]have to go a[SOL]way\nI [RE]know I [DO]have to [SOL]go"
   },
   {
     "titolo": "Il pescatore",

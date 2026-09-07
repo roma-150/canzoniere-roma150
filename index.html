@@ -471,9 +471,16 @@
   .key-controls{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:4px; }
   .key-controls button{
     width:20px; height:20px; border-radius:50%; border:1.5px solid var(--purple);
-    background:var(--white); color:var(--purple); font-size:12px; font-weight:700;
-    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+    background:var(--white); color:var(--purple); font-size:12px; font-weight:700; line-height:1;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
   }
+  .btn-plus, .btn-minus{ position:relative; }
+  .btn-plus::before, .btn-plus::after, .btn-minus::before{
+    content:""; position:absolute; top:50%; left:50%;
+    background:currentColor; transform:translate(-50%, -50%);
+  }
+  .btn-plus::before, .btn-minus::before{ width:9px; height:2px; }
+  .btn-plus::after{ width:2px; height:9px; }
   .key-controls button:active{ background:var(--neutral); }
 
   .fontsize-tile{ background:var(--neutral); cursor:pointer; user-select:none; }
@@ -503,7 +510,7 @@
   }
   .scroll-controls button{
     width:20px; height:20px; border-radius:50%; border:1.5px solid var(--purple);
-    background:var(--white); color:var(--purple); font-size:12px; font-weight:700;
+    background:var(--white); color:var(--purple); font-size:12px; font-weight:700; line-height:1;
     display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;
   }
   .scroll-controls button:active{ background:var(--neutral); }
@@ -4521,8 +4528,8 @@ function showDetail(index){
         <div class="label">Tonalità</div>
         <div class="key-value" id="currentKey">${song.tonalita || "—"}</div>
         <div class="key-controls">
-          <button id="down" aria-label="Trasponi giù">–</button>
-          <button id="up" aria-label="Trasponi su">+</button>
+          <button id="down" class="btn-minus" aria-label="Trasponi giù"></button>
+          <button id="up" class="btn-plus" aria-label="Trasponi su"></button>
         </div>
       </div>
       <div class="mini-tile fontsize-tile" id="fontSizeTile">
@@ -4539,8 +4546,8 @@ function showDetail(index){
         <div class="label" id="scrollLabel">Scorri (5)</div>
         <button class="scroll-play-btn" id="scrollPlayPause" aria-label="Avvia scorrimento">${ICONS.play(14)}</button>
         <div class="scroll-controls" id="scrollControls">
-          <button id="scrollMinus" aria-label="Rallenta">–</button>
-          <button id="scrollPlus" aria-label="Accelera">+</button>
+          <button id="scrollMinus" class="btn-minus" aria-label="Rallenta"></button>
+          <button id="scrollPlus" class="btn-plus" aria-label="Accelera"></button>
         </div>
       </div>
     </div>
@@ -4804,9 +4811,9 @@ function showDetail(index){
   const scrollFloat = document.createElement("div");
   scrollFloat.className = "scroll-float";
   scrollFloat.innerHTML = `
-    <button id="scrollFloatMinus" aria-label="Rallenta">–</button>
+    <button id="scrollFloatMinus" class="btn-minus" aria-label="Rallenta"></button>
     <button id="scrollFloatPlayPause" aria-label="Avvia scorrimento">${ICONS.play(14)}</button>
-    <button id="scrollFloatPlus" aria-label="Accelera">+</button>
+    <button id="scrollFloatPlus" class="btn-plus" aria-label="Accelera"></button>
     <span class="scroll-float-label" id="scrollFloatLabel">Velocità 5</span>
   `;
   document.querySelector(".phone").appendChild(scrollFloat);
