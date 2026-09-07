@@ -1370,6 +1370,41 @@
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
     "testo_accordi": "[DO]Al levar dell'alba il sam[REm]bhur bra[DO]mì.\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Un daino bal[SOL7]zò fuori dal mac[DO]chion\ne s'abbeve[SOL7]rò al laghetto [DO]d'or.\nIo sol battendo il bosco ho visto [SOL7]ciò.\n---\n{rit}\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Una, [SOL7]due, poi an[DO]cor!\n---\n[DO]Al levar dell'alba il bran[REm]co ulu[DO]lò.\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Zampa che la pista [SOL7]mai non lasce[DO]rà\nocchi che osser[SOL7]vano nell'oscuri[DO]tà.\nUn grande ululato orsù lanciamo as[SOL7]siem.\n---\n{rit}\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Una, [SOL7]due, poi an[DO]cor!\n---\n[DO]Al levar dell'alba il sam[REm]bhur bra[DO]mì.\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Senza alcun rumore [SOL7]un lupo tor[DO]nò\nsui suoi passi al[SOL7]lor verso il branco an[DO]dò.\nSulla pista assieme ci lasciammo al[SOL7]lor.\n---\n{rit}\n[REm]Una, [DO]due, [SOL7]poi ancor!\n[DO]Una, [SOL7]due, poi an[DO]cor!"
+  },
+  {
+    "titolo": "Canto della Promessa",
+    "anno": 1947,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C", "E/G", "R/S"],
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI-ASCI-AGI",    
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [MIm] [LA7] [RE]\n---\n[RE]Dinnanzi a voi m'impegno\n[MIm]sul mio o[LA7]nor\n[RE]e voglio esserne degno\n[MIm]per [LA7]Te, o Si[RE]gnor.\n---\n{rit}\nLa [SOL]giusta e [LA7]retta [RE]via\n[SOL]mostra[LA7]mi [RE]Tu\ne la [SOL]Promessa mia\nac[LA7]cogli, o Ge[RE]sù.\n---\n[RE]Fedele al Tuo volere\n[MIm]sempre sa[LA7]rò,\n[RE]di Patria il mio dovere\n[MIm]a[LA7]dempi[RE]rò.\n---\n{rit}\nLa [SOL]giusta e [LA7]retta [RE]via\n[SOL]mostra[LA7]mi [RE]Tu\ne la [SOL]Promessa mia\nac[LA7]cogli, o Ge[RE]sù.\n---\n[RE]Apostolo Tuo sono\n[MIm]per Tuo a[LA7]mor,\n[RE]agli altri di me dono\n[MIm]vo' [LA7]fare o[RE]gnor.\n---\n{rit}\nLa [SOL]giusta e [LA7]retta [RE]via\n[SOL]mostra[LA7]mi [RE]Tu\ne la [SOL]Promessa mia\nac[LA7]cogli, o Ge[RE]sù.\n---\n[RE]Leale alla mia Legge\n[MIm]sempre sa[LA7]rò,\n[RE]se la Tua man mi regge\n[MIm]io [LA7]mante[RE]rrò!\n---\n{rit}\nLa [SOL]giusta e [LA7]retta [RE]via\n[SOL]mostra[LA7]mi [RE]Tu\ne la [SOL]Promessa mia\nac[LA7]cogli, o Ge[RE]sù."
+  },  
+  {
+    "titolo": "Canto della Promessa (versione Bosco)",
+    "anno": 1947,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI-AGI",    
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [MIm] [LA7] [RE]\n---\n[RE]Seguendo la tua legge,\n[MIm]al motto tuo fe[LA7]del,\n[RE]le ali apri al vento,\n[MIm]noi [LA7]vole[RE]remo insiem.\n---\n{rit}\nRi[SOL]corda [LA7]poi nel tuo [RE]vol\nche un [SOL]solo [LA7]cerchio ci [RE]tien,\nin[SOL]tatta nel tuo cuore\nla [LA7]tua Promessa man[RE]tien.\n---\n[RE]Dammi la mano, cocci,\n[MIm]insieme vogliamo vo[LA7]lar,\n[RE]in gran catena unite,\n[MIm]nessu[LA7]no ci potrà sepa[RE]rar.\n---\n{rit}\nRi[SOL]corda [LA7]poi nel tuo [RE]vol\nche un [SOL]solo [LA7]cerchio ci [RE]tien,\nin[SOL]tatta nel tuo cuore\nla [LA7]tua Promessa man[RE]tien.\n---\n[RE]Dall'alto Dio ci vede,\n[MIm]ci guida nel suo sen[LA7]tier,\n[RE]o coccinella serba\n[MIm]la [LA7]tua Promessa nel [RE]cuor.\n---\n{rit}\nRi[SOL]corda [LA7]poi nel tuo [RE]vol\nche un [SOL]solo [LA7]cerchio ci [RE]tien,\nin[SOL]tatta nel tuo cuore\nla [LA7]tua Promessa man[RE]tien."
+  },   
+  {
+    "titolo": "Canto della Promessa (versione Giungla)",
+    "anno": 1947,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Giungla",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI-ASCI",    
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[RE] [MIm] [LA7] [RE]\n---\n[RE]Davanti a Te m'impegno\n[MIm]con tutto il [LA7]cuor,\n[RE]diventerò tuo paggio,\n[MIm]o [LA7]mio Si[RE]gnor.\n---\n{rit}\nIo [SOL]voglio a[LA7]marti [RE]sempre,\n[SOL]sempre [LA7]di [RE]più\ne la [SOL]promessa mia\npro[LA7]teggi [RE]Tu.\n---\n[RE]Voglio esser Tuo lupetto\n[MIm]per dive[LA7]nir,\n[RE]più tardi esploratore\n[MIm]per [LA7]ser[RE]vir.\n---\n{rit}\nIo [SOL]voglio a[LA7]marti [RE]sempre,\n[SOL]sempre [LA7]di [RE]più\ne la [SOL]promessa mia\npro[LA7]teggi [RE]Tu.\n---\n[RE]A Te, Gesù, che amo\n[MIm]obbedi[LA7]rò,\n[RE]a me dimenticando\n[MIm]ti a[LA7]scolte[RE]rò.\n---\n{rit}\nIo [SOL]voglio a[LA7]marti [RE]sempre,\n[SOL]sempre [LA7]di [RE]più\ne la [SOL]promessa mia\npro[LA7]teggi [RE]Tu."
   },  
   {
     "titolo": "Attorno alla Rupe",
@@ -1762,6 +1797,17 @@
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
     "testo_accordi": "[REm]Per le notti [DO]piene di avven[REm]tura,\n[REm]Per le nostre [DO]corse più ve[REm]loci,\n[FA]Quando insieme [DO7]noi senza pa[FA]ura\n[SOLm]Tendiamo l'ag[REm]guato ai ne[LA7]mici.\n---\n[REm]Per gli odori [DO]dell'alba fra[REm]granti\n[REm]Prima che eva[DO]pori la [REm]brina\n[FA]per i nostri as[DO7]salti più scat[FA]tanti\n[SOLm]Che riescono a sco[REm]var la selvag[LA7]gina.\n---\n[REm]Per le urla dei fra[DO]telli in [REm]caccia,\n[REm]Quando a terra il [DO]cervo si di[REm]fende\n[FA]per il richiamo [DO7]della nuova [FA]traccia\n[SOLm]Quando il Branco u[REm]nito ri[LA7]sponde.\n---\n[REm]È deciso: in[DO]sieme combat[REm]tiamo\n[REm]Questa caccia è [DO]caccia senza [REm]preda\n[FA]È deciso: cor[DO7]riam, su cor[FA]riamo.\n[SOLm]Abbaia cane [REm]rosso senza [LA7]coda."
+  },     
+  {
+    "titolo": "Cenerentola",
+    "anno": 1986,
+    "luogo": "Route Nazionale R/S 1986",
+    "tonalita": "DO",
+    "branca": ["L/C", "R/S"],
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",    
+    "origine": "AGESCI",
+    "testo_accordi": "{strumentale}\n[MI] [LAm] [FA] [SOL] [DO]\n---\n{rit}\n[MI]Forse... [LAm]ho ancora sonno, [MI]ma mi chiaman [LAm]forte:\n[MI]“Entra nel [LAm]gioco, [FA]gioca la tua [SOL]parte!”\n[MI]Si sa, non è ancor [LAm]nato [MI]chi goda l'avven[LAm]tura\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n---\nSe un [DO]giorno Cenerentola avesse detto: [MI]“Basta!\nMi [DO]lascian qui, pazienza, non andrò alla [MI]festa”,\nlag[LAm]giù il figlio del [MI]re, sicuro come il [LAm]cielo,\nnel [FA]suo grande pa[DO]lazzo sa[FA]rebbe ancora [SOL]solo.\n---\nDi [DO]fronte al vecchio padre, piuttosto imbufo[MI]lito,\nFran[DO]cesco forse un giorno avrebbe prefe[MI]rito\ntor[LAm]nare buono a [MI]casa, far pure lui il mer[LAm]cante,\ne [FA]non passar la [DO]vita a sconcer[FA]tar la [SOL]gente.\n---\n{rit}\n[MI]Forse... [LAm]ho ancora sonno, [MI]ma mi chiaman [LAm]forte:\n[MI]“Entra nel [LAm]gioco, [FA]gioca la tua [SOL]parte!”\n[MI]Si sa, non è ancor [LAm]nato [MI]chi goda l'avven[LAm]tura\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n---\nSe [DO]tre caravelle, da mesi in mezzo al [MI]mare,\na[DO]vessero convinto Colombo a rinun[MI]ciare,\npo[LAm]tremmo ancora [MI]oggi stare sicuri [LAm]che\nnon [FA]molti a cola[DO]zione ber[FA]rebbero caf[SOL]fè.\n---\nSe co[DO]sì avesse detto Giuseppe, spaven[MI]tato:\n“[DO]Maria, io qui ti lascio, quel che è stato è [MI]stato!”,\nbeh, [LAm]voi non ci pen[MI]sate che storia sbrindel[LAm]lata\nin [FA]quella mangia[DO]toia un [FA]dì sarebbe [SOL]nata.\n---\n{rit}\n[MI]Forse... [LAm]ho ancora sonno, [MI]ma mi chiaman [LAm]forte:\n[MI]“Entra nel [LAm]gioco, [FA]gioca la tua [SOL]parte!”\n[MI]Si sa, non è ancor [LAm]nato [MI]chi goda l'avven[LAm]tura\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n---\nSe [DO]mentre era assediato a Mafeking, lag[MI]giù,\nB.[DO]P. avesse detto ai suoi: “There is nothing to [MI]do”,\nnon [LAm]ci sarebbe al [MI]mondo, ti piaccia o non ti [LAm]piaccia,\nnes[FA]suno che sa[DO]luti di[FA]cendo: “Buona [SOL]Caccia!”.\n---\nGui[DO]dando una canoa per acque tempe[MI]stose,\ndo[DO]mando col sorriso le rapide fu[MI]riose,\nben [LAm]più di una per[MI]sona mi ha detto che la [LAm]vita,\ngu[FA]stata in questo [DO]modo, è [FA]ben più sapo[SOL]rita.\n---\n{rit}\n[MI]Vedi? [LAm]Così va il mondo, a [MI]ognuno la sua [LAm]arte:\n[MI]entra nel [LAm]gioco, [FA]gioca la tua [SOL]parte!\n[MI]Si sa, non è ancor [LAm]nato [MI]chi goda l'avven[LAm]tura\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!\n[FA]guardando il mondo [DO]dietro al buco [SOL]della serra[DO]tura!"
   }, 
   {
     "titolo": "Ulula alla luna",
