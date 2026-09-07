@@ -1634,30 +1634,41 @@
     "testo_accordi": "[LAm]Tra boschi e prati [DO]verdi e fiumi\n[SOL]con l'acqua e con il [LAm]sole\ncol vento pure con l'[DO]aria lieve\n[SOL]nella calda estate o [LAm]con la neve\n[FA]quanti passi [DO]fatti insieme\n[SOL]allegria di una fa[LAm]tica\n[FA]ancor più mera[DO]vigliosa per[SOL]ché...\nfatta con [LAm]te, [SOL] fatta con [LAm]te [SOL]\n---\n[LAm]Un sorso d'acqua [DO]fresca e poi\nl'oriz[SOL]zonte di nuovo da[LAm]vanti a noi\nsenza più limi[DO]ti ed ore\n[SOL]ci fermeremo col [LAm]morir del sole\n[FA]per poi star da[DO]vanti al fuoco\nin una [SOL]notte con la [LAm]luna\n[FA]a pregar le [DO]stelle e il vento [SOL]di...\nportarci la for[LAm]tuna, [SOL] portarci la for[LAm]tuna [SOL]\n---\n[LAm]Lo zaino è fatto [DO]tutto è pronto\nun [SOL]nuovo giorno è [LAm]sorto già\ne con il ritmo dei [DO]nostri passi\n[SOL]il nostro tempo mi[LAm]sureremo\n[FA]poi di nuovo [DO]sul sentiero\nsoli[SOL]tario e sile[LAm]nzioso\n[FA]testimoni al[DO]le fatiche di [SOL]chi...\nin alto vuole an[LAm]dare [SOL] in alto vuole an[LAm]dare."
   },  
   {
-    "titolo": "L'uomo torna all'uomo",
-    "anno": 1980,
+    "titolo": "Canto di marcia",
+    "anno": 1970,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "LAm",
+    "branca": ["R/S"],
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "[LAm]Tra boschi e prati [DO]verdi e fiumi\n[SOL]con l'acqua e con il [LAm]sole\ncol vento pure con l'[DO]aria lieve\n[SOL]nella calda estate o [LAm]con la neve\n[FA]quanti passi [DO]fatti insieme\n[SOL]allegria di una fa[LAm]tica\n[FA]ancor più mera[DO]vigliosa per[SOL]ché...\nfatta con [LAm]te, [SOL] fatta con [LAm]te [SOL]\n---\n[LAm]Un sorso d'acqua [DO]fresca e poi\nl'oriz[SOL]zonte di nuovo da[LAm]vanti a noi\nsenza più limi[DO]ti ed ore\n[SOL]ci fermeremo col [LAm]morir del sole\n[FA]per poi star da[DO]vanti al fuoco\nin una [SOL]notte con la [LAm]luna\n[FA]a pregar le [DO]stelle e il vento [SOL]di...\nportarci la for[LAm]tuna, [SOL] portarci la for[LAm]tuna [SOL]\n---\n[LAm]Lo zaino è fatto [DO]tutto è pronto\nun [SOL]nuovo giorno è [LAm]sorto già\ne con il ritmo dei [DO]nostri passi\n[SOL]il nostro tempo mi[LAm]sureremo\n[FA]poi di nuovo [DO]sul sentiero\nsoli[SOL]tario e sile[LAm]nzioso\n[FA]testimoni al[DO]le fatiche di [SOL]chi...\nin alto vuole an[LAm]dare [SOL] in alto vuole an[LAm]dare."
+  },  
+  {
+    "titolo": "Oh mia pressa blu",
+    "anno": 1975,
     "anno_incerto": true,
     "luogo": null,
     "tonalita": "RE",
     "branca": ["L/C"],
-    "ambientazione": "Giungla",
     "tipo": "scout",
     "autore": "Tradizione scout AGESCI",    
     "origine": "AGESCI",
-    "testo_accordi": "[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]tutta la giungla [RE]griderà:\n[SOL]\"Chi fu [LA]nostro fra[FA#m]tel[SIm]lo\n[MIm]ora se ne [LA]va\".\n---\n[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]tutta la giungla s'a[RE]dunerà\n[SOL]nostro fra[LA]tello an[FA#m]dia[SIm]mo\n[MIm]ora a [LA]salu[RE]tar.\n---\n[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]tutta la giungla [RE]piangerà\n[SOL]il dolore [LA]del fra[FA#m]tel[SIm]lo\n[MIm]che ora se ne [LA]va.\n---\n[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]tutta la giungla si [RE]fermerà,\n[SOL]la traccia [LA]del fra[FA#m]tel[SIm]lo\n[MIm]nessun più [LA]segui[RE]rà.\n---\n[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]tutta la giungla [RE]griderà:\n[SOL]\"Chi fu [LA]nostro fra[FA#m]tel[SIm]lo\n[MIm]scordar non si po[LA]trà\".\n---\n[RE]L'uomo [SOL]torna all'[RE]uomo\n[LA]la giungla poi sus[RE]surrerà:\n[SOL]\"Buona [LA]caccia, fra[FA#m]tel[SIm]lo,\n[MIm]la giungla [LA]non scor[RE]dar\"."
+    "testo_accordi": "{rit}\n[DO]Oh mia pressa blu, oh mia pressa blu,\n[SOL7]io non t’amo più, io non t’amo più,\n[DO]e non ti rivedrò, e non ti rivedrò,\n[SOL7]pressa blu e bordò, pressa blu e [DO]bordò!\n---\nDal [DO]fondo della via\nti sa[SOL]luto, o pressa [DO]mia,\nti sa[DO]luto da quag[SOL]giù!\n[DO]Oh mia pressa [SOL]blu\n---\n{rit}\n[DO]Oh mia pressa blu, oh mia pressa blu,\n[SOL7]io non t’amo più, io non t’amo più,\n[DO]e non ti rivedrò, e non ti rivedrò,\n[SOL7]pressa blu e bordò, pressa blu e [DO]bordò!\n---\n[DO]Sei fuggita con una motozappa\nche non be[SOL]veva né rum né [DO]grappa,\nche ha una [DO]fila di trentasette denti\nche gli [SOL]creano solo dei tor[DO]menti!\n---\n{rit}\n[DO]Oh mia pressa blu, oh mia pressa blu,\n[SOL7]io non t’amo più, io non t’amo più,\n[DO]e non ti rivedrò, e non ti rivedrò,\n[SOL7]pressa blu e bordò, pressa blu e [DO]bordò!\n---\n[DO]Una cosa è essere affettuosi,\n[SOL]altra cosa è essere affet[DO]tati,\n[DO]una cosa è essere compresi,\n[SOL]altra cosa è essere com[DO]pressi!\n---\n{rit}\n[DO]Oh mia pressa blu, oh mia pressa blu,\n[SOL7]io non t’amo più, io non t’amo più,\n[DO]e non ti rivedrò, e non ti rivedrò,\n[SOL7]pressa blu e bordò, pressa blu e [DO]bordò!"
   },   
-{
-  "titolo": "Guendalina",
-  "anno": 1980,
-  "anno_incerto": true,
-  "luogo": null,
-  "tonalita": "DO",
-  "branca": ["L/C"],
-  "tipo": "scout",
-  "autore": "Tradizione scout AGESCI",
-  "origine": "AGESCI",
-  "testo_accordi": "[DO]Girando tra le steppe intorno al [LAm]polo\nagli [DO]argini del Nilo e del mar[LAm] Nero\nil [FA]papero Augusto lì tro[SOL7]vò\nla [FA]papera che il cuore suo stre[SOL7]gò\n---\n[DO]Vestita di un tailler di raso [LAm]nero\ncon gli [DO]occhi grandi e azzurri come il [LAm]cielo\ni [FA]riccioli alla Merilyn Mon[SOL7]roe\nuno [FA]sguardo e Augusto s'incen[SOL7]diò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono due anni entusiasm[LAm]anti\nPa[DO]rigi, Vienna e il golfo degli a[LAm]manti\ngi[FA]ravano il mondo senza [SOL7]meta\nfa[FA]cevano l’amore e la [SOL7]dieta\n---\n[DO]Ma una mattina triste di set[LAm]tembre\nAu[DO]gusto si svegliò un po’ strana[LAm]mente\nsul [FA]tavolo un biglietto lui tro[SOL7]vò\nin Au[FA]stralia con un tacchino lei scap[SOL7]pò!\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Ma il giorno dopo Augusto volò [LAm]via\nAn[DO]dò in Australia con la ferro[LAm]via\nA [FA]Melbourne Guendalina ritro[SOL7]vò\nUno [FA]sguardo e l’amor ricomin[SOL7]ciò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono degli anni entusiasm[LAm]anti\nu[DO]sciron dalle uova dei lat[LAm]tanti\ned [FA]eran proprio dei bei pape[SOL7]rini\ne [FA]si chiamavan tutti Guenda[SOL7]lini\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]"
-  },
+  {
+    "titolo": "Guendalina",
+    "anno": 1980,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "DO",
+    "branca": ["L/C"],
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "[DO]Girando tra le steppe intorno al [LAm]polo\nagli [DO]argini del Nilo e del mar[LAm] Nero\nil [FA]papero Augusto lì tro[SOL7]vò\nla [FA]papera che il cuore suo stre[SOL7]gò\n---\n[DO]Vestita di un tailler di raso [LAm]nero\ncon gli [DO]occhi grandi e azzurri come il [LAm]cielo\ni [FA]riccioli alla Merilyn Mon[SOL7]roe\nuno [FA]sguardo e Augusto s'incen[SOL7]diò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono due anni entusiasm[LAm]anti\nPa[DO]rigi, Vienna e il golfo degli a[LAm]manti\ngi[FA]ravano il mondo senza [SOL7]meta\nfa[FA]cevano l’amore e la [SOL7]dieta\n---\n[DO]Ma una mattina triste di set[LAm]tembre\nAu[DO]gusto si svegliò un po’ strana[LAm]mente\nsul [FA]tavolo un biglietto lui tro[SOL7]vò\nin Au[FA]stralia con un tacchino lei scap[SOL7]pò!\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Ma il giorno dopo Augusto volò [LAm]via\nAn[DO]dò in Australia con la ferro[LAm]via\nA [FA]Melbourne Guendalina ritro[SOL7]vò\nUno [FA]sguardo e l’amor ricomin[SOL7]ciò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono degli anni entusiasm[LAm]anti\nu[DO]sciron dalle uova dei lat[LAm]tanti\ned [FA]eran proprio dei bei pape[SOL7]rini\ne [FA]si chiamavan tutti Guenda[SOL7]lini\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]"
+    },
   {
     "titolo": "Buon Volo",
     "anno": 1980,
@@ -1883,19 +1894,6 @@
     "tipo": "scout",
     "origine": "AGESCI",
     "testo_accordi": "{strumentale}\n[RE] [LA] [RE]\n---\n[RE]Insieme con noi venite anche voi,\nla vita è per tutti un'occa[LA]sione,\nnon fa niente se uguali non siam,\nfaremo bandiera ovunque an[RE]dremo.\nLa felicità colore non ha,\nè un pezzo di cielo\nche dopo la pioggia ritorna se[RE]reno.\n---\n{rit}\n[SOL]Bianco, verde, rosso, giallo\ne [RE]tu prendi il posto che [LA]vuoi\ne con noi cante[RE]rai.\n[RE]Noi siamo quelli che formiam l'arcoba[SOL]leno,\ntanti colori che si tengono per [RE]mano,\nin tutto il mondo un po' d'amore noi por[SOL]tiamo\ne rega[RE]liamo a tutti [LA]la felici[RE]tà.\n---\n[RE]La gente non sa che amore e bontà\nson fiori che stanno in un giar[LA]dino,\ndonarli tu puoi se solo lo vuoi,\nraccoglili e dalli al tuo vi[RE]cino.\nTu sei come me, stringiamo le mani,\ntutti domani insieme re[SOL]stiamo.\n---\n{rit}\n[SOL]Bianco, verde, rosso, giallo\ne [RE]tu prendi il posto che [LA]vuoi\ne con noi cante[RE]rai.\n[RE]Noi siamo quelli che formiam l'arcoba[SOL]leno,\ntanti colori che si tengono per [RE]mano,\nin tutto il mondo un po' d'amore noi por[SOL]tiamo\ne rega[RE]liamo a tutti [LA]la felici[RE]tà."
-  },
-  {
-    "titolo": "Mille e ancora mille",
-    "anno": 1990,
-    "anno_incerto": true,
-    "luogo": null,
-    "tonalita": "DO",
-    "branca": ["L/C"],
-    "ambientazione": "Bosco",
-    "tipo": "scout",
-    "autore": "Nicola Catellani-Carpi 1",
-    "origine": "AGESCI",
-    "testo_accordi": "{strumentale}\n[SOL] [DO] [SOL] [RE] [SOL]\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\nRestano...\n[SOL]Mille e ancora mille\nprati [DO]da attraver[SOL]sare,\nmille e ancora mille\nboschi [LA]da esplo[RE]rare.\n[SOL]Mille e ancora mille\nmontagne [DO]da sca[SOL]lare,\n[DO]mille e ancora [SOL]mille\nfra[RE]telli da incon[SOL]trare.\n---\n{rit}\nManchi [DO]tu\n(non ti resta che partire),\nproprio [SOL]tu\n(chissà come va a finire),\nlo sai [RE7]tu\n(non ti mettere a dormire),\nsolo [SOL]tu![SOL7]\nNessun [DO]altro potrà prendere\nil tuo [SOL]posto nella vita,\nla tua [LAm]storia è impor[LA7]tante\ne non [RE7]è finita!\n---\n[SOL]Mille e ancora mille\nsogni [DO]restano da [SOL]fare,\nmille e ancora mille\ncanti [LA]da impa[RE]rare.\n[SOL]Mille e ancora mille\nvoli [DO]da incomin[SOL]ciare,\n[DO]mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare.\n[DO]Mille e ancora [SOL]mille\nso[RE]relle da incon[SOL]trare."
   },
   {
     "titolo": "Coccinella vuoi venire",
@@ -2300,6 +2298,16 @@
     "testo_accordi": "{strumentale}\n[SOL]\n---\n[SOL]I've been a wild rover for many a [DO]year\nI [RE]spent all me money on whiskey and [SOL]beer\n[SOL]But now I'm returning with gold in great [DO]store\nAnd I [SOL]never will [DO]play the wild [RE7]rover no [SOL]more\n---\n{rit}\nAnd it's [RE7]no nay never,[SOL] no nay never no [DO]more\nWill I [SOL]play the wild [DO]rover, no [RE7]never, no [SOL]more\n---\n[SOL]I went in to an alehouse I used to fre[DO]quent\nAnd I [RE]told the landlady me money was [SOL]spent\n[SOL]I asked her for credit, she answered me [DO]\"Nay!\"\n\"Such [SOL]custom as [DO]yours I could [RE7]have any [SOL]day!\"\n---\n{rit}\nAnd it's [RE7]no nay never,[SOL] no nay never no [DO]more\nWill I [SOL]play the wild [DO]rover, no [RE7]never, no [SOL]more\n---\n[SOL]I took out of me pocket ten sovereigns [DO]bright\nAnd the [RE]landlady's eyes opened wide with de[SOL]light\n[SOL]She said: \"I have whiskeys and wines on the [DO]best!\nAnd the [SOL]words that I [DO]told you were [RE7]only in [SOL]jest!\"\n---\n{rit}\nAnd it's [RE7]no nay never,[SOL] no nay never no [DO]more\nWill I [SOL]play the wild [DO]rover, no [RE7]never, no [SOL]more\n---\n[SOL]I'll go home to my parents, confess what I've [DO]done\nAnd [RE]ask them to pardon their prodigal [SOL]son\n[SOL]And when they've caressed me as oftimes [DO]before\nI [SOL]never will [DO]play the wild [RE7]rover no [SOL]more.\n---\n{rit}\nAnd it's [RE7]no nay never,[SOL] no nay never no [DO]more\nWill I [SOL]play the wild [DO]rover, no [RE7]never, no [SOL]more\nAnd it's [RE7]no nay never,[SOL] no nay never no [DO]more\nWill I [SOL]play the wild [DO]rover, no [RE7]never, no [SOL]more"
   },
   {
+    "titolo": "Ch'el che dis",
+    "anno": 1800,
+    "anno_incerto": true,
+    "tonalita": "DO",
+    "tipo": "musica",
+    "autore": "Tradizionale",
+    "genere": "Folk",
+    "testo_accordi": "{strumentale}\n[DO] [SOL7] [DO]\n---\n[DO]Ch’el che dis che il vin le fa mal\nl’è tutta [SOL7]gente, l’è tutta [DO]gente,\nch’el che dis che il vin le fa mal\nl’è tutta [SOL7]gente dell’ospe[DO]dal.\n[DO]Io n’ho bevuto tanto\ne non m’ha fatto [SOL7]male,\nl’acqua sì che fa male,\nil vino fa can[DO]tar!\n---\n{rit}\n[DO]E che la vada ben, che la vada mal,\nsiamo al fior della gioven[SOL7]tù:\npensa all’amore e [DO]bevi,\n[SOL7]pensa all’amore e [DO]bevi!\nE che la vada ben, che la vada mal,\nsiamo al fior della gioven[SOL7]tù:\npensa all’amore e [DO]bevi,\n[SOL7]bevi anche [DO]tu!\n---\n[DO]Era sbronzo quel mortaio\nche nel fango sprofon[SOL7]dò,\nla fiaschetta era d’acciaio\ne il Barbera si sal[DO]vò.\n---\n{rit}\n[DO]Barbera, Barbera, siamo tutti figli [SOL7]tuoi,\ne se [DO]non sarà sta[FA]sera sarà [SOL7]quando [DO]vuoi!\ne se [DO]non sarà sta[FA]sera sarà [SOL7]quando [DO]vuoi!\n---\n[DO]Napoleone faceva l’oste,\nGaribaldi il canti[SOL7]niere,\nla re[SOL]gina d’Inghil[FA]terra\nsi la[SOL]vava in un bic[DO]chier!\nLa re[SOL]gina d’Inghil[FA]terra\nsi la[SOL]vava in un bic[DO]chier!\nIn [SOL]un bic[DO]chier!\nIn [SOL]un bic[DO]chier! [SOL] [DO]"
+  },
+  {
     "titolo": "Cockles and mussels (Molly Malone)",
     "anno": 1884,
     "tonalita": "DO",
@@ -2326,6 +2334,16 @@
     "autore": "Traditional",
     "genere": "Gospel",
     "testo_accordi": "[DO]Oh when the saints go marchin' in,\nOh when the saints go marchin' [SOL]in,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen the [DO]saints go [SOL7]marchin' [DO]in.\n---\n[DO]Oh when the sun refuse to shine,\nOh when the sun refuse to [SOL]shine,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen the [DO]sun re[SOL7]fuse to [DO]shine.\n---\n[DO]Oh when the moon goes down in blood,\nO when the moon goes down in [SOL]blood,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen the [DO]moon goes [SOL7]down in [DO]blood.\n---\n[DO]Oh when the stars have disappeared,\nO when the stars have disap[SOL]peared,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen the [DO]stars have [SOL7]disap[DO]peared,\n---\n[DO]Oh when they crown Him Lord of all,\nO when they crown Him Lord of [SOL]all,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen they [DO]crown Him [SOL7]Lord of [DO]all.\n---\n[DO]Oh when the day of judgement comes,\nO when the day of judgement [SOL]comes,\nLord, I [DO]want to [DO7]be in that [FA]number [FA7]\nWhen the [DO]day of [SOL7]judgement [DO]comes."
+  },
+  {
+    "titolo": "E butta in mezzo e butta",
+    "anno": 1900,
+    "anno_incerto": true,
+    "tonalita": "DO",
+    "tipo": "musica",
+    "autore": "Tradizionale",
+    "genere": "Folk",
+    "testo_accordi": "{strumentale}\n[DO] [SOL] [DO]\n---\n[DO]E butta in mezzo e butta,\nBarbera e Bardo[SOL7]lin,\nbasta che sia da bere,\nbasta che sia da [DO]bere!\nE butta in mezzo e butta,\nBarbera e Bardo[FA]lin,\nbasta che sia da [DO]bere\ndalla [SOL]sera alla mat[DO]tin!\n---\n{rit}\n[DO]Cipiripiri contù contelo,\ncala giù dal reggi[SOL]mento,\nparpompussà parapompussà,\nparafò contù con[DO]tà...\n[DO]Cala giù!\n---\n[DO]Aveo una monfrigotta\nche vien dalla mon[SOL7]tà,\nvendeva la ricotta,\nvendeva la ri[DO]cotta!\nAveo una monfrigotta\nche vien dalla mon[FA]tà,\nvendeva la ri[DO]cotta,\nla ven[SOL]deva bruciac[DO]chià!\n---\n{rit}\n[DO]Cipiripiri contù contelo,\ncala giù dal reggi[SOL]mento,\nparpompussà parapompussà,\nparafò contù con[DO]tà...\n[DO]Cala giù!"
   },
   {
     "titolo": "Down by the Riverside",
@@ -2362,6 +2380,15 @@
     "autore": "Tradizionale",
     "genere": "Canti partigiani",
     "testo_accordi": "[LAm]Una mattina mi son svegliato,\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nUna mat[REm]tina mi son sve[LAm]gliato\ne ho tro[MI7]vato l'inva[LAm]sor.\n---\n[LAm]O partigiano, portami via,\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nO parti[REm]giano, portami [LAm]via,\nché mi [MI7]sento di mo[LAm]rir.\n---\n[LAm]E se io muoio da partigiano,\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nE se io [REm]muoio da parti[LAm]giano,\ntu mi [MI7]devi seppel[LAm]lir.\n---\n[LAm]E seppellire lassù in montagna,\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nE seppel[REm]lire lassù in mon[LAm]tagna\nSotto l'[MI7]ombra di un bel [LAm]fior.\n---\n[LAm]E le genti che passeranno\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nE le [REm]genti che passe[LAm]ranno\nTi di[MI7]ranno: Che bel [LAm]fior!\n---\n[LAm]È questo il fiore del partigiano,\nO bella, ciao! Bella, ciao!\nBella, [LAm7]ciao, ciao, ciao!\nÈ questo il [REm]fiore del parti[LAm]giano\nmorto [MI7]per la liber[LAm]tà!"
+  },
+  {
+    "titolo": "Where have all the flowers gone",
+    "anno": 1955,
+    "tonalita": "SOL",
+    "tipo": "musica",
+    "autore": "Pete Seeger",
+    "genere": "Folk",
+    "testo_accordi": "{strumentale}\n[SOL] [MIm] [DO] [RE] [SOL]\n---\n[SOL]Where have all the flowers [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the flowers [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the flowers [MIm]gone?\n[DO]Girls have picked them [RE]every one.\n[DO]When will they [SOL]ever learn?\n[DO]When will [RE]they ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]\n---\n[SOL]Where have all the young girls [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the young girls [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the young girls [MIm]gone?\n[DO]Taken husbands [RE]every one.\n[DO]When will they [SOL]ever learn?\n[DO]When will [RE]they ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]\n---\n[SOL]Where have all the young men [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the young men [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the young men [MIm]gone?\n[DO]Gone for soldiers [RE]every one.\n[DO]When will they [SOL]ever learn?\n[DO]When will [RE]they ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]\n---\n[SOL]Where have all the soldiers [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the soldiers [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the soldiers [MIm]gone?\n[DO]Gone to graveyards [RE]every one.\n[DO]When will they [SOL]ever learn?\n[DO]When will [RE]they ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]\n---\n[SOL]Where have all the graveyards [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the graveyards [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the graveyards [MIm]gone?\n[DO]Covered with flowers [RE]every one.\n[DO]When will we [SOL]ever learn?\n[DO]When will [RE]we ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]\n---\n[SOL]Where have all the flowers [MIm]gone?\n[DO]Long time [RE]passing.\nWhere have [SOL]all the flowers [MIm]gone?\n[DO]Long time a[RE]go.\nWhere have [SOL]all the flowers [MIm]gone?\n[DO]Girls have picked them [RE]every one.\n[DO]When will they [SOL]ever learn?\n[DO]When will [RE]they ever [SOL]learn?\n---\n{strumentale}\n[SOL] [MIm] [SOL] [MIm]"
   },
   {
     "titolo": "Bye Bye Love",
