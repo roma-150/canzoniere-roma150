@@ -176,8 +176,9 @@ v1.4 DONE
 - Migliorata la sezione impostazioni - reso più evidente il pulsante per segnalare canzoni o errori
 - Inseriti tutti i canti bosco richiesti
 ----------------------------------------------------------------------------------------
-v1.5
-- Finito l'upload dei canti del canzoniere di clan...
+v1.5 RELEASED
+- Finito l'upload dei canti del canzoniere di clan
+- Fix tasti + e - di scorri e tonalità
 ----------------------------------------------------------------------------------------
 v1.6
 - Canti canzoniere messa...
