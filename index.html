@@ -421,6 +421,24 @@
   .cz-typed-detail-text{ white-space:pre-wrap; font-size:14px; line-height:1.5; color:var(--ink); max-height:50vh; overflow-y:auto; }
   .phone.dark-bg .cz-typed-detail-text{ color:#F2F2F7; }
 
+  .instrument-chips{ display:flex; gap:8px; margin:10px 0 0; }
+  .chord-diagram-wrap{ display:flex; justify-content:center; padding:14px 0 4px; color:var(--purple); }
+  .chord-diagram-wrap svg{ width:150px; height:auto; }
+  .phone.dark-bg .chord-diagram-wrap{ color:#F2F2F7; }
+
+  .chord-hover-tooltip{
+    position:fixed; z-index:150;
+    background:var(--white); border-radius:20px; padding:10px 16px 6px;
+    box-shadow:0 8px 24px rgba(30,20,50,0.25);
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none;
+  }
+  .chord-hover-tooltip-title{ font-size:14px; font-weight:800; color:var(--ink); }
+  .chord-hover-tooltip .chord-diagram-wrap{ padding:8px 0 2px; }
+  .chord-hover-tooltip .chord-diagram-wrap svg{ width:120px; }
+  .phone.dark-bg .chord-hover-tooltip{ background:#1C1C1E; }
+  .phone.dark-bg .chord-hover-tooltip-title{ color:#F2F2F7; }
+
   .key-badge{
     display:flex; align-items:center; gap:3px; flex-shrink:0;
     font-size:11.5px; font-weight:800; color:var(--gold);
@@ -529,7 +547,7 @@
   .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
   .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:0; }
   .pair.pair-space{ margin-right:3px; }
-  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; }
+  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; cursor:pointer; }
   .verse.chorus .chord{ color:var(--amber); }
   .verse.instrumental{ background:var(--green-tint-a); border-radius:16px; padding:14px 16px 12px; }
   .verse.instrumental .refrain-tag{ background:var(--green); }
@@ -797,6 +815,159 @@ function transposeChord(chord, semitones){
   return CHROMATIC[newIdx] + suffix;
 }
 
+// Forme di accordo per chitarra con capotasto mobile (E-shape e A-shape).
+// Ogni voce \u00e8 un array di 6 valori (corda 6=Mi basso \u2192 corda 1=Mi cantino):
+// null = corda muta, N = tasto in pi\u00f9 rispetto al capotasto.
+const CHORD_SHAPES = {
+  "":     { E: [0,2,2,1,0,0], A: [null,0,2,2,2,0] },
+  "m":    { E: [0,2,2,0,0,0], A: [null,0,2,2,1,0] },
+  "7":    { E: [0,2,0,1,0,0], A: [null,0,2,0,2,0] },
+  "m7":   { E: [0,2,0,0,0,0], A: [null,0,2,0,1,0] },
+  "sus4": { E: [0,2,2,2,0,0], A: [null,0,2,2,3,0] },
+  "m6":   { E: [0,2,2,0,2,0], A: [null,0,2,2,1,2] },
+  "6":    { E: [0,2,2,1,2,0], A: [null,0,2,2,2,2] }
+};
+// Diteggiature "aperte" standard, senza capotasto/barr\u00e9, per gli accordi
+// che si suonano davvero cos\u00ec sul manico (non forme mobili E/A-shape).
+const OPEN_CHORD_OVERRIDES = {
+  "DO":  [null, 3, 2, 0, 1, 0],
+  "RE":  [null, null, 0, 2, 3, 2],
+  "SOL": [3, 2, 0, 0, 0, 3],
+  "REm": [null, null, 0, 2, 3, 1],
+  "DO7":  [null, 3, 2, 3, 1, 0],
+  "RE7":  [null, null, 0, 2, 1, 2],
+  "SOL7": [3, 2, 0, 0, 0, 1],
+  "SI7":  [null, 2, 1, 2, 0, 2],
+  "REm7": [null, null, 0, 2, 1, 1],
+  "SIm7": [null, 2, 0, 2, 0, 2],
+  "DOsus4":  [null, 3, 3, 0, 1, 1],
+  "REsus4":  [null, null, 0, 2, 3, 3],
+  "SOLsus4": [3, 3, 0, 0, 1, 3],
+  "REm6": [null, null, 0, 2, 0, 1],
+  "SIm6": [null, 2, 0, 1, 0, 2],
+  "DO6":  [null, 3, 2, 2, 1, 0],
+  "RE6":  [null, null, 0, 2, 0, 2],
+  "FA6":  [null, null, 3, 2, 1, 1],
+  "SOL6": [3, 2, 0, 0, 0, 0]
+};
+function getChordDiagramData(chordName){
+  const m = (chordName || "").match(NOTE_RE);
+  if(!m) return null;
+  const root = m[1] + (m[2] || "");
+  let suffix = (m[3] || "").trim();
+  if(suffix === "4") suffix = "sus4";
+  const overrideKey = root + suffix;
+  if(OPEN_CHORD_OVERRIDES[overrideKey]){
+    return { frets: OPEN_CHORD_OVERRIDES[overrideKey], fret: 0 };
+  }
+  const quality = CHORD_SHAPES[suffix];
+  if(!quality) return null;
+  const rootIdx = CHROMATIC.indexOf(root);
+  if(rootIdx === -1) return null;
+  const fretFromE = (rootIdx - CHROMATIC.indexOf("MI") + 12) % 12;
+  const fretFromA = (rootIdx - CHROMATIC.indexOf("LA") + 12) % 12;
+  const useE = fretFromE <= fretFromA;
+  return { frets: quality[useE ? "E" : "A"], fret: useE ? fretFromE : fretFromA };
+}
+function buildChordDiagramSVG(data){
+  const { frets, fret } = data;
+  const stringX = [34, 50, 66, 82, 98, 114];
+  const topY = 24;
+  const rowH = 20;
+  const bottomY = topY + rowH * 4;
+  const dotR = 6.5;
+
+  let svg = `<svg viewBox="0 0 134 150" xmlns="http://www.w3.org/2000/svg">`;
+  stringX.forEach(x => {
+    svg += `<line x1="${x}" y1="${topY}" x2="${x}" y2="${bottomY}" stroke="currentColor" stroke-width="1.5"/>`;
+  });
+  for(let r = 0; r <= 4; r++){
+    const y = topY + r * rowH;
+    const strokeW = (r === 0 && fret === 0) ? 4 : 1.5;
+    svg += `<line x1="${stringX[0]}" y1="${y}" x2="${stringX[5]}" y2="${y}" stroke="currentColor" stroke-width="${strokeW}"/>`;
+  }
+  if(fret > 0){
+    svg += `<text x="26" y="${topY + rowH/2 + 4}" font-size="12" font-weight="700" fill="currentColor" text-anchor="end">${fret}fr</text>`;
+  }
+
+  const barreIndices = [];
+  frets.forEach((v, i) => {
+    if(v === null){
+      svg += `<text x="${stringX[i]}" y="${topY - 8}" font-size="12" font-weight="700" fill="currentColor" text-anchor="middle">\u2715</text>`;
+    } else if(v === 0){
+      if(fret === 0){
+        svg += `<circle cx="${stringX[i]}" cy="${topY - 10}" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/>`;
+      } else {
+        barreIndices.push(i);
+      }
+    }
+  });
+  if(barreIndices.length > 1){
+    const y = topY + rowH / 2;
+    svg += `<line x1="${stringX[barreIndices[0]]}" y1="${y}" x2="${stringX[barreIndices[barreIndices.length - 1]]}" y2="${y}" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>`;
+  }
+  frets.forEach((v, i) => {
+    if(v !== null && v > 0){
+      const rowIndex = fret === 0 ? v : v + 1;
+      const y = topY + rowH * (rowIndex - 0.5);
+      svg += `<circle cx="${stringX[i]}" cy="${y}" r="${dotR}" fill="currentColor"/>`;
+    }
+  });
+  svg += `</svg>`;
+  return svg;
+}
+function showChordDiagram(chordName){
+  const data = getChordDiagramData(chordName);
+  const overlay = document.createElement("div");
+  overlay.className = "cz-picker-overlay";
+  overlay.innerHTML = `
+    <div class="cz-picker-panel" style="align-items:center;">
+      <div class="cz-picker-header" style="width:100%;">
+        <div class="list-title" style="margin:0;">${chordName}</div>
+        <button class="cz-picker-close" aria-label="Chiudi">${ICONS.clear(14)}</button>
+      </div>
+      <div class="instrument-chips">
+        <button class="filter-chip active">Chitarra</button>
+        <button class="filter-chip" disabled style="opacity:0.5; cursor:default;">Ukulele (presto)</button>
+      </div>
+      <div class="chord-diagram-wrap">
+        ${data ? buildChordDiagramSVG(data) : `<p class="empty">Diagramma non disponibile per questo accordo.</p>`}
+      </div>
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(overlay);
+  overlay.querySelector(".cz-picker-close").addEventListener("click", () => overlay.remove());
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) overlay.remove(); });
+}
+
+const SUPPORTS_HOVER = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+let chordHoverTooltipEl = null;
+function hideChordHoverTooltip(){
+  if(chordHoverTooltipEl){ chordHoverTooltipEl.remove(); chordHoverTooltipEl = null; }
+}
+function showChordHoverTooltip(chordEl, chordName){
+  hideChordHoverTooltip();
+  const data = getChordDiagramData(chordName);
+  const tooltip = document.createElement("div");
+  tooltip.className = "chord-hover-tooltip";
+  tooltip.innerHTML = `
+    <div class="chord-hover-tooltip-title">${chordName}</div>
+    <div class="chord-diagram-wrap">
+      ${data ? buildChordDiagramSVG(data) : `<p class="empty" style="font-size:12px; padding:0;">Non disponibile</p>`}
+    </div>
+  `;
+  document.querySelector(".phone").appendChild(tooltip);
+  const rect = chordEl.getBoundingClientRect();
+  const tRect = tooltip.getBoundingClientRect();
+  let top = rect.top - tRect.height - 8;
+  if(top < 8) top = rect.bottom + 8;
+  let left = rect.left + rect.width / 2 - tRect.width / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tRect.width - 8));
+  tooltip.style.top = top + "px";
+  tooltip.style.left = left + "px";
+  chordHoverTooltipEl = tooltip;
+}
+
 function renderBlock(text, semitones){
   if(text.trim() === "RIT."){
     const el = document.createElement("div");
@@ -908,7 +1079,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.5.0";
+const APP_VERSION = "1.6.0";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -4392,6 +4563,7 @@ function showDetail(index){
     clearInterval(activeScrollInterval);
     activeScrollInterval = null;
     document.querySelectorAll(".scroll-float").forEach(el => el.remove());
+    hideChordHoverTooltip();
     returnToView();
     requestAnimationFrame(() => window.scrollTo(0, savedScrollY));
   }
@@ -4675,6 +4847,73 @@ function showDetail(index){
   const body = document.createElement("div");
   card2.appendChild(body);
   content.appendChild(card2);
+  body.addEventListener("click", (e) => {
+    const chordEl = e.target.closest(".chord");
+    if(!chordEl) return;
+    const chordText = chordEl.textContent.trim();
+    if(!chordText) return;
+    showChordDiagram(chordText);
+  });
+  if(SUPPORTS_HOVER){
+    body.addEventListener("mouseover", (e) => {
+      const chordEl = e.target.closest(".chord");
+      if(!chordEl) return;
+      const chordText = chordEl.textContent.trim();
+      if(!chordText) return;
+      showChordHoverTooltip(chordEl, chordText);
+    });
+    body.addEventListener("mouseout", (e) => {
+      const chordEl = e.target.closest(".chord");
+      if(!chordEl) return;
+      if(e.relatedTarget && chordEl.contains(e.relatedTarget)) return;
+      hideChordHoverTooltip();
+    });
+    window.addEventListener("scroll", hideChordHoverTooltip, { passive: true });
+  } else {
+    let chordLongPressTimer = null;
+    let chordLongPressActive = false;
+    let chordLongPressStartX = 0;
+    let chordLongPressStartY = 0;
+    body.addEventListener("touchstart", (e) => {
+      const chordEl = e.target.closest(".chord");
+      if(!chordEl) return;
+      const chordText = chordEl.textContent.trim();
+      if(!chordText) return;
+      chordLongPressActive = false;
+      chordLongPressStartX = e.touches[0].clientX;
+      chordLongPressStartY = e.touches[0].clientY;
+      chordLongPressTimer = setTimeout(() => {
+        chordLongPressActive = true;
+        showChordHoverTooltip(chordEl, chordText);
+      }, 350);
+    }, { passive: true });
+    body.addEventListener("touchmove", (e) => {
+      if(!chordLongPressTimer && !chordLongPressActive) return;
+      const dx = Math.abs(e.touches[0].clientX - chordLongPressStartX);
+      const dy = Math.abs(e.touches[0].clientY - chordLongPressStartY);
+      if(dx > 10 || dy > 10){
+        clearTimeout(chordLongPressTimer);
+        chordLongPressTimer = null;
+        if(chordLongPressActive) hideChordHoverTooltip();
+        chordLongPressActive = false;
+      }
+    }, { passive: true });
+    body.addEventListener("touchend", (e) => {
+      clearTimeout(chordLongPressTimer);
+      chordLongPressTimer = null;
+      if(chordLongPressActive){
+        hideChordHoverTooltip();
+        chordLongPressActive = false;
+        e.preventDefault();
+      }
+    });
+    body.addEventListener("touchcancel", () => {
+      clearTimeout(chordLongPressTimer);
+      chordLongPressTimer = null;
+      if(chordLongPressActive) hideChordHoverTooltip();
+      chordLongPressActive = false;
+    });
+  }
 
   let pendingNavRow = null;
 

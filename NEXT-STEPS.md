@@ -181,16 +181,20 @@ v1.5 RELEASED
 - Fix tasti + e - di scorri e tonalità
 ----------------------------------------------------------------------------------------
 v1.6
+- Nuova funzione visualizzazione accordi chitarra
+- Suono accordi chitarra
+----------------------------------------------------------------------------------------
+
+
+
+
+v1.?
 - Canti canzoniere messa...
-
-
-
-
-
-v1.6
+----------------------------------------------------------------------------------------
+v1.?
 - Finito il check dei brani famosi
 ----------------------------------------------------------------------------------------
-v1.7
+v1.?
 - Finito il check delle canzoni di gruppo
 
 
