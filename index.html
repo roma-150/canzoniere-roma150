@@ -1078,7 +1078,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.1";
+const APP_VERSION = "1.6.2";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -4846,9 +4846,11 @@ function showDetail(index){
   const body = document.createElement("div");
   card2.appendChild(body);
   content.appendChild(card2);
+  let suppressNextChordClick = false;
   body.addEventListener("click", (e) => {
     const chordEl = e.target.closest(".chord");
     if(!chordEl) return;
+    if(suppressNextChordClick){ suppressNextChordClick = false; return; }
     const chordText = chordEl.textContent.trim();
     if(!chordText) return;
     showChordDiagram(chordText);
@@ -4885,6 +4887,7 @@ function showDetail(index){
       chordLongPressTimer = setTimeout(() => {
         if(window.getSelection) window.getSelection().removeAllRanges();
         chordLongPressActive = true;
+        suppressNextChordClick = true;
         showChordHoverTooltip(chordEl, chordText);
       }, 350);
     }, { passive: true });
