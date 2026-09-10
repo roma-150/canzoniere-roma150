@@ -547,7 +547,7 @@
   .line{ display:flex; flex-wrap:wrap; align-items:flex-start; }
   .pair{ display:inline-flex; flex-direction:column; align-items:flex-start; max-width:100%; margin-right:0; }
   .pair.pair-space{ margin-right:3px; }
-  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; cursor:pointer; }
+  .chord{ display:block; height:17px; line-height:17px; font-size:calc(13px * var(--text-scale)); font-weight:800; color:var(--purple); white-space:nowrap; cursor:pointer; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
   .verse.chorus .chord{ color:var(--amber); }
   .verse.instrumental{ background:var(--green-tint-a); border-radius:16px; padding:14px 16px 12px; }
   .verse.instrumental .refrain-tag{ background:var(--green); }
@@ -928,7 +928,6 @@ function showChordDiagram(chordName){
       </div>
       <div class="instrument-chips">
         <button class="filter-chip active">Chitarra</button>
-        <button class="filter-chip" disabled style="opacity:0.5; cursor:default;">Ukulele (presto)</button>
       </div>
       <div class="chord-diagram-wrap">
         ${data ? buildChordDiagramSVG(data) : `<p class="empty">Diagramma non disponibile per questo accordo.</p>`}
@@ -1079,7 +1078,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.0";
+const APP_VERSION = "1.6.1";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -4879,10 +4878,12 @@ function showDetail(index){
       if(!chordEl) return;
       const chordText = chordEl.textContent.trim();
       if(!chordText) return;
+      if(window.getSelection) window.getSelection().removeAllRanges();
       chordLongPressActive = false;
       chordLongPressStartX = e.touches[0].clientX;
       chordLongPressStartY = e.touches[0].clientY;
       chordLongPressTimer = setTimeout(() => {
+        if(window.getSelection) window.getSelection().removeAllRanges();
         chordLongPressActive = true;
         showChordHoverTooltip(chordEl, chordText);
       }, 350);
