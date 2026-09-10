@@ -1,13 +1,4 @@
 [
-  {
-  "titolo": "TEST Accordi Chitarra",
-  "anno": 2026,
-  "tonalita": "DO",
-  "tipo": "musica",
-  "autore": "Test app",
-  "genere": "Test",
-  "testo_accordi": "[DO]Do [DO#]Do# [RE]Re [RE#]Re# [MI]Mi [FA]Fa [FA#]Fa# [SOL]Sol [SOL#]Sol# [LA]La [LA#]La# [SI]Si\n---\n[DOm]Dom [DO#m]Do#m [REm]Rem [RE#m]Re#m [MIm]Mim [FAm]Fam [FA#m]Fa#m [SOLm]Solm [SOL#m]Sol#m [LAm]Lam [LA#m]La#m [SIm]Sim\n---\n[DO7]Do7 [DO#7]Do#7 [RE7]Re7 [RE#7]Re#7 [MI7]Mi7 [FA7]Fa7 [FA#7]Fa#7 [SOL7]Sol7 [SOL#7]Sol#7 [LA7]La7 [LA#7]La#7 [SI7]Si7\n---\n[DOm7]Dom7 [DO#m7]Do#m7 [REm7]Rem7 [RE#m7]Re#m7 [MIm7]Mim7 [FAm7]Fam7 [FA#m7]Fa#m7 [SOLm7]Solm7 [SOL#m7]Sol#m7 [LAm7]Lam7 [LA#m7]La#m7 [SIm7]Sim7\n---\n[DOsus4]Dosus4 [DO#sus4]Do#sus4 [REsus4]Resus4 [RE#sus4]Re#sus4 [MIsus4]Misus4 [FAsus4]Fasus4 [FA#sus4]Fa#sus4 [SOLsus4]Solsus4 [SOL#sus4]Sol#sus4 [LAsus4]Lasus4 [LA#sus4]La#sus4 [SIsus4]Sisus4\n---\n[DOm6]Dom6 [DO#m6]Do#m6 [REm6]Rem6 [RE#m6]Re#m6 [MIm6]Mim6 [FAm6]Fam6 [FA#m6]Fa#m6 [SOLm6]Solm6 [SOL#m6]Sol#m6 [LAm6]Lam6 [LA#m6]La#m6 [SIm6]Sim6\n---\n[DOmaj7]Domaj7 (non supportato) [REdim]Redim (non supportato) [MIaug]Miaug (non supportato)\n[SOL9]Sol9 (non supportato) [LA6]La6 (non supportato) [SIadd9]Siadd9 (non supportato)\n---\n[DO6]Do6 [DO#6]Do#6 [RE6]Re6 [RE#6]Re#6 [MI6]Mi6 [FA6]Fa6 [FA#6]Fa#6 [SOL6]Sol6 [SOL#6]Sol#6 [LA6]La6 [LA#6]La#6 [SI6]Si6"
-},
     {
     "titolo": "Sciffelli Coccinelle",
     "anno": 1992,

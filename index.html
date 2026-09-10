@@ -424,7 +424,9 @@
   .instrument-chips{ display:flex; gap:8px; margin:10px 0 0; }
   .chord-diagram-wrap{ display:flex; justify-content:center; padding:14px 0 4px; color:var(--purple); }
   .chord-diagram-wrap svg{ width:150px; height:auto; }
+  .chord-finger-label{ fill:var(--white); pointer-events:none; }
   .phone.dark-bg .chord-diagram-wrap{ color:#F2F2F7; }
+  .phone.dark-bg .chord-finger-label{ fill:var(--purple); }
 
   .chord-hover-tooltip{
     position:fixed; z-index:150;
@@ -801,64 +803,83 @@ const ICONS = {
   share: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
-const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#)?(.*)$/;
+const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#|b)?(.*)$/;
+const FLAT_TO_SHARP = { "REb":"DO#", "MIb":"RE#", "SOLb":"FA#", "LAb":"SOL#", "SIb":"LA#" };
+const SHARP_TO_FLAT = { "DO#":"REb", "RE#":"MIb", "FA#":"SOLb", "SOL#":"LAb", "LA#":"SIb" };
+function normalizeRootNote(base, accidental){
+  if(accidental === "b") return FLAT_TO_SHARP[base + "b"] || base;
+  return base + (accidental || "");
+}
 
 function transposeChord(chord, semitones){
   if(!chord) return chord;
   const m = chord.match(NOTE_RE);
   if(!m) return chord;
-  const root = m[1] + (m[2] || "");
+  const wasFlat = m[2] === "b";
+  const root = normalizeRootNote(m[1], m[2]);
   const suffix = m[3] || "";
   const idx = CHROMATIC.indexOf(root);
   if(idx === -1) return chord;
   const newIdx = ((idx + semitones) % 12 + 12) % 12;
-  return CHROMATIC[newIdx] + suffix;
+  const newRootSharp = CHROMATIC[newIdx];
+  if(wasFlat && SHARP_TO_FLAT[newRootSharp]) return SHARP_TO_FLAT[newRootSharp] + suffix;
+  return newRootSharp + suffix;
 }
 
 // Forme di accordo per chitarra con capotasto mobile (E-shape e A-shape).
 // Ogni voce \u00e8 un array di 6 valori (corda 6=Mi basso \u2192 corda 1=Mi cantino):
 // null = corda muta, N = tasto in pi\u00f9 rispetto al capotasto.
 const CHORD_SHAPES = {
-  "":     { E: [0,2,2,1,0,0], A: [null,0,2,2,2,0] },
-  "m":    { E: [0,2,2,0,0,0], A: [null,0,2,2,1,0] },
-  "7":    { E: [0,2,0,1,0,0], A: [null,0,2,0,2,0] },
-  "m7":   { E: [0,2,0,0,0,0], A: [null,0,2,0,1,0] },
-  "sus4": { E: [0,2,2,2,0,0], A: [null,0,2,2,3,0] },
-  "m6":   { E: [0,2,2,0,2,0], A: [null,0,2,2,1,2] },
-  "6":    { E: [0,2,2,1,2,0], A: [null,0,2,2,2,2] }
+  "":     {
+    E: { frets: [0,2,2,1,0,0], fingers: [1,3,4,2,1,1] },
+    A: { frets: [null,0,2,2,2,0], fingers: [null,1,2,3,4,1] }
+  },
+  "m":    { E: { frets: [0,2,2,0,0,0], fingers: [1,3,4,1,1,1] }, A: { frets: [null,0,2,2,1,0], fingers: [null,1,3,4,2,1] } },
+  "7":    {
+    E: { frets: [0,2,0,1,0,0], fingers: [1,3,1,2,1,1] },
+    A: { frets: [null,0,2,0,2,0], fingers: [null,1,3,1,4,1] }
+  },
+  "m7":   { E: { frets: [0,2,0,0,0,0], fingers: [1,2,1,1,1,1] }, A: { frets: [null,0,2,0,1,0], fingers: [null,1,3,1,2,1] } },
+  "sus4": { E: { frets: [0,2,2,2,0,0], fingers: [1,2,3,4,1,1] }, A: { frets: [null,0,2,2,3,0], fingers: [null,1,2,3,4,1] } },
+  "m6":   { E: { frets: [0,2,2,0,2,0], fingers: [1,2,3,1,4,1] }, A: { frets: [null,0,2,2,1,2], fingers: [null,1,3,4,2,4] } },
+  "6":    { E: { frets: [0,2,2,1,2,0], fingers: [1,2,3,1,4,1] }, A: { frets: [null,0,2,2,2,2], fingers: [null,1,2,3,4,4] } }
 };
 // Diteggiature "aperte" standard, senza capotasto/barr\u00e9, per gli accordi
 // che si suonano davvero cos\u00ec sul manico (non forme mobili E/A-shape).
 const OPEN_CHORD_OVERRIDES = {
-  "DO":  [null, 3, 2, 0, 1, 0],
-  "RE":  [null, null, 0, 2, 3, 2],
-  "SOL": [3, 2, 0, 0, 0, 3],
-  "REm": [null, null, 0, 2, 3, 1],
-  "DO7":  [null, 3, 2, 3, 1, 0],
-  "RE7":  [null, null, 0, 2, 1, 2],
-  "SOL7": [3, 2, 0, 0, 0, 1],
-  "SI7":  [null, 2, 1, 2, 0, 2],
-  "REm7": [null, null, 0, 2, 1, 1],
-  "SIm7": [null, 2, 0, 2, 0, 2],
-  "DOsus4":  [null, 3, 3, 0, 1, 1],
-  "REsus4":  [null, null, 0, 2, 3, 3],
-  "SOLsus4": [3, 3, 0, 0, 1, 3],
-  "REm6": [null, null, 0, 2, 0, 1],
-  "SIm6": [null, 2, 0, 1, 0, 2],
-  "DO6":  [null, 3, 2, 2, 1, 0],
-  "RE6":  [null, null, 0, 2, 0, 2],
-  "FA6":  [null, null, 3, 2, 1, 1],
-  "SOL6": [3, 2, 0, 0, 0, 0]
+  "MIm": { frets: [0,2,2,0,0,0], fingers: [null, 1, 2, null, null, null] },
+  "LAm": { frets: [null,0,2,2,1,0], fingers: [null, null, 2, 3, 1, null] },
+  "LAm7": { frets: [null,0,2,0,1,0], fingers: [null, null, 2, null, 1, null] },
+  "DO":  { frets: [null, 3, 2, 0, 1, 0], fingers: [null, 3, 2, null, 1, null] },
+  "RE":  { frets: [null, null, 0, 2, 3, 2], fingers: [null, null, null, 1, 3, 2] },
+  "SOL": { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, null, null, null, 3] },
+  "REm": { frets: [null, null, 0, 2, 3, 1], fingers: [null, null, null, 2, 3, 1] },
+  "DO7":  { frets: [null, 3, 2, 3, 1, 0], fingers: [null, 3, 2, 4, 1, null] },
+  "RE7":  { frets: [null, null, 0, 2, 1, 2], fingers: [null, null, null, 3, 1, 2] },
+  "SOL7": { frets: [3, 2, 0, 0, 0, 1], fingers: [3, 2, null, null, null, 1] },
+  "SI7":  { frets: [null, 2, 1, 2, 0, 2], fingers: [null, 2, 1, 3, null, 4] },
+  "REm7": { frets: [null, null, 0, 2, 1, 1], fingers: [null, null, null, 2, 1, 1] },
+  "SIm7": { frets: [null, 2, 0, 2, 0, 2], fingers: [null, 1, null, 2, null, 3] },
+  "DOsus4":  { frets: [null, 3, 3, 0, 1, 1], fingers: [null, 3, 4, null, 1, 1] },
+  "REsus4":  { frets: [null, null, 0, 2, 3, 3], fingers: [null, null, null, 1, 2, 3] },
+  "SOLsus4": { frets: [3, 3, 0, 0, 1, 3], fingers: [2, 3, null, null, 1, 4] },
+  "REm6": { frets: [null, null, 0, 2, 0, 1], fingers: [null, null, null, 2, null, 1] },
+  "SIm6": { frets: [null, 2, 0, 1, 0, 2], fingers: [null, 2, null, 1, null, 3] },
+  "DO6":  { frets: [null, 3, 2, 2, 1, 0], fingers: [null, 4, 2, 3, 1, null] },
+  "RE6":  { frets: [null, null, 0, 2, 0, 2], fingers: [null, null, null, 1, null, 2] },
+  "FA6":  { frets: [null, null, 3, 2, 1, 1], fingers: [null, null, 4, 3, 1, 1] },
+  "SOL6": { frets: [3, 2, 0, 0, 0, 0], fingers: [3, 2, null, null, null, null] }
 };
 function getChordDiagramData(chordName){
   const m = (chordName || "").match(NOTE_RE);
   if(!m) return null;
-  const root = m[1] + (m[2] || "");
+  const root = normalizeRootNote(m[1], m[2]);
   let suffix = (m[3] || "").trim();
   if(suffix === "4") suffix = "sus4";
   const overrideKey = root + suffix;
   if(OPEN_CHORD_OVERRIDES[overrideKey]){
-    return { frets: OPEN_CHORD_OVERRIDES[overrideKey], fret: 0 };
+    const ov = OPEN_CHORD_OVERRIDES[overrideKey];
+    return { frets: ov.frets, fret: 0, fingers: ov.fingers };
   }
   const quality = CHORD_SHAPES[suffix];
   if(!quality) return null;
@@ -867,15 +888,16 @@ function getChordDiagramData(chordName){
   const fretFromE = (rootIdx - CHROMATIC.indexOf("MI") + 12) % 12;
   const fretFromA = (rootIdx - CHROMATIC.indexOf("LA") + 12) % 12;
   const useE = fretFromE <= fretFromA;
-  return { frets: quality[useE ? "E" : "A"], fret: useE ? fretFromE : fretFromA };
+  const shape = quality[useE ? "E" : "A"];
+  return { frets: shape.frets, fret: useE ? fretFromE : fretFromA, fingers: shape.fingers };
 }
 function buildChordDiagramSVG(data){
-  const { frets, fret } = data;
+  const { frets, fret, fingers } = data;
   const stringX = [34, 50, 66, 82, 98, 114];
   const topY = 24;
   const rowH = 20;
   const bottomY = topY + rowH * 4;
-  const dotR = 6.5;
+  const dotR = 7;
 
   let svg = `<svg viewBox="0 0 134 150" xmlns="http://www.w3.org/2000/svg">`;
   stringX.forEach(x => {
@@ -905,12 +927,28 @@ function buildChordDiagramSVG(data){
   if(barreIndices.length > 1){
     const y = topY + rowH / 2;
     svg += `<line x1="${stringX[barreIndices[0]]}" y1="${y}" x2="${stringX[barreIndices[barreIndices.length - 1]]}" y2="${y}" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>`;
+    const barreFinger = fingers ? fingers[barreIndices[0]] : null;
+    if(barreFinger){
+      svg += `<text x="${stringX[barreIndices[0]]}" y="${y + 3.5}" font-size="10" font-weight="700" text-anchor="middle" class="chord-finger-label">${barreFinger}</text>`;
+    }
+  } else if(barreIndices.length === 1){
+    const y = topY + rowH / 2;
+    const i = barreIndices[0];
+    svg += `<circle cx="${stringX[i]}" cy="${y}" r="${dotR}" fill="currentColor"/>`;
+    const finger = fingers ? fingers[i] : null;
+    if(finger){
+      svg += `<text x="${stringX[i]}" y="${y + 3.5}" font-size="10" font-weight="700" text-anchor="middle" class="chord-finger-label">${finger}</text>`;
+    }
   }
   frets.forEach((v, i) => {
     if(v !== null && v > 0){
       const rowIndex = fret === 0 ? v : v + 1;
       const y = topY + rowH * (rowIndex - 0.5);
       svg += `<circle cx="${stringX[i]}" cy="${y}" r="${dotR}" fill="currentColor"/>`;
+      const finger = fingers ? fingers[i] : null;
+      if(finger){
+        svg += `<text x="${stringX[i]}" y="${y + 3.5}" font-size="10" font-weight="700" text-anchor="middle" class="chord-finger-label">${finger}</text>`;
+      }
     }
   });
   svg += `</svg>`;
@@ -1078,7 +1116,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.2";
+const APP_VERSION = "1.6.5";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
