@@ -182,36 +182,29 @@ v1.5 RELEASED
 ----------------------------------------------------------------------------------------
 v1.6
 - Nuova funzione visualizzazione accordi chitarra
-- Suono accordi chitarra
 ----------------------------------------------------------------------------------------
-
+v1.7
+- Finito il check dei brani famosi
 
 
 
 v1.?
 - Canti canzoniere messa...
-----------------------------------------------------------------------------------------
-v1.?
-- Finito il check dei brani famosi
+- Suono accordi chitarra
 ----------------------------------------------------------------------------------------
 v1.?
 - Finito il check delle canzoni di gruppo
-
-
-
-
-
 
 - PENSA DI AGGIUNGERE LE CATEGORIE: CANTI DI PASSAGGIO/CANTI DEL BUONGIORNO/CANTI DELLA BUONANOTTE/ETC, TRA I CANTI SCOUT...
 
 
 - PROCEDI CON:
-- CANTI SCOUT VARI (L/C, E/G, AGESCI)
+- CANTI SCOUT VARI (L/C, E/G, AGESCI)-vedi anche sotto...
 
-- PIù BRANI FAMOSI (MAGARI VAI PER GENERE), DOPO AVER CORRETTO QUELLI CHE CI SONO GIà...
+- PIù BRANI FAMOSI (MAGARI VAI PER GENERE)??? Tra quelli nella nostra tradizione di gruppo...
 
 
----------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 - CANTI DAL CANZONIERE MESSA
 
 CANTI NON MESSI, DA METTERE NELLA NOSTRA VERSIONE:
@@ -228,7 +221,7 @@ CANTI NON MESSI, DA METTERE NELLA NOSTRA VERSIONE:
 - CANTI CANZONIERE MESSA DA PAGINA 29 INCLUSA IN POI PARTI DA CAMMINIAMO INCONTRO AL SIGNORE
 
 - METTI CATEGORIA SPIRITUAL IN CANTI MESSA????
----------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 CANTI VARI DA AGGIUNGERE, AGGIUNGILI GIA FIXATI!!!
 - AGNELLO DI DIO
 - SANTO GEN VERDE (QUELLO NUOVO)
