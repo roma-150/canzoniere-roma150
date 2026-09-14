@@ -183,8 +183,11 @@ v1.5 RELEASED
 v1.6
 - Nuova funzione visualizzazione accordi chitarra
 ----------------------------------------------------------------------------------------
-v1.7
-- Finito il check dei brani famosi
+v1.6.8 RELEASED
+- Finito il check dei brani famosi anni 70, rimangono anni 90
+----------------------------------------------------------------------------------------
+v1.6.9
+- Finito il check dei brani famosi (concludendo gli anni 90)
 
 
 
