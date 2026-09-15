@@ -805,7 +805,8 @@ const ICONS = {
   disco: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16M6.34 6.34l11.32 11.32M17.66 6.34L6.34 17.66"/></svg>`,
   clapper: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 9l1.5-4h4L7 9M9 9l1.5-4h4L13 9M15 9l1.5-4h4L19 9"/><rect x="3" y="9" width="18" height="11" rx="1.2"/></svg>`,
   copy: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>`,
-  share: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>`
+  share: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>`,
+  speaker: (s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>`
 };
 const CHROMATIC = ["DO","DO#","RE","RE#","MI","FA","FA#","SOL","SOL#","LA","LA#","SI"];
 const NOTE_RE = /^(DO|RE|MI|FA|SOL|LA|SI)(#|b)?(.*)$/;
@@ -975,11 +976,14 @@ function showChordDiagram(chordName){
       <div class="chord-diagram-wrap">
         ${data ? buildChordDiagramSVG(data) : `<p class="empty">Diagramma non disponibile per questo accordo.</p>`}
       </div>
+      ${data ? `<button class="pill-btn active" id="chordPlayBtn" style="justify-content:center; gap:8px; margin-top:4px;">${ICONS.speaker(16)} Ascolta</button>` : ""}
     </div>
   `;
   document.querySelector(".phone").appendChild(overlay);
   overlay.querySelector(".cz-picker-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", (e) => { if(e.target === overlay) overlay.remove(); });
+  const playBtn = overlay.querySelector("#chordPlayBtn");
+  if(playBtn) playBtn.addEventListener("click", () => playChordSound(chordName));
 }
 
 const SUPPORTS_HOVER = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -1121,7 +1125,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.9";
+const APP_VERSION = "1.7.0";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
@@ -2183,6 +2187,79 @@ function renderImpostazioni(){
     <p class="row-meta" style="margin-bottom:0;">Canzoniere di Gruppo · Roma 150 — v${APP_VERSION}<br>Realizzata per il gruppo scout AGESCI Roma 150.</p>
   `;
   content.appendChild(infoCard);
+}
+
+// --- Sintesi audio accordo: oscillatori + inviluppo, nessun feedback loop ---
+const OPEN_STRING_FREQS = [82.41, 110.00, 146.83, 196.00, 246.94, 329.63]; // Mi2 La2 Re3 Sol3 Si3 Mi4
+function getChordFrequencies(data){
+  return data.frets.map((v, i) => v === null ? null : OPEN_STRING_FREQS[i] * Math.pow(2, (v + data.fret) / 12));
+}
+let chordAudioCtx = null;
+function getChordAudioContext(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!chordAudioCtx) chordAudioCtx = new AC();
+  if(chordAudioCtx.state === "suspended") chordAudioCtx.resume();
+  return chordAudioCtx;
+}
+function pluckString(ctx, frequency, startTime, masterGain){
+  const osc = ctx.createOscillator();
+  osc.type = "triangle";
+  osc.frequency.value = frequency;
+
+  // Un secondo oscillatore un'ottava sopra, pi\u00f9 debole, per dare corpo al timbro
+  const oscHigh = ctx.createOscillator();
+  oscHigh.type = "sine";
+  oscHigh.frequency.value = frequency * 2;
+
+  const tone = ctx.createBiquadFilter();
+  tone.type = "lowpass";
+  tone.frequency.value = frequency * 5;
+
+  const envelope = ctx.createGain();
+  envelope.gain.setValueAtTime(0, startTime);
+  envelope.gain.linearRampToValueAtTime(0.22, startTime + 0.008);
+  envelope.gain.exponentialRampToValueAtTime(0.001, startTime + 1.8);
+
+  const envelopeHigh = ctx.createGain();
+  envelopeHigh.gain.setValueAtTime(0, startTime);
+  envelopeHigh.gain.linearRampToValueAtTime(0.05, startTime + 0.008);
+  envelopeHigh.gain.exponentialRampToValueAtTime(0.001, startTime + 0.9);
+
+  osc.connect(tone);
+  tone.connect(envelope);
+  envelope.connect(masterGain);
+
+  oscHigh.connect(envelopeHigh);
+  envelopeHigh.connect(masterGain);
+
+  osc.start(startTime);
+  osc.stop(startTime + 1.9);
+  oscHigh.start(startTime);
+  oscHigh.stop(startTime + 1.0);
+
+  setTimeout(() => {
+    try { osc.disconnect(); oscHigh.disconnect(); tone.disconnect(); envelope.disconnect(); envelopeHigh.disconnect(); }
+    catch(e){ /* nodo gi\u00e0 disconnesso */ }
+  }, 2000);
+}
+function playChordSound(chordName){
+  const ctx = getChordAudioContext();
+  if(!ctx) { alert("Audio non supportato su questo dispositivo/browser."); return; }
+  const data = getChordDiagramData(chordName);
+  if(!data) return;
+  const freqs = getChordFrequencies(data);
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = 0.5;
+  masterGain.connect(ctx.destination);
+  const now = ctx.currentTime;
+  let stringIndex = 0;
+  freqs.forEach(f => {
+    if(f === null) return;
+    pluckString(ctx, f, now + stringIndex * 0.02, masterGain);
+    stringIndex++;
+  });
+  setTimeout(() => { try { masterGain.disconnect(); } catch(e){} }, 2200);
 }
 
 function showCanzoniereForm(existingId){
