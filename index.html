@@ -73,7 +73,7 @@
     bottom:calc(env(safe-area-inset-bottom) * 0.6 + 10px);
   }
   body.is-ipad .app-header{
-    padding-top:calc(12px + env(safe-area-inset-top) + 34px);
+    padding-top:calc(12px + env(safe-area-inset-top) + 14px);
   }
   .nav-item{
     flex:1; display:flex; flex-direction:column; align-items:center;
@@ -202,8 +202,8 @@
   .header-update-btn{ position:relative; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
   .brand-text-center{
-    position:absolute; left:calc(50% - 23px); top:50%;
-    transform:translate(-50%, -50%);
+    position:absolute; left:calc(50% - 23px); bottom:13px;
+    transform:translateX(-50%);
     text-align:center; white-space:nowrap; pointer-events:none;
   }
   .brand-text-center .name{ font-size:17px; font-weight:800; letter-spacing:0.01em; }
@@ -1120,7 +1120,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.9.2";
+const APP_VERSION = "1.6.9";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
