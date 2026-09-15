@@ -2250,7 +2250,7 @@ function playChordSound(chordName){
   if(!data) return;
   const freqs = getChordFrequencies(data);
   const masterGain = ctx.createGain();
-  masterGain.gain.value = 0.5;
+  masterGain.gain.value = 0.75;
   masterGain.connect(ctx.destination);
   const now = ctx.currentTime;
   let stringIndex = 0;

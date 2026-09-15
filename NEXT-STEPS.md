@@ -190,6 +190,12 @@ v1.6.9 RELEASED
 - Finito il check dei brani famosi (concludendo gli anni 90) - manca solo FATA MORGANA
 - FIXATO ULULA ALLA LUNA
 ----------------------------------------------------------------------------------------
+1.7.0 RELEASED
+- Suono accordi chitarra
+----------------------------------------------------------------------------------------
+
+
+
 v1.6.10
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
     - CANTI SCOUT AGESCI VARI:
@@ -207,7 +213,7 @@ v1.6.???
 
 v1.?
 - Canti canzoniere messa...
-- Suono accordi chitarra
+
 ----------------------------------------------------------------------------------------
 v1.?
 - Finito il check delle canzoni di gruppo
