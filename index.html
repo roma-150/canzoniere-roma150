@@ -165,7 +165,8 @@
   .app-header{
     background:var(--purple);
     color:var(--white);
-    padding:12px 20px 13px;
+    padding:calc(12px + env(safe-area-inset-top)) 20px 13px;
+    margin-top:calc(-1 * env(safe-area-inset-top));
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -173,7 +174,7 @@
   }
   .app-header.sticky{
     position:sticky;
-    top:0;
+    top:calc(-1 * env(safe-area-inset-top));
     z-index:15;
   }
   .header-spacer{ width:44px; flex-shrink:0; }
@@ -1116,7 +1117,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.6.9";
+const APP_VERSION = "1.6.9.1";
 let updateAvailable = false;
 
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
