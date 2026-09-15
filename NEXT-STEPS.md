@@ -186,9 +186,23 @@ v1.6
 v1.6.8 RELEASED
 - Finito il check dei brani famosi anni 70, rimangono anni 90
 ----------------------------------------------------------------------------------------
-v1.6.9
-- Finito il check dei brani famosi (concludendo gli anni 90)
+v1.6.9 RELEASED
+- Finito il check dei brani famosi (concludendo gli anni 90) - manca solo FATA MORGANA
+- FIXATO ULULA ALLA LUNA
+----------------------------------------------------------------------------------------
+v1.6.10
+- Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
+    - CANTI SCOUT AGESCI VARI:
+    - CANTI SCOUT R/S
+    - CON UN FILO, CONVEGNO L/C 2026 NELLE DUE VERSIONI
+    - CANTI SCOUT L/C NON DI BRANCA
+    - CANTI DA CANZONIERE PO, CFM, PT, CFA ETC...
 
+
+
+----------------------------------------------------------------------------------------
+v1.6.???
+- Fix di qualche canto del Roma 150:
 
 
 v1.?
@@ -199,14 +213,8 @@ v1.?
 - Finito il check delle canzoni di gruppo
 
 - PENSA DI AGGIUNGERE LE CATEGORIE: CANTI DI PASSAGGIO/CANTI DEL BUONGIORNO/CANTI DELLA BUONANOTTE/ETC, TRA I CANTI SCOUT...
-
-
-- PROCEDI CON:
-- CANTI SCOUT VARI (L/C, E/G, AGESCI)-vedi anche sotto...
-
-- PIù BRANI FAMOSI (MAGARI VAI PER GENERE)??? Tra quelli nella nostra tradizione di gruppo...
-
-
+----------------------------------------------------------------------------------------
+- PIù BRANI FAMOSI Tra quelli nella nostra tradizione di gruppo...
 ----------------------------------------------------------------------------------------
 - CANTI DAL CANZONIERE MESSA
 
@@ -231,6 +239,3 @@ CANTI VARI DA AGGIUNGERE, AGGIUNGILI GIA FIXATI!!!
 - ALLELUIA GEN VERDE (QUELLO NUOVO)
 - I WILL FOLLOW
 - CANTO GUIDE 2007: SCONOSCIUTO
-- CANTI SCOUT R/S
-- CON UN FILO, CONVEGNO L/C 2026
-- CANTI SCOUT L/C NON DI BRANCA
