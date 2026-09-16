@@ -207,6 +207,12 @@ v1.8.1
 ----------------------------------------------------------------------------------------
 v1.8.2
 - FUNZIONE AUDIO - METADATI
+----------------------------------------------------------------------------------------
+v1.8.3
+- LOG DI CHI SCARICA E/O ASCOLTA
+
+
+
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
