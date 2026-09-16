@@ -191,18 +191,35 @@ v1.6.9 RELEASED
 - FIXATO ULULA ALLA LUNA
 ----------------------------------------------------------------------------------------
 1.7.0 RELEASED
-- Suono accordi chitarra
+- Suono accordi chitarra DONE
 ----------------------------------------------------------------------------------------
+v1.7.1 RELEASED
+- FIX DI QUALCHE CANZONE DEL ROMA 150 TRA LE PIU RECENTI...
+----------------------------------------------------------------------------------------
+v1.7.2
 
 
 
-v1.6.10
+
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
     - CANTI SCOUT AGESCI VARI:
     - CANTI SCOUT R/S
     - CON UN FILO, CONVEGNO L/C 2026 NELLE DUE VERSIONI
     - CANTI SCOUT L/C NON DI BRANCA
-    - CANTI DA CANZONIERE PO, CFM, PT, CFA ETC...
+    - CANTI DA CANZONIERE PO, CFM, PT, CFA ETC, CANZONIERE DI BRANCO E DI CERCHIO...
+
+
+
+
+
+1.8.0
+- DETTAGLIO CANZONE
+- RAGIONA SU ONLINE/OFFLINE
+- FIX DIMENSIONE E POSIZIONE TASTI PLAY, SCORRI, +, -
+- SWIPE TRA PAGINE, SISTEMALO
+
+
+
 
 
 
