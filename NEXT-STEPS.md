@@ -214,9 +214,12 @@ v1.8.3
 v1.8.4 - RELEASED
 - FINO A 25 DOWNLOAD
 ----------------------------------------------------------------------------------------
-v1.8.5
+v1.8.5 - released
 - LOG DI CHI SCARICA E/O ASCOLTA
-
+- COMPLETATI I CANTI BOSCO E AGGIUNTO TASTO IN TUTTI GLI ELENCHI...
+----------------------------------------------------------------------------------------
+v1.8.6
+- 
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:

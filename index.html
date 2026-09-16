@@ -1127,7 +1127,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.8.4";
+const APP_VERSION = "1.8.5";
 let updateAvailable = false;
 
 const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";
@@ -1986,21 +1986,26 @@ function showCategoryDetail(cat, sez, backFn){
             <div class="row-meta">${metaLine(song)}</div>
           </div>
           <div class="row-end">
-            <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>            <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
+            <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
+            ${hasAudio(song) ? `<button class="fav-star audio-stream-btn" data-audio-url="${getAudioUrl(song)}" data-size="18" aria-label="Ascolta">${ICONS.play(18)}</button>` : ""}
+            <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
             ${ICONS.chevronRight(18)}
           </div>
         `;
         row.addEventListener("click", () => { currentCzQueue = null; currentCzInfo = null; showDetail(SONGS.indexOf(song)); });
-        row.querySelector(".fav-star").addEventListener("click", (e) => {
+        row.querySelector(".fav-star:not(.audio-stream-btn)").addEventListener("click", (e) => {
           e.stopPropagation();
           if(favoriti.has(favKey(song))) favoriti.delete(favKey(song));
           else favoriti.add(favKey(song));
           saveFavorites();
           renderCategoryResults();
         });
+        const audioBtnRow = row.querySelector(".audio-stream-btn");
+        if(audioBtnRow) audioBtnRow.addEventListener("click", (e) => { e.stopPropagation(); toggleStreamingAudio(song); });
         results.appendChild(row);
       });
     });
+    updateStreamingButtons();
   }
 
   const catSearchInputEl = card.querySelector("#catSearchInput");
@@ -3452,7 +3457,10 @@ function showCanzoniereDetail(id){
             <div class="row-title">${song.titolo}</div>
             <div class="row-meta">${metaLine(song)}</div>
           </div>
-          ${isPreset ? "" : `<div class="row-end"><button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button></div>`}
+          <div class="row-end">
+            ${hasAudio(song) ? `<button class="cz-edit-btn audio-stream-btn" data-audio-url="${getAudioUrl(song)}" data-size="18" aria-label="Ascolta" style="border:none; background:none; padding:6px; margin:-6px; cursor:pointer; display:flex; align-items:center;">${ICONS.play(18)}</button>` : ""}
+            ${isPreset ? "" : `<button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button>`}
+          </div>
         `;
         row.addEventListener("click", () => {
           returnToView = () => showCanzoniereDetail(cz.id);
@@ -3461,6 +3469,8 @@ function showCanzoniereDetail(id){
           currentCzInfo = { titolo: cz.titolo, descrizione: cz.descrizione, sezione: sezioneDiCanzone[key] || null, fullList: cz.canzoni.slice() };
           showDetail(SONGS.indexOf(song));
         });
+        const audioBtnCz = row.querySelector(".audio-stream-btn");
+        if(audioBtnCz) audioBtnCz.addEventListener("click", (e) => { e.stopPropagation(); toggleStreamingAudio(song); });
         if(!isPreset){
           row.querySelector(".cz-remove-btn").addEventListener("click", (e) => {
             e.stopPropagation();
@@ -3514,6 +3524,7 @@ function showCanzoniereDetail(id){
     if(!isPreset && cz.canzoni.length > 1) initCzDragReorder(listCard, cz);
   }
   content.appendChild(listCard);
+  updateStreamingButtons();
 
 }
 
