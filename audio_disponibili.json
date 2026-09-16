@@ -1,11 +1,17 @@
 [
-    { "titolo": "Basta un filo d'erba", "autore": "CANTAILBOSCO" },
-    { "titolo": "C'è qualcuno che mi può aiutare?!", "autore": "CANTAILBOSCO" },
-    { "titolo": "Eirene", "autore": "CANTAILBOSCO" },
-    { "titolo": "Il canto della procellaria", "autore": "CANTAILBOSCO" },
-    { "titolo": "La formica Mi", "autore": "CANTAILBOSCO" },
-    { "titolo": "La notte delle lanterne", "autore": "CANTAILBOSCO" },
-    { "titolo": "Mille e ancora mille", "autore": "CANTAILBOSCO" },
-    { "titolo": "Scrolla le ali", "autore": "CANTAILBOSCO" },
-    { "titolo": "Siamo le Formiche!", "autore": "CANTAILBOSCO" }
+    { "titolo": "Basta un filo d'erba", "autore": "" },
+    { "titolo": "Buon Volo", "autore": "" },
+    { "titolo": "Canto della Promessa (versione Bosco)", "autore": "" },
+    { "titolo": "C'è qualcuno che mi può aiutare?!", "autore": "" },
+    { "titolo": "Chiudi gli occhi e sogna", "autore": "" },
+    { "titolo": "Eirene", "autore": "" },
+    { "titolo": "Festa nel bosco", "autore": "" },
+    { "titolo": "Il canto della procellaria", "autore": "" },
+    { "titolo": "La formica Mi", "autore": "" },
+    { "titolo": "La notte delle lanterne", "autore": "" },
+    { "titolo": "Mille e ancora mille", "autore": "" },
+    { "titolo": "Scrolla le ali", "autore": "" },
+    { "titolo": "Sette punti neri", "autore": "" },
+    { "titolo": "Siamo le Formiche!", "autore": "" },
+    { "titolo": "Sol soletto", "autore": "" }
 ]
