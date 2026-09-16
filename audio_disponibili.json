@@ -7,9 +7,13 @@
     { "titolo": "Chiudi gli occhi e sogna", "autore": "Canta il Bosco" },
     { "titolo": "Coccinella vuoi venire", "autore": "Canta il Bosco" },
     { "titolo": "Eirene", "autore": "Canta il Bosco" },
+    { "titolo": "Excalibur", "autore": "Giuseppe Mattia" },
+    { "titolo": "Expecto Felicitatem", "autore": "Giuseppe Mattia" },
     { "titolo": "Festa nel bosco", "autore": "Canta il Bosco" },
     { "titolo": "Il canto della procellaria", "autore": "Canta il Bosco" },
     { "titolo": "Il viaggio dei pirati", "autore": "Giuseppe Mattia" },
+    { "titolo": "In quel di Stella Vitae", "autore": "Giuseppe Mattia" },
+    { "titolo": "Insieme a Dorchester", "autore": "Giuseppe Mattia" },
     { "titolo": "La formica Mi", "autore": "Canta il Bosco" },
     { "titolo": "La gioia nel cuore", "autore": "Giuseppe Mattia" },
     { "titolo": "La notte delle lanterne", "autore": "Canta il Bosco" },
@@ -21,5 +25,7 @@
     { "titolo": "Sotto al temporale", "autore": "Giuseppe Mattia" },
     { "titolo": "Tra l'Inferno e il Paradiso", "autore": "Giuseppe Mattia" },
     { "titolo": "Un bosco a colori", "autore": "Marco Costantini AGESCI Emilia Romagna" },
-    { "titolo": "Una vacanza al museo", "autore": "Giuseppe Mattia" }
+    { "titolo": "Una vacanza al museo", "autore": "Giuseppe Mattia" },
+    { "titolo": "Viaggia nel tempo", "autore": "Giuseppe Mattia" },
+    { "titolo": "Wanted", "autore": "Giuseppe Mattia" },
 ]
