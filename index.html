@@ -1131,12 +1131,15 @@ const APP_VERSION = "1.8.4";
 let updateAvailable = false;
 
 const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";
-let AUDIO_DISPONIBILI = new Set();
+let AUDIO_DISPONIBILI = new Map();
 function slugifyTitle(title){
   return normalizeText(title || "").replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 function hasAudio(song){
   return AUDIO_DISPONIBILI.has(song.titolo);
+}
+function getAudioAutore(song){
+  return AUDIO_DISPONIBILI.get(song.titolo) || "";
 }
 function getAudioUrl(song){
   return AUDIO_BASE_URL + "/" + slugifyTitle(song.titolo) + ".m4a";
@@ -2364,10 +2367,12 @@ function renderImpostazioni(){
     offlineSongs.forEach(song => {
       const row = document.createElement("div");
       row.className = "song-row";
+      const autore = getAudioAutore(song);
       row.innerHTML = `
         <div style="flex:1; min-width:0;">
           <div class="row-title">${song.titolo}</div>
           <div class="row-meta">${metaLine(song)}</div>
+          ${autore ? `<div class="row-meta" style="font-style:italic;">Audio di: ${autore}</div>` : ""}
         </div>
         <div class="row-end"><button class="cz-remove-btn" aria-label="Rimuovi">${ICONS.trash(18)}</button></div>
       `;
@@ -5592,8 +5597,13 @@ fetch("canzonieri_predefiniti.json")
 
 fetch("audio_disponibili.json")
   .then(r => r.json())
-  .then(data => { AUDIO_DISPONIBILI = new Set(Array.isArray(data) ? data : []); })
-  .catch(() => { AUDIO_DISPONIBILI = new Set(); });
+  .then(data => {
+    AUDIO_DISPONIBILI = new Map();
+    (Array.isArray(data) ? data : []).forEach(item => {
+      if(item && item.titolo) AUDIO_DISPONIBILI.set(item.titolo, item.autore || "");
+    });
+  })
+  .catch(() => { AUDIO_DISPONIBILI = new Map(); });
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
