@@ -1137,7 +1137,7 @@ function hasAudio(song){
   return AUDIO_DISPONIBILI.has(song.titolo);
 }
 function getAudioUrl(song){
-  return AUDIO_BASE_URL + "/" + slugifyTitle(song.titolo) + ".opus";
+  return AUDIO_BASE_URL + "/" + slugifyTitle(song.titolo) + ".m4a";
 }
 
 let streamingAudioEl = null;
