@@ -1,4 +1,5 @@
 [
+    { "titolo": "A Brittoli ritornerò…", "autore": "Giuseppe Mattia" },
     { "titolo": "Basta un filo d'erba", "autore": "Canta il Bosco" },
     { "titolo": "Buon Volo", "autore": "Canta il Bosco" },
     { "titolo": "Canto della Promessa (versione Bosco)", "autore": "Canta il Bosco" },
@@ -8,6 +9,7 @@
     { "titolo": "Eirene", "autore": "Canta il Bosco" },
     { "titolo": "Festa nel bosco", "autore": "Canta il Bosco" },
     { "titolo": "Il canto della procellaria", "autore": "Canta il Bosco" },
+    { "titolo": "Il viaggio dei pirati", "autore": "Giuseppe Mattia" },
     { "titolo": "La formica Mi", "autore": "Canta il Bosco" },
     { "titolo": "La gioia nel cuore", "autore": "Giuseppe Mattia" },
     { "titolo": "La notte delle lanterne", "autore": "Canta il Bosco" },
@@ -16,5 +18,8 @@
     { "titolo": "Sette punti neri", "autore": "Canta il Bosco" },
     { "titolo": "Siamo le Formiche!", "autore": "Canta il Bosco" },
     { "titolo": "Sol soletto", "autore": "Canta il Bosco" },
-    { "titolo": "Un bosco a colori", "autore": "Marco Costantini AGESCI Emilia Romagna" }
+    { "titolo": "Sotto al temporale", "autore": "Giuseppe Mattia" },
+    { "titolo": "Tra l'Inferno e il Paradiso", "autore": "Giuseppe Mattia" },
+    { "titolo": "Un bosco a colori", "autore": "Marco Costantini AGESCI Emilia Romagna" },
+    { "titolo": "Una vacanza al museo", "autore": "Giuseppe Mattia" }
 ]

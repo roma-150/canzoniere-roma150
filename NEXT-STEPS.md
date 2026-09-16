@@ -218,8 +218,8 @@ v1.8.5 - released
 - LOG DI CHI SCARICA E/O ASCOLTA
 - COMPLETATI I CANTI BOSCO E AGGIUNTO TASTO IN TUTTI GLI ELENCHI...
 ----------------------------------------------------------------------------------------
-v1.8.6
-- 
+v1.8.6 RELEASED
+- Aggiunti i primi di canti di gruppo in vocale, come Dimostrazione
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
