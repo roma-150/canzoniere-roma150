@@ -1274,7 +1274,7 @@ function inviaEvento(payload){
 }
 function logEvento(tipo, titolo){
   if(!ANALYTICS_URL || ANALYTICS_URL.indexOf("http") !== 0) return;
-  const payload = { tipo, titolo: titolo || "", utente: DEVICE_ID, nome: USERNAME };
+  const payload = { tipo, titolo: titolo || "", utente: DEVICE_ID, nome: USERNAME, versione: APP_VERSION };
   if(!navigator.onLine){
     queueEvento(payload);
     return;
