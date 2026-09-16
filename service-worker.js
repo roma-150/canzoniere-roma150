@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v2';
+const CACHE_NAME = 'canzoniere-v3';
 
 const APP_SHELL = [
   './',
@@ -48,6 +48,14 @@ self.addEventListener('message', (event) => {
 // - tutto il resto (guscio app): cache prima, rete come riserva
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  // Lascia che il browser gestisca direttamente le richieste verso domini esterni
+  // (es. l'audio in streaming da R2): il Service Worker non deve intercettarle,
+  // altrimenti le richieste "a pezzi" (Range) usate per lo streaming audio
+  // possono fallire, specialmente su Safari/iOS.
+  if (url.origin !== self.location.origin) {
+    return;
+  }
 
   if (url.pathname.endsWith('version.json')) {
     event.respondWith(fetch(event.request));
