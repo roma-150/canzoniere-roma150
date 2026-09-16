@@ -2403,9 +2403,22 @@ function renderImpostazioni(){
   infoCard.className = "card";
   infoCard.innerHTML = `
     <div class="list-title">Info app</div>
-    <p class="row-meta" style="margin-bottom:0;">Canzoniere di Gruppo · Roma 150 — v${APP_VERSION}<br>Realizzata per il gruppo scout AGESCI Roma 150.</p>
+    <p class="row-meta" style="margin-bottom:10px;">Canzoniere di Gruppo · Roma 150 — v${APP_VERSION}<br>Realizzata per il gruppo scout AGESCI Roma 150.</p>
+    <p class="row-meta" style="margin-bottom:10px;">Il "Canzoniere di Gruppo - Roma 150" nasce nell'ottobre 2025 da un'idea di Giuseppe Mattia, con l'obiettivo di raccogliere e non perdere le canzoni scritte nei nostri campi negli anni — recuperando testi, luoghi e accordi da vecchi canzonieri, cartelloni e testimonianze di capi ed ex capi.</p>
+    <p class="row-meta" style="margin-bottom:0;">Da semplice archivio è cresciuto, e nel settembre 2026 è nata questa app: pensata per avere testi, accordi e — dove disponibili — audio delle melodie sempre a portata di mano.</p>
   `;
   content.appendChild(infoCard);
+
+  const legalCard = document.createElement("div");
+  legalCard.className = "card";
+  legalCard.innerHTML = `
+    <div class="list-title">Note legali</div>
+    <p class="row-meta" style="margin-bottom:10px;">Questa app è un progetto amatoriale, senza scopo di lucro, realizzato da e per i membri del gruppo scout AGESCI Roma 150 per uso interno durante attività, campi e momenti di preghiera.</p>
+    <p class="row-meta" style="margin-bottom:10px;">I testi e gli accordi delle canzoni sono trascrizioni amatoriali di opere altrui, riportate per finalità didattiche e di condivisione all'interno del gruppo, senza alcuna finalità commerciale. Gli audio presenti non sono registrazioni ufficiali né professionali: sono semplici vocali/registrazioni informali realizzate da membri del gruppo, condivisi per aiutare l'apprendimento delle melodie.</p>
+    <p class="row-meta" style="margin-bottom:10px;">L'app non è in alcun modo affiliata, sponsorizzata o approvata dagli autori originali delle canzoni, dalle case discografiche o da AGESCI nazionale, salvo dove diversamente specificato. Non viene richiesto né raccolto alcun pagamento per l'uso dell'app o per l'accesso ai contenuti.</p>
+    <p class="row-meta" style="margin-bottom:0;">Se sei titolare dei diritti su un testo, un accordo o un audio presente in questa app e desideri che venga rimosso, scrivici tramite la sezione Assistenza qui sopra: provvederemo prontamente.</p>
+  `;
+  content.appendChild(legalCard);
 }
 
 // --- Sintesi audio accordo: oscillatori + inviluppo, nessun feedback loop ---
