@@ -1128,6 +1128,50 @@ const CATEGORY_SECTIONS = [
 const APP_VERSION = "1.7.1";
 let updateAvailable = false;
 
+const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";
+let AUDIO_DISPONIBILI = new Set();
+function slugifyTitle(title){
+  return normalizeText(title || "").replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+function hasAudio(song){
+  return AUDIO_DISPONIBILI.has(song.titolo);
+}
+function getAudioUrl(song){
+  return AUDIO_BASE_URL + "/" + slugifyTitle(song.titolo) + ".opus";
+}
+
+let streamingAudioEl = null;
+function isStreamingUrl(url){
+  return !!(streamingAudioEl && streamingAudioEl.dataset.url === url && !streamingAudioEl.paused);
+}
+function updateStreamingButtons(){
+  document.querySelectorAll(".audio-stream-btn").forEach(btn => {
+    const playing = isStreamingUrl(btn.dataset.audioUrl);
+    btn.innerHTML = playing ? ICONS.pause(btn.dataset.size || 18) : ICONS.play(btn.dataset.size || 18);
+    btn.classList.toggle("active", playing);
+  });
+}
+function toggleStreamingAudio(song){
+  const url = getAudioUrl(song);
+  if(isStreamingUrl(url)){
+    streamingAudioEl.pause();
+    return;
+  }
+  if(streamingAudioEl){ streamingAudioEl.pause(); }
+  const audio = new Audio(url);
+  audio.dataset.url = url;
+  streamingAudioEl = audio;
+  audio.addEventListener("play", updateStreamingButtons);
+  audio.addEventListener("pause", updateStreamingButtons);
+  audio.addEventListener("ended", () => { if(streamingAudioEl === audio) streamingAudioEl = null; updateStreamingButtons(); });
+  audio.play().catch(() => {
+    alert("Impossibile riprodurre l'audio. Controlla la connessione.");
+    if(streamingAudioEl === audio) streamingAudioEl = null;
+    updateStreamingButtons();
+  });
+  updateStreamingButtons();
+}
+
 const ANALYTICS_URL = "https://script.google.com/macros/s/AKfycbw8oMApsgmNod9j7N0MGS-bzy6EXYxi6zSka_89UUjTBoW8YkRUZgV33qZhCn8aYihuXQ/exec"; // URL del deploy Apps Script
 const DEVICE_ID_KEY = "canzoniere_device_id_v1";
 function loadDeviceId(){
@@ -3694,21 +3738,25 @@ function renderResults(card){
         </div>
         <div class="row-end">
           <span class="key-badge">${ICONS.music(12)}${song.tonalita || "—"}</span>
+          ${hasAudio(song) ? `<button class="fav-star audio-stream-btn" data-audio-url="${getAudioUrl(song)}" data-size="18" aria-label="Ascolta">${ICONS.play(18)}</button>` : ""}
           <button class="fav-star ${isFav ? "active" : ""}" aria-label="Preferita">${ICONS.star(19, isFav)}</button>
           ${ICONS.chevronRight(18)}
         </div>
       `;
       row.addEventListener("click", () => { currentCzQueue = null; currentCzInfo = null; showDetail(SONGS.indexOf(song)); });
-      row.querySelector(".fav-star").addEventListener("click", (e) => {
+      row.querySelector(".fav-star:not(.audio-stream-btn)").addEventListener("click", (e) => {
         e.stopPropagation();
         if(favoriti.has(favKey(song))) favoriti.delete(favKey(song));
         else favoriti.add(favKey(song));
         saveFavorites();
         renderResults(card);
       });
+      const audioBtnRow = row.querySelector(".audio-stream-btn");
+      if(audioBtnRow) audioBtnRow.addEventListener("click", (e) => { e.stopPropagation(); toggleStreamingAudio(song); });
       results.appendChild(row);
     });
   });
+  updateStreamingButtons();
 }
 
 function showList(){
@@ -4812,7 +4860,10 @@ function showDetail(index){
         <p class="song-title">${song.titolo}</p>
         <p class="song-meta">${metaLine(song)}</p>
       </div>
-      <button class="cz-edit-btn" id="printSongBtn" aria-label="Stampa / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; flex-shrink:0;">${ICONS.print(22)}</button>
+      <div style="display:flex; gap:10px; align-items:center; flex-shrink:0;">
+        ${hasAudio(song) ? `<button class="cz-edit-btn audio-stream-btn" data-audio-url="${getAudioUrl(song)}" data-size="22" aria-label="Ascolta la canzone" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center;">${ICONS.play(22)}</button>` : ""}
+        <button class="cz-edit-btn" id="printSongBtn" aria-label="Stampa / PDF" style="border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center;">${ICONS.print(22)}</button>
+      </div>
     </div>
     <div class="tile-row">
       <div class="mini-tile key-tile">
@@ -4844,6 +4895,10 @@ function showDetail(index){
     </div>
   `;
   content.appendChild(card1);
+
+  const streamBtnDetail = card1.querySelector(".audio-stream-btn");
+  if(streamBtnDetail) streamBtnDetail.addEventListener("click", () => toggleStreamingAudio(song));
+  updateStreamingButtons();
 
   const fontSizeTile = document.getElementById("fontSizeTile");
   const aSample = document.getElementById("aSample");
@@ -5360,6 +5415,11 @@ fetch("canzonieri_predefiniti.json")
     if(currentTab === "canzonieri") renderCanzonieri();
   })
   .catch(() => { PRESET_CANZONIERI = []; });
+
+fetch("audio_disponibili.json")
+  .then(r => r.json())
+  .then(data => { AUDIO_DISPONIBILI = new Set(Array.isArray(data) ? data : []); })
+  .catch(() => { AUDIO_DISPONIBILI = new Set(); });
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
