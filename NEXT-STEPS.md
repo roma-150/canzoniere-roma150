@@ -196,7 +196,8 @@ v1.6.9 RELEASED
 v1.7.1 RELEASED
 - FIX DI QUALCHE CANZONE DEL ROMA 150 TRA LE PIU RECENTI...
 ----------------------------------------------------------------------------------------
-v1.7.2
+v1.7.3
+- DEMO DELLA FUNZIONE AUDIO
 
 
 

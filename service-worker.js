@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v3';
+const CACHE_NAME = 'canzoniere-v4';
 
 const APP_SHELL = [
   './',
@@ -62,7 +62,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (url.pathname.endsWith('songs.json') || url.pathname.endsWith('canzonieri_predefiniti.json')) {
+  if (url.pathname.endsWith('songs.json') || url.pathname.endsWith('canzonieri_predefiniti.json') || url.pathname.endsWith('audio_disponibili.json')) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
