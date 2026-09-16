@@ -220,6 +220,10 @@ v1.8.5 - released
 ----------------------------------------------------------------------------------------
 v1.8.6 RELEASED
 - Aggiunti i primi di canti di gruppo in vocale, come Dimostrazione
+----------------------------------------------------------------------------------------
+v1.8.7 RELEASED
+- Log della versione attuale utilizzata
+
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
