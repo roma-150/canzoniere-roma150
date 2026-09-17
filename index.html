@@ -3856,12 +3856,11 @@ function renderHeaderBrand(){
   appHeader.classList.add("sticky");
   appHeader.innerHTML = `
     <div class="header-actions">
-      <div class="header-version">v${APP_VERSION}</div>
       <button class="header-dark-btn" id="headerRandom" aria-label="Canzone a caso">${ICONS.dice(18)}</button>
     </div>
     <div class="brand-text-center">
-      <div class="name">Canzoniere</div>
-      <div class="sub">Roma 150</div>
+      <div class="name">Canzoniere di gruppo</div>
+      <div class="sub">Roma 150 (v${APP_VERSION})</div>
     </div>
     <div class="header-actions">
       <button class="header-dark-btn" id="headerDark" aria-label="Tema scuro">${ICONS.moon(18)}</button>
