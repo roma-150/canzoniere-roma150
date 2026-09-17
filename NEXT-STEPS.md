@@ -236,7 +236,7 @@ v1.9.0 RELEASED
 - RINGRAZIAMENTI
 ----------------------------------------------------------------------------------------
 v1.9.1
-- FIX 
+- AGGIUNTE UN PO' DI CANZONI GIUNGLA E AGESCI IN GENERALE...
 
 
 
