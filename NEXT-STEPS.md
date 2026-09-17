@@ -237,11 +237,8 @@ v1.9.0 RELEASED
 ----------------------------------------------------------------------------------------
 v1.9.1
 - AGGIUNTE UN PO' DI CANZONI GIUNGLA E AGESCI IN GENERALE...
-
-
-
-
-
+- MOSTRA CLASSIFICA DELLE CANZONI PIÙ APERTE...
+- FIX FATA MORGANA
 
 
 
@@ -251,30 +248,6 @@ v1.9.1
     - CON UN FILO, CONVEGNO L/C 2026 NELLE DUE VERSIONI
     - CANTI SCOUT L/C NON DI BRANCA
     - CANTI DA CANZONIERE PO, CFM, PT, CFA ETC, CANZONIERE DI BRANCO E DI CERCHIO...
-
-
-
-
-
-1.8.0
-- DETTAGLIO CANZONE
-- RAGIONA SU ONLINE/OFFLINE
-- FIX DIMENSIONE E POSIZIONE TASTI PLAY, SCORRI, +, -
-- SWIPE TRA PAGINE, SISTEMALO
-
-
-
-
-
-
-----------------------------------------------------------------------------------------
-v1.6.???
-- Fix di qualche canto del Roma 150:
-
-
-v1.?
-- Canti canzoniere messa...
-
 ----------------------------------------------------------------------------------------
 v1.?
 - Finito il check delle canzoni di gruppo
@@ -306,3 +279,4 @@ CANTI VARI DA AGGIUNGERE, AGGIUNGILI GIA FIXATI!!!
 - ALLELUIA GEN VERDE (QUELLO NUOVO)
 - I WILL FOLLOW
 - CANTO GUIDE 2007: SCONOSCIUTO
+- CANTO CENTENARIO 2007!!!

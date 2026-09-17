@@ -203,6 +203,13 @@
   }
   .header-update-btn{ position:relative; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes diceRoll{
+    0%{ transform:rotate(0deg) scale(1); }
+    35%{ transform:rotate(200deg) scale(1.18); }
+    65%{ transform:rotate(330deg) scale(0.92); }
+    100%{ transform:rotate(360deg) scale(1); }
+  }
+  .header-dark-btn.dice-rolling svg{ animation:diceRoll 0.45s ease; }
   .brand-text-center{
     position:absolute; left:calc(50% - 23px); bottom:13px;
     transform:translateX(-50%);
@@ -3869,7 +3876,11 @@ function renderHeaderBrand(){
   `;
   wireUpdateBtn();
   wireDarkBtn();
-  document.getElementById("headerRandom").addEventListener("click", showRandomSong);
+  document.getElementById("headerRandom").addEventListener("click", (e) => {
+    const btn = e.currentTarget;
+    btn.classList.add("dice-rolling");
+    setTimeout(() => { showRandomSong(); }, 400);
+  });
 }
 
 function renderHeaderBack(onBack){
