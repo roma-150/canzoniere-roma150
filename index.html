@@ -1130,7 +1130,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.8.7.4";
+const APP_VERSION = "1.9.0";
 let updateAvailable = false;
 
 const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";
@@ -2427,6 +2427,23 @@ function renderImpostazioni(){
     <p class="row-meta" style="margin-bottom:0;">Se sei titolare dei diritti su un testo, un accordo o un audio presente in questa app e desideri che venga rimosso, scrivici tramite la sezione Assistenza qui sopra: provvederemo prontamente.</p>
   `;
   content.appendChild(legalCard);
+
+  const thanksCard = document.createElement("div");
+  thanksCard.className = "card";
+  thanksCard.innerHTML = `
+    <div class="list-title">Ringraziamenti</div>
+    <p class="row-meta" style="margin-bottom:6px;">Per aver contribuito al reperimento dei testi e degli accordi delle canzoni si ringraziano in modo particolare:</p>
+    <p class="row-meta" style="margin-bottom:10px;">
+      • La Comunità Capi dell'anno 2026: Antonello, Antonio, Carlotta, Christian, Dario, Elisa, Elisa, Giuseppe, Giulia, Giulia, Lavinia, Lorenzo, Marta, Patrizio, Sara, Tiziano.<br>
+      • Tutte gli scout che, dal 1980, hanno fatto parte della Comunità Capi e del Clan e hanno contribuito alla scrittura delle canzoni che oggi sono patrimonio del nostro gruppo.
+    </p>
+    <p class="row-meta" style="margin-bottom:6px;">Per le registrazioni audio delle canzoni (in ordine alfabetico):</p>
+    <p class="row-meta" style="margin-bottom:0;">
+      • Il sito web "Canta il Bosco"<br>
+      • Marco Costantini - AGESCI Emilia Romagna
+    </p>
+  `;
+  content.appendChild(thanksCard);
 }
 
 // --- Sintesi audio accordo: oscillatori + inviluppo, nessun feedback loop ---
@@ -3677,6 +3694,7 @@ const backToTopBtn = document.getElementById("backToTop");
 backToTopBtn.innerHTML = ICONS.arrowUp(20);
 backToTopBtn.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
+  backToTopBtn.classList.remove("visible");
 });
 let listFilterCollapsed = false;
 function updateBackToTopVisibility(){
@@ -3837,9 +3855,12 @@ window.addEventListener("offline", () => {
 function renderHeaderBrand(){
   appHeader.classList.add("sticky");
   appHeader.innerHTML = `
-    <div class="header-version">v${APP_VERSION}</div>
+    <div class="header-actions">
+      <div class="header-version">v${APP_VERSION}</div>
+      <button class="header-dark-btn" id="headerRandom" aria-label="Canzone a caso">${ICONS.dice(18)}</button>
+    </div>
     <div class="brand-text-center">
-      <div class="name">Canzoniere di gruppo</div>
+      <div class="name">Canzoniere</div>
       <div class="sub">Roma 150</div>
     </div>
     <div class="header-actions">
@@ -3849,6 +3870,7 @@ function renderHeaderBrand(){
   `;
   wireUpdateBtn();
   wireDarkBtn();
+  document.getElementById("headerRandom").addEventListener("click", showRandomSong);
 }
 
 function renderHeaderBack(onBack){
@@ -4919,6 +4941,14 @@ async function exportCanzoniereePdf(cz){
   doc.save(filename);
 }
 
+function showRandomSong(){
+  if(!SONGS || SONGS.length === 0) return;
+  const idx = Math.floor(Math.random() * SONGS.length);
+  currentCzQueue = null;
+  currentCzInfo = null;
+  showDetail(idx);
+}
+
 function showDetail(index){
   clearInterval(activeScrollInterval);
   activeScrollInterval = null;
@@ -5588,9 +5618,16 @@ content.addEventListener("pointercancel", (e) => {
 content.addEventListener("pointerup", (e) => {
   if(e.pointerId !== swipePointerId) return;
   swipePointerId = null;
-  if(!inDetailView || !currentCzQueue || !currentDetailSong) return;
   const dx = e.clientX - swipeStartX;
   const dy = e.clientY - swipeStartY;
+
+  // Swipe dal bordo sinistro verso destra: torna indietro, ovunque sia presente il tasto freccia
+  if(swipeStartX < 24 && dx > 70 && Math.abs(dx) > Math.abs(dy) * 1.5){
+    const backBtn = document.getElementById("headerHome");
+    if(backBtn){ backBtn.click(); return; }
+  }
+
+  if(!inDetailView || !currentCzQueue || !currentDetailSong) return;
   if(Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
   const czIdx = currentCzQueue.indexOf(favKey(currentDetailSong));
   if(czIdx === -1) return;

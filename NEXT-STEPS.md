@@ -224,9 +224,21 @@ v1.8.6 RELEASED
 v1.8.7 RELEASED
 - Log della versione attuale utilizzata
 ----------------------------------------------------------------------------------------
-v1.8.8
+v1.8.8 RELEASED
 - Aggiunto qualche audio
 - Fix audio accordi in muto
+- Ragionamenti su ONLINE/OFFLINE 
+----------------------------------------------------------------------------------------
+v1.9.0 RELEASED
+- SWIPE TO GO BACK
+- FIX +,-,PLAY,SCORRI
+- DADO CANZONE RANDOM
+- RINGRAZIAMENTI
+----------------------------------------------------------------------------------------
+v1.9.1
+- FIX 
+
+
 
 
 

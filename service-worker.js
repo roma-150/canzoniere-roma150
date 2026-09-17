@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v7';
+const CACHE_NAME = 'canzoniere-v9';
 
 const APP_SHELL = [
   './',
