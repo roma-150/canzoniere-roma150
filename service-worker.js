@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v9';
+const CACHE_NAME = 'canzoniere-v10';
 
 const APP_SHELL = [
   './',
@@ -6,7 +6,6 @@ const APP_SHELL = [
   './manifest.json',
   './icons/icon-ios.jpg',
   './icons/icon-android.jpg',
-  './icons/agesci.png',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
 ];// Installazione: mette in cache i file base dell'app (guscio)
 self.addEventListener('install', (event) => {
