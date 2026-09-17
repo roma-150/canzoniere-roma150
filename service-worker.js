@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v5';
+const CACHE_NAME = 'canzoniere-v6';
 
 const APP_SHELL = [
   './',
@@ -46,14 +46,17 @@ self.addEventListener('message', (event) => {
 // - songs.json: prova sempre la rete per avere le canzoni aggiornate,
 //   se non c'è connessione usa l'ultima copia salvata in cache
 // - tutto il resto (guscio app): cache prima, rete come riserva
+const AUDIO_ORIGIN = 'https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev';
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Lascia che il browser gestisca direttamente le richieste verso domini esterni
-  // (es. l'audio in streaming da R2): il Service Worker non deve intercettarle,
-  // altrimenti le richieste "a pezzi" (Range) usate per lo streaming audio
-  // possono fallire, specialmente su Safari/iOS.
-  if (url.origin !== self.location.origin) {
+  // Lascia che il browser gestisca direttamente le richieste verso l'hosting
+  // audio (R2): il Service Worker non deve intercettarle, altrimenti le
+  // richieste "a pezzi" (Range) usate per lo streaming audio possono fallire,
+  // specialmente su Safari/iOS. Tutto il resto, comprese le librerie esterne
+  // come jsPDF, continua a passare dalla cache come sempre (serve per l'uso offline).
+  if (url.origin === AUDIO_ORIGIN) {
     return;
   }
 
