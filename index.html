@@ -764,6 +764,8 @@
   <button class="lock-suggest-toast-close" id="lockSuggestClose" aria-label="Chiudi">✕</button>
 </div>
 
+<audio id="chordAudioOutput" playsinline style="display:none"></audio>
+
 <script>
 const ICONS = {
   music: (s=20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
@@ -1127,7 +1129,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.8.7";
+const APP_VERSION = "1.8.7.1";
 let updateAvailable = false;
 
 const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";
@@ -2432,11 +2434,19 @@ function getChordFrequencies(data){
   return data.frets.map((v, i) => v === null ? null : OPEN_STRING_FREQS[i] * Math.pow(2, (v + data.fret) / 12));
 }
 let chordAudioCtx = null;
+let chordStreamDestination = null;
 function getChordAudioContext(){
   const AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return null;
-  if(!chordAudioCtx) chordAudioCtx = new AC();
+  if(!chordAudioCtx){
+    chordAudioCtx = new AC();
+    chordStreamDestination = chordAudioCtx.createMediaStreamDestination();
+    const chordAudioOutputEl = document.getElementById("chordAudioOutput");
+    if(chordAudioOutputEl) chordAudioOutputEl.srcObject = chordStreamDestination.stream;
+  }
   if(chordAudioCtx.state === "suspended") chordAudioCtx.resume();
+  const chordAudioOutputEl = document.getElementById("chordAudioOutput");
+  if(chordAudioOutputEl && chordAudioOutputEl.paused) chordAudioOutputEl.play().catch(() => {});
   return chordAudioCtx;
 }
 function pluckString(ctx, frequency, startTime, masterGain){
@@ -2488,7 +2498,7 @@ function playChordSound(chordName){
   const freqs = getChordFrequencies(data);
   const masterGain = ctx.createGain();
   masterGain.gain.value = 0.75;
-  masterGain.connect(ctx.destination);
+  masterGain.connect(chordStreamDestination);
   const now = ctx.currentTime;
   let stringIndex = 0;
   freqs.forEach(f => {
