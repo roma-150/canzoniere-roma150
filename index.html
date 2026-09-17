@@ -981,6 +981,7 @@ function showChordDiagram(chordName){
         ${data ? buildChordDiagramSVG(data) : `<p class="empty">Diagramma non disponibile per questo accordo.</p>`}
       </div>
       ${data ? `<button class="pill-btn active" id="chordPlayBtn" style="justify-content:center; gap:8px; margin-top:4px;">${ICONS.speaker(16)} Ascolta</button>` : ""}
+      ${data ? `<p class="row-meta" style="text-align:center; margin-top:8px; margin-bottom:0;">Se non senti nulla, controlla che l'interruttore silenzioso del telefono non sia attivo.</p>` : ""}
     </div>
   `;
   document.querySelector(".phone").appendChild(overlay);
@@ -1129,7 +1130,7 @@ const CATEGORY_SECTIONS = [
   { label: "Messa", gruppi: ["Momenti della liturgia", "Momenti dell'anno liturgico", "Sacramenti e cerimonie"] },
   { label: "Brani famosi", gruppi: ["Per annata", "Per genere", "Per autore"] }
 ];let returnToViewLabel = "Torna all'elenco";
-const APP_VERSION = "1.8.7.3";
+const APP_VERSION = "1.8.7.4";
 let updateAvailable = false;
 
 const AUDIO_BASE_URL = "https://pub-7abc69ad949c4cd9bfbbb8812dd48975.r2.dev";

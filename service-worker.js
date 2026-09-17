@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canzoniere-v6';
+const CACHE_NAME = 'canzoniere-v7';
 
 const APP_SHELL = [
   './',
@@ -22,7 +22,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((names) =>
       Promise.all(
         names
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => name !== CACHE_NAME && name !== 'canzoniere-audio-v1')
           .map((name) => caches.delete(name))
       )
     )
