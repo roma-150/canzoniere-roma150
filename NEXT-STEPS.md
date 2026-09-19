@@ -235,12 +235,13 @@ v1.9.0 RELEASED
 - DADO CANZONE RANDOM
 - RINGRAZIAMENTI
 ----------------------------------------------------------------------------------------
-v1.9.1
+v1.9.1 RELEASED
 - AGGIUNTE UN PO' DI CANZONI GIUNGLA E AGESCI IN GENERALE...
 - MOSTRA CLASSIFICA DELLE CANZONI PIÙ APERTE...
 - FIX FATA MORGANA
-- UN ALTRO PO' DI CANZONI, FAI SCARICARE A QUALCUNO 9.0 PRIMA DI ANDARE OLTRE...
-
+- AGGIUNTI ALTRI NUMEROSI AUDIO DI DEMO...
+----------------------------------------------------------------------------------------
+v1.9.2
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
