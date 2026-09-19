@@ -242,6 +242,8 @@ v1.9.1 RELEASED
 - AGGIUNTI ALTRI NUMEROSI AUDIO DI DEMO...
 ----------------------------------------------------------------------------------------
 v1.9.2
+- AGGIORNAMENTI ANCHE SE LASCIO L'APP APERTA...
+
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
