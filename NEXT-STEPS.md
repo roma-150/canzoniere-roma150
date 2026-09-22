@@ -241,9 +241,11 @@ v1.9.1 RELEASED
 - FIX FATA MORGANA
 - AGGIUNTI ALTRI NUMEROSI AUDIO DI DEMO...
 ----------------------------------------------------------------------------------------
-v1.9.2
+v1.9.2 RELEASED
 - AGGIORNAMENTI ANCHE SE LASCIO L'APP APERTA...
-
+----------------------------------------------------------------------------------------
+v1.9.3 RELEASED
+- TEST DI AGGIORNAMENTI ANCHE SE LASCIO L'APP APERTA...
 
 
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
