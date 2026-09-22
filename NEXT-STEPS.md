@@ -248,6 +248,9 @@ v1.9.3 RELEASED
 - TEST DI AGGIORNAMENTI ANCHE SE LASCIO L'APP APERTA...
 
 
+
+
+
 - Aggiungi qualche canto giungla/bosco/AGESCI tra quelli appuntati:
     - CANTI SCOUT AGESCI VARI:
     - CANTI SCOUT R/S
