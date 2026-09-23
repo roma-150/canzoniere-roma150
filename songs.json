@@ -2095,7 +2095,7 @@
     "anno": 2026,
     "luogo": "Guidoncini verdi AGESCI Lazio 2026",
     "tonalita": "SOL",
-    "branca": null,
+    "branca": ["E/G"],
     "tipo": "scout",
     "autore": "EstoteStonati",
     "origine": "AGESCI",
