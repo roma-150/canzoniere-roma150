@@ -251,9 +251,20 @@ v1.9.4 RELEASED
 - Canzone guidoncini verdi
 ----------------------------------------------------------------------------------------
 v1.9.5
-- Voce difficoltà per tutte le canzoni
+- Aggiunta la voce difficoltà per tutte le canzoni, utile per principianti.
+- Fai in modo che questa funzionalità/vista sia disponibile solo se attivata dalle impostazioni...
 
+AGGIUNGI LA CANZONE, VA COMPLETATO TESTO E ACCORDI (FAI FUNZIONARE BENE GEMINI...)
 
+  {
+    "titolo": "I sogni e le idee",
+    "anno": 2003,
+    "tonalita": "MI",
+    "tipo": "musica",
+    "autore": "Brusco",
+    "genere": "Reggae",
+    "testo_accordi": "{strumentale}\n[MI] [SI] [DO#m] [LA]\n[MI] [SI] [DO#m] [LA]\n---\n[MI]... [SI]...\n[DO#m]... [LA]...\n[MI]... [SI]...\n[DO#m]... [LA]...\n[MI]... [SI]...\n[DO#m]... [LA]...\n[MI]... [SI]...\n[DO#m]... [LA]... [MI]\n---\n{rit}\n[MI]Qualsiasi cosa ac[SI]cada a [DO#m]me,\nvada come [LA]vada [MI]c'è\nun uomo e la sua [SI]strada [DO#m]che\nè fatta de [LA]sogni e de idee. [MI]\n[MI]Qualunque cosa ac[SI]cada a [DO#m]me,\nvada come [LA]vada [MI]c'è\nun uomo e la sua [SI]strada [DO#m]che\nè fatta de [LA]sogni e de idee. [MI]\n---\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]... [MI]\n---\n{rit}\n[MI]Qualsiasi cosa ac[SI]cada a [DO#m]me,\nvada come [LA]vada [MI]c'è\nun uomo e la sua [SI]strada [DO#m]che\nè fatta de [LA]sogni e de idee. [MI]\n---\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]...\n[MI]... [SI]... [DO#m]... [LA]... [MI]\n---\n{rit}\n[MI]Qualsiasi cosa ac[SI]cada a [DO#m]me,\nvada come [LA]vada [MI]c'è\nun uomo e la sua [SI]strada [DO#m]che\nè fatta de [LA]sogni e de idee. [MI]"
+  },
 
 
 
