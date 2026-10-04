@@ -250,9 +250,25 @@ v1.9.3 RELEASED
 v1.9.4 RELEASED
 - Canzone guidoncini verdi
 ----------------------------------------------------------------------------------------
-v1.9.5
+v1.9.5 RELEASED
+- Canzone con audio "Perfetta Letizia"
+
+
+
+
+
+
+
+v1.9.?
 - Aggiunta la voce difficoltà per tutte le canzoni, utile per principianti.
 - Fai in modo che questa funzionalità/vista sia disponibile solo se attivata dalle impostazioni...
+
+
+
+
+
+
+
 
 AGGIUNGI LA CANZONE, VA COMPLETATO TESTO E ACCORDI (FAI FUNZIONARE BENE GEMINI...)
 
@@ -296,6 +312,12 @@ CANTI NON MESSI, DA METTERE NELLA NOSTRA VERSIONE:
 - ECCO QUEL CHE ABBIAMO PAGINA 25
 - PACE A TE PAGINA 27
 - CANTI CANZONIERE MESSA DA PAGINA 29 INCLUSA IN POI PARTI DA CAMMINIAMO INCONTRO AL SIGNORE
+
+
+
+- GIA MESSA PAGINA 44 (PERFETTA LETIZIA)
+
+
 
 - METTI CATEGORIA SPIRITUAL IN CANTI MESSA????
 -------------------------------------------------------------------------------
