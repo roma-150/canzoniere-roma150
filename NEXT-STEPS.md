@@ -252,6 +252,14 @@ v1.9.4 RELEASED
 ----------------------------------------------------------------------------------------
 v1.9.5 RELEASED
 - Canzone con audio "Perfetta Letizia"
+----------------------------------------------------------------------------------------
+v1.9.6 RELEASED
+- Canzone con audio "Per un'amica che va"
+- fix apostrofi in barra di ricerca.
+
+
+
+
 
 
 
