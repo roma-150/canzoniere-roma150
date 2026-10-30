@@ -1706,7 +1706,7 @@
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
     "testo_accordi": "[DO]Girando tra le steppe intorno al [LAm]polo\nagli [DO]argini del Nilo e del mar[LAm] Nero\nil [FA]papero Augusto lì tro[SOL7]vò\nla [FA]papera che il cuore suo stre[SOL7]gò\n---\n[DO]Vestita di un tailler di raso [LAm]nero\ncon gli [DO]occhi grandi e azzurri come il [LAm]cielo\ni [FA]riccioli alla Merilyn Mon[SOL7]roe\nuno [FA]sguardo e Augusto s'incen[SOL7]diò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono due anni entusiasm[LAm]anti\nPa[DO]rigi, Vienna e il golfo degli a[LAm]manti\ngi[FA]ravano il mondo senza [SOL7]meta\nfa[FA]cevano l’amore e la [SOL7]dieta\n---\n[DO]Ma una mattina triste di set[LAm]tembre\nAu[DO]gusto si svegliò un po’ strana[LAm]mente\nsul [FA]tavolo un biglietto lui tro[SOL7]vò\nin Au[FA]stralia con un tacchino lei scap[SOL7]pò!\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Ma il giorno dopo Augusto volò [LAm]via\nAn[DO]dò in Australia con la ferro[LAm]via\nA [FA]Melbourne Guendalina ritro[SOL7]vò\nUno [FA]sguardo e l’amor ricomin[SOL7]ciò\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]\n---\n[DO]Passarono degli anni entusiasm[LAm]anti\nu[DO]sciron dalle uova dei lat[LAm]tanti\ned [FA]eran proprio dei bei pape[SOL7]rini\ne [FA]si chiamavan tutti Guenda[SOL7]lini\n---\n{rit}\n[SOL]Guendalina a[FA]more [SOL7]mio\nsenza di [DO]te (qua qua) mio [LAm]dio\nla [FA]vita [SOL7]mia che senso [DO]ha. [SOL7] [DO]"
-    },
+  },
   {
     "titolo": "Buon Volo",
     "anno": 1980,
@@ -1719,6 +1719,32 @@
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
     "testo_accordi": "[SOL]Vola, [DO]coccinella [SOL]và, il viaggio è [DO]cominciato [SOL]già\n[DO]per il bosco e per il [SOL]prato in fior [LA7]fino al monte dov'è [RE]l'aquila.\n[SOL]Con le [DO]formichine impari [SOL]che tutte in[DO]sieme si sta [SOL]ben\n[DO]se ciascuno il meglio [SOL]da di sé [LA7]sempre il meglio noi pos[RE]siamo aver.\n[DO]Al girino tu fa[SOL]rai capir [DO]che le zampe devo[SOL]no servir\n[DO]e così la rana al[SOL]fine sa [LA7]saltellare qui e [RE]là.\n---\n{rit}\n[SOL]Coccinella, buon [RE]volo, [DO]coccinella, buon [SOL]volo, buon [RE]volo.\n[SOL]Prendi un puntino in [RE]più, [DO]dai [RE]buttati anche [SOL]tu.\n---\n[SOL]Vola, [DO]coccinella [SOL]và, la ci[DO]vetta può par[SOL]lar,\n[DO]tutto è suo e se lo [SOL]può tener, [LA7]noi vogliamo dare e [RE]non aver.\n[SOL]Gli scoi[DO]attoli ve[SOL]drai giocare in[DO]sieme e lavo[SOL]rar\n[DO]bello stare nella [SOL]quercia ma [LA7]il tuo viaggio non fi[RE]nisce qua.\n[DO]Se il tuo volo non con[SOL]tinuerai [DO]tu felice non lo [SOL]sarai mai\n[DO]e il tuo impegno ti ri[SOL]chiama là, [LA7]la montagna [RE]vedi già.\n---\n{rit}\n[SOL]Coccinella, buon [RE]volo, [DO]coccinella, buon [SOL]volo, buon [RE]volo.\n[SOL]Prendi un puntino in [RE]più, [DO]dai [RE]buttati anche [SOL]tu.\n---\n[SOL]Vola, [DO]coccinella [SOL]và, il viaggio [DO]presto fini[SOL]rà\n[DO]per il bosco e per il [SOL]prato in fior [LA7]fino al monte dov'è [RE]l'aquila.\n[SOL]Il tuo a[DO]iuto non ne[SOL]gar al ser[DO]pente mai perc[SOL]hé\n[DO]la risposta è una fa[SOL]tica ma [LA7]dimmi cosa posso [RE]far per te.\n[DO]Occhi attenti sempre [SOL]a scoprir [DO]nuove cose a [SOL]non finir\n[DO]e per questo sai [SOL]vedere chi [LA7]al tuo aiuto dice [RE]sì.\n---\n{rit}\n[SOL]Coccinella, buon [RE]volo, [DO]coccinella, buon [SOL]volo, buon [RE]volo.\n[SOL]Prendi un puntino in [RE]più, [DO]dai [RE]buttati anche [SOL]tu."
+  },
+  {
+    "titolo": "La lanterna",
+    "anno": 1980,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "LA",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "La lan[LA]terna che ci il[RE]lumina il cammin\nnelle [MI]notti senza [LA]luna\nche ci guida verso [RE]la felicità\nsempre [SIm]uniti [MI]ci ter[LA]rà.\n---\nSe per [LA]caso abbiamo [RE]litigato un po'\nqui ci [MI]vuole la lan[LA]terna\ncon la fiamma sempre [RE]lei ci aiuterà\ne la [SIm]pace [MI]si fa[LA]rà.\n---\nAlla [LA]Grande Quercia [RE]tutte accorse siam\ne comin[MI]cia qui il Con[LA]siglio\ncon la fiamma sempre [RE]lei ci aiuterà\ne la [SIm]gioia [MI]ci sa[LA]rà."
+  },
+  {
+    "titolo": "La pista nel bosco",
+    "anno": 1980,
+    "anno_incerto": true,
+    "luogo": null,
+    "tonalita": "RE",
+    "branca": ["L/C"],
+    "ambientazione": "Bosco",
+    "tipo": "scout",
+    "autore": "Tradizione scout AGESCI",
+    "origine": "AGESCI",
+    "testo_accordi": "Io [RE]sono coccinella\nvivo [LA]sempre nel gran [RE]bosco\nseguo dritta la mia [LA]pista\ne contento è il mio [RE]cuor.\n---\nIl [RE]canto degli uccelli\naccom[LA]pagna il mio cam[RE]mino\nsotto l'ombra della [LA]quercia\ncolle altre amo [RE]danzar.\n---\nIl [RE]mughetto là mi aspetta\nsulle [LA]rive del ru[RE]scello\ne lassù sulla mon[LA]tagna\nla genziana coglie[RE]rà."
   },
   {
     "titolo": "La formica Mi",
