@@ -1738,13 +1738,13 @@
     "anno": 1980,
     "anno_incerto": true,
     "luogo": null,
-    "tonalita": "RE",
+    "tonalita": "DO",
     "branca": ["L/C"],
     "ambientazione": "Bosco",
     "tipo": "scout",
     "autore": "Tradizione scout AGESCI",
     "origine": "AGESCI",
-    "testo_accordi": "Io [RE]sono coccinella\nvivo [LA]sempre nel gran [RE]bosco\nseguo dritta la mia [LA]pista\ne contento è il mio [RE]cuor.\n---\nIl [RE]canto degli uccelli\naccom[LA]pagna il mio cam[RE]mino\nsotto l'ombra della [LA]quercia\ncolle altre amo [RE]danzar.\n---\nIl [RE]mughetto là mi aspetta\nsulle [LA]rive del ru[RE]scello\ne lassù sulla mon[LA]tagna\nla genziana coglie[RE]rà."
+    "testo_accordi": "Io [DO]sono coccinella\nvivo [SOL]sempre nel gran [DO]bosco\nseguo dritta la mia [SOL]pista\ne contento è il mio [DO]cuor.\n---\nIl [DO]canto degli uccelli\naccom[SOL]pagna il mio cam[DO]mino\nsotto l'ombra della [SOL]quercia\ncolle altre amo [DO]danzar.\n---\nIl [DO]mughetto là mi aspetta\nsulle [SOL]rive del ru[DO]scello\ne lassù sulla mon[SOL]tagna\nla genziana coglie[DO]rà."
   },
   {
     "titolo": "La formica Mi",
