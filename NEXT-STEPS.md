@@ -256,7 +256,9 @@ v1.9.5 RELEASED
 v1.9.6 RELEASED
 - Canzone con audio "Per un'amica che va"
 - fix apostrofi in barra di ricerca.
-
+v1.9.7 RELEASED
+- Aggiunte due canzoni bosco
+- Audio di pista nel bosco e la lanterna!
 
 
 
