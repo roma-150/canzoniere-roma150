@@ -259,6 +259,11 @@ v1.9.6 RELEASED
 v1.9.7 RELEASED
 - Aggiunte due canzoni bosco
 - Audio di pista nel bosco e la lanterna!
+v1.9.8 RELEASED
+- Aggiunti tre audio canzoni Selva
+- Fix accordi Dorchester ritornello
+v 1.9.9
+- 
 
 
 
